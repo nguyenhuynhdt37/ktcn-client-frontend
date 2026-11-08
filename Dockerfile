@@ -6,7 +6,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@10.11.0 --activate
 
 # Install dependencies based on the preferred package manager
 COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* ./
@@ -15,7 +15,7 @@ RUN pnpm i --frozen-lockfile
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@10.11.0 --activate
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
@@ -26,7 +26,7 @@ ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
 # Disable telemetry during the build.
-ENV NEXT_TELEMTRY_DISABLED=1
+ENV NEXT_TELEMETRY_DISABLED=1
 ENV IS_BUILD=true
 
 RUN pnpm run build

@@ -11,3 +11,9 @@ docker-compose*.yaml
 .env
 .DS_Store
 *.tsbuildinfo
+
+.env*
+!.env.example
+*.bak-*
+deploy/
+backups/
