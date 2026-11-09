@@ -159,6 +159,7 @@ export function LanguageSwitcher({ initialLanguages }: LanguageSwitcherProps) {
             src={lang.flag_url}
             alt={lang.native_name || lang.name}
             fill
+            unoptimized
             sizes="20px"
             className="object-cover"
           />

@@ -80,24 +80,14 @@ export function HeroSlider({ banners }: HeroSliderProps) {
 
             const SlideContent = (
               <div className="relative aspect-[16/9] md:aspect-[2.39/1] w-full min-w-0 flex-[0_0_100%]">
-                {/* 
-                  Sử dụng thẻ picture để hỗ trợ load ảnh tối ưu cho cả Desktop và Mobile
-                  - Desktop: Sử dụng desktop_image_object_key
-                  - Mobile: Sử dụng mobile_image_object_key nếu có, ngược lại fallback về desktop image
-                */}
-                <picture className="absolute inset-0 h-full w-full">
-                  {banner.mobile_image_object_key && (
-                    <source media="(max-w: 640px)" srcSet={banner.mobile_image_object_key} />
-                  )}
-                  <Image
-                    src={banner.desktop_image_object_key}
-                    alt={title}
-                    fill
-                    priority={index === 0}
-                    sizes="100vw"
-                    className="h-full w-full object-cover"
-                  />
-                </picture>
+                <Image
+                  src={banner.desktop_image_object_key}
+                  alt={title}
+                  fill
+                  priority={index === 0}
+                  sizes="100vw"
+                  className="object-cover"
+                />
 
 
               </div>

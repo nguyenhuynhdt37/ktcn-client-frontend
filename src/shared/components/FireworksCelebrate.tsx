@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { GraduationCap } from "lucide-react";
-import { Fireworks } from "fireworks-js";
+import type { Fireworks } from "fireworks-js";
 import { useLocale } from "next-intl";
 
 // Helper đọc cookie ở client-side
@@ -104,12 +104,21 @@ export function FireworksCelebrate() {
       },
     };
 
-    const fireworks = new Fireworks(containerRef.current, options);
-    fireworksRef.current = fireworks;
-    fireworks.start();
+    const container = containerRef.current;
+    let cancelled = false;
+    let fireworks: Fireworks | null = null;
+
+    // Thư viện chỉ tải khi pháo hoa thực sự bật, không nằm trong JS của mọi trang.
+    void import("fireworks-js").then(({ Fireworks: FireworksCtor }) => {
+      if (cancelled) return;
+      fireworks = new FireworksCtor(container, options);
+      fireworksRef.current = fireworks;
+      fireworks.start();
+    });
 
     return () => {
-      fireworks.stop();
+      cancelled = true;
+      fireworks?.stop();
     };
   }, [show]);
 

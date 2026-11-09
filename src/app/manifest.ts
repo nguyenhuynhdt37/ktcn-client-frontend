@@ -3,9 +3,9 @@ import { SEO_CONFIG } from "@/shared/lib/seo";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Trường Kỹ thuật và Công nghệ - Đại học Vinh",
+    name: "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
     short_name: "SET VinhUni",
-    description: "Cổng thông tin chính thức Trường Kỹ thuật và Công nghệ - Đại học Vinh",
+    description: "Cổng thông tin chính thức Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

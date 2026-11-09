@@ -20,7 +20,7 @@
     "english": "English",
     "all": "Tất cả",
     "read_more": "Xem chi tiết",
-    "college_name": "Trường Kỹ thuật và Công nghệ - Đại học Vinh",
+    "college_name": "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
     "research_title": "Nghiên cứu khoa học & Hợp tác đối ngoại",
     "view_all": "Xem tất cả",
     "student_activities_title": "Hoạt động sinh viên",
@@ -104,7 +104,7 @@
     "benchmark_2025": "Điểm chuẩn 2025",
     "status_pass": "Đạt điểm chuẩn",
     "status_fail": "Cần cố gắng thêm",
-    "note": "* Lưu ý: Kết quả tính toán này chỉ mang tính chất tham khảo dựa trên dữ liệu tuyển sinh năm 2025. Thí sinh cần đối chiếu với đề án tuyển sinh chính thức được công bố bởi Trường Kỹ thuật và Công nghệ - Đại học Vinh.",
+    "note": "* Lưu ý: Kết quả tính toán này chỉ mang tính chất tham khảo dựa trên dữ liệu tuyển sinh năm 2025. Thí sinh cần đối chiếu với đề án tuyển sinh chính thức được công bố bởi Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh.",
     "area_kv1": "Khu vực 1 (KV1) - Cộng 0.75",
     "area_kv2nt": "Khu vực 2 - Nông thôn (KV2-NT) - Cộng 0.5",
     "area_kv2": "Khu vực 2 (KV2) - Cộng 0.25",
@@ -115,7 +115,7 @@
   },
   "consultation": {
     "metadata_title": "Đăng ký tư vấn tuyển sinh",
-    "metadata_description": "Đăng ký để được Trường Kỹ thuật và Công nghệ - Đại học Vinh tư vấn ngành học và phương thức xét tuyển.",
+    "metadata_description": "Đăng ký để được Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh tư vấn ngành học và phương thức xét tuyển.",
     "breadcrumb": "Tư vấn tuyển sinh",
     "eyebrow": "Đồng hành cùng bạn",
     "page_title": "Đăng ký tư vấn tuyển sinh",
@@ -226,7 +226,7 @@
     "phone": "Điện thoại",
     "website": "Trang chủ",
     "responsible_officer": "Chịu trách nhiệm nội dung",
-    "dean_name": "TS. Đặng Thái Sơn - Hiệu trưởng"
+    "dean_name": "PGS. TS. Hoàng Hữu Việt - Hiệu phó"
   },
   "calendar": {
     "title": "Lịch công tác tuần",
@@ -246,7 +246,7 @@
     "no_schedule": "Không có lịch công tác"
   },
   "about": {
-    "hero_alt": "Trường Kỹ thuật và Công nghệ - Đại học Vinh",
+    "hero_alt": "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
     "hero_badge": "TRƯỜNG KỸ THUẬT VÀ CÔNG NGHỆ",
     "hero_heading": "Trường Kỹ thuật và Công nghệ",
     "hero_subtext": "Đào tạo nguồn nhân lực chất lượng cao, nghiên cứu khoa học và chuyển giao công nghệ tiên tiến, dẫn dắt đổi mới sáng tạo.",
@@ -269,15 +269,15 @@
 
     "video_badge": "VIDEO GIỚI THIỆU",
     "video_heading": "Khám phá Trường Kỹ thuật và Công nghệ",
-    "video_subtext": "Cùng khám phá khuôn viên, phòng thí nghiệm và môi trường học tập hiện đại tại Trường Kỹ thuật và Công nghệ - Đại học Vinh.",
+    "video_subtext": "Cùng khám phá khuôn viên, phòng thí nghiệm và môi trường học tập hiện đại tại Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh.",
     "video_play_label": "Xem video giới thiệu",
-    "video_caption": "Video giới thiệu Trường Kỹ thuật và Công nghệ - Đại học Vinh",
+    "video_caption": "Video giới thiệu Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
 
     "timeline_badge": "HÀNH TRÌNH PHÁT TRIỂN",
     "timeline_heading": "Các mốc lịch sử quan trọng",
     "timeline_subtext": "Nhìn lại những dấu mốc vàng đánh dấu sự phát triển vượt bậc của Trường Kỹ thuật và Công nghệ.",
     "timeline_2002_title": "Đặt nền móng đào tạo KT&CN",
-    "timeline_2002_desc": "Đại học Vinh chính thức mở và tuyển sinh khóa đầu tiên các ngành Công nghệ Thông tin và Kỹ thuật Điện tử - Viễn thông, đặt nền móng lịch sử cho khối ngành công nghệ mũi nhọn.",
+    "timeline_2002_desc": "Trường Đại học Vinh chính thức mở và tuyển sinh khóa đầu tiên các ngành Công nghệ Thông tin và Kỹ thuật Điện tử - Viễn thông, đặt nền móng lịch sử cho khối ngành công nghệ mũi nhọn.",
     "timeline_2007_title": "Mở rộng ngành đào tạo",
     "timeline_2007_desc": "Bổ sung các ngành Công nghệ kỹ thuật Điện - Điện tử, Tự động hóa. Quy mô sinh viên tăng nhanh, khẳng định vị thế đào tạo kỹ thuật hàng đầu khu vực Bắc Trung Bộ.",
     "timeline_2013_title": "Triển khai chương trình CDIO",
@@ -292,7 +292,7 @@
     "mission_title": "Sứ mệnh",
     "mission_desc": "Đào tạo nguồn nhân lực kỹ thuật, công nghệ chất lượng cao; nghiên cứu khoa học và chuyển giao công nghệ tiên tiến; góp phần thúc đẩy sự phát triển kinh tế - xã hội khu vực Bắc Trung Bộ và cả nước.",
     "vision_title": "Tầm nhìn",
-    "vision_desc": "Đến năm 2030, trở thành trung tâm đào tạo và nghiên cứu kỹ thuật, công nghệ uy tín hàng đầu khu vực; hướng tới chuẩn mực quốc tế, đóng góp vào mục tiêu đưa Đại học Vinh vào tốp 500 đại học châu Á.",
+    "vision_desc": "Đến năm 2030, trở thành trung tâm đào tạo và nghiên cứu kỹ thuật, công nghệ uy tín hàng đầu khu vực; hướng tới chuẩn mực quốc tế, đóng góp vào mục tiêu đưa Trường Đại học Vinh vào tốp 500 đại học châu Á.",
     "values_title": "Giá trị cốt lõi",
     "values_desc": "Chất lượng – Sáng tạo – Hội nhập – Trách nhiệm. Lấy người học làm trung tâm, lấy nghiên cứu dẫn dắt đào tạo, lấy hợp tác quốc tế mở rộng tri thức.",
     "philosophy_title": "Triết lý giáo dục",
@@ -370,7 +370,7 @@
     "achievements_heading": "Thành tích nổi bật",
     "achievement_1_title": "Kiểm định chất lượng giáo dục",
     "achievement_1_desc": "Đạt chuẩn kiểm định chất lượng giáo dục theo tiêu chuẩn Bộ Giáo dục và Đào tạo.",
-    "achievement_2_title": "Tạp chí Khoa học Đại học Vinh (VUJS)",
+    "achievement_2_title": "Tạp chí Khoa học Trường Đại học Vinh (VUJS)",
     "achievement_2_desc": "Tạp chí học thuật đạt chuẩn Crossref, DOAJ, Google Scholar.",
     "achievement_3_title": "Giải thưởng sinh viên xuất sắc",
     "achievement_3_desc": "Sinh viên đạt giải các cuộc thi lập trình, sáng tạo KHKT cấp quốc gia và quốc tế.",
@@ -390,14 +390,14 @@
     "contact_cta_admission": "Tìm hiểu tuyển sinh",
     "contact_cta_facebook": "Facebook Fanpage",
 
-    "meta_title": "Giới thiệu - Trường Kỹ thuật và Công nghệ | Đại học Vinh",
-    "meta_description": "Tìm hiểu về Trường Kỹ thuật và Công nghệ - Đại học Vinh: Lịch sử hình thành, sứ mệnh, ngành đào tạo, đội ngũ giảng viên, cơ sở vật chất và thành tích nổi bật.",
+    "meta_title": "Giới thiệu - Trường Kỹ thuật và Công nghệ | Trường Đại học Vinh",
+    "meta_description": "Tìm hiểu về Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh: Lịch sử hình thành, sứ mệnh, ngành đào tạo, đội ngũ giảng viên, cơ sở vật chất và thành tích nổi bật.",
     "press_heading": "Báo chí nói về chúng tôi",
     "press_subtext": "Các tin tức, bài viết nổi bật trên các trang báo chí chính thống về hoạt động hợp tác và phát triển của nhà trường.",
     "press_1_title": "Trường Đại học Vinh trao đổi thỏa thuận hợp tác với Đại học Waikato (New Zealand)",
     "press_2_title": "Trường Đại học Vinh khởi động dự án ODA trị giá hơn 2,7 tỷ won do Chính phủ Hàn Quốc tài trợ",
     "press_3_title": "Kỳ vọng vào sự đổi mới, phát triển của Trường Đại học Vinh trong nhiệm kỳ 2025 - 2030",
     "press_4_title": "FPT Education hợp tác với Trường Đại học Vinh phát triển việc làm cho sinh viên",
-    "press_5_title": "Learn to Leap ký kết hợp tác cùng Đại học Vinh và xã Tam Thái hiện thực hóa tầm nhìn đưa giáo dục STEM, AI đến mọi miền Tổ quốc"
+    "press_5_title": "Learn to Leap ký kết hợp tác cùng Trường Đại học Vinh và xã Tam Thái hiện thực hóa tầm nhìn đưa giáo dục STEM, AI đến mọi miền Tổ quốc"
   }
 }

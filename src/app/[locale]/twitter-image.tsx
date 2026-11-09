@@ -15,7 +15,7 @@ export default async function Image({ params }: { params: { locale: string } }) 
   const isEn = locale === "en";
   const collegeName = isEn
     ? "College of Engineering and Technology - Vinh University"
-    : "Trường Kỹ thuật và Công nghệ - Đại học Vinh";
+    : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh";
   const title = isEn
     ? "Official News & Information"
     : "Cổng Thông Tin Chính Thức";

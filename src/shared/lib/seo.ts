@@ -4,7 +4,7 @@ import type { Metadata, Viewport } from "next";
 export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://ktcn.itup.io.vn";
 
 export const SEO_CONFIG = {
-  applicationName: "Cổng thông tin Trường Kỹ thuật và Công nghệ - Đại học Vinh",
+  applicationName: "Cổng thông tin Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
   themeColor: "#0f2950", // Navy Blue color matching the school identity
   colorScheme: "light" as const,
   defaultKeywords: [
@@ -25,7 +25,7 @@ export const SEO_CONFIG = {
     { name: "CLB ITUP", url: "https://www.facebook.com/itup.binhdanhocvuso.dhv/" }
   ],
   creator: "CLB ITUP",
-  publisher: "Trường Kỹ thuật và Công nghệ - Đại học Vinh",
+  publisher: "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
   googleVerification: "Siki4bEf5Hnv5qu8KHanq-b7bTQE_9U0lPMj2sOddbs",
   fallbackOgImage: `${BASE_URL}/images/logo.png`, // Fallback to official logo if no post image exists
 };
@@ -63,7 +63,7 @@ export function constructMetadata(options: MetadataOptions): Metadata {
   // Format Title
   const siteName = isEn 
     ? "SET VinhUni - College of Engineering and Technology" 
-    : "Trường Kỹ thuật và Công nghệ - Đại học Vinh";
+    : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh";
   
   const titleFormatted = options.slug 
     ? `${options.title} | ${isEn ? "SET VinhUni" : "Trường Kỹ thuật và Công nghệ"}`
@@ -154,7 +154,7 @@ export function constructMetadata(options: MetadataOptions): Metadata {
   return {
     title: {
       default: titleFormatted,
-      template: `%s | ${isEn ? "SET VinhUni" : "Trường Kỹ thuật và Công nghệ - Đại học Vinh"}`,
+      template: `%s | ${isEn ? "SET VinhUni" : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh"}`,
     },
     description: description,
     keywords: keywords,
@@ -224,10 +224,10 @@ export function buildWebSiteSchema(locale: string = "vi") {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": `${BASE_URL}/${locale}#website`,
-    "name": isEn ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Đại học Vinh",
+    "name": isEn ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
     "alternateName": isEn 
       ? ["SET VinhUni", "College of Engineering and Technology"]
-      : ["Trường Kỹ thuật và Công nghệ - Đại học Vinh", "Trường Kỹ thuật và Công nghệ", "SET VinhUni"],
+      : ["Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh", "Trường Kỹ thuật và Công nghệ", "SET VinhUni"],
     "url": BASE_URL,
     "potentialAction": {
       "@type": "SearchAction",
@@ -247,8 +247,8 @@ export function buildOrganizationSchema(locale: string = "vi") {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
     "@id": `${BASE_URL}/${locale}#organization`,
-    "name": isEn ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Đại học Vinh",
-    "alternateName": ["SET VinhUni", "Trường Kỹ thuật và Công nghệ", "Viện Kỹ thuật và Công nghệ Đại học Vinh"],
+    "name": isEn ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
+    "alternateName": ["SET VinhUni", "Trường Kỹ thuật và Công nghệ", "Viện Kỹ thuật và Công nghệ Trường Đại học Vinh"],
     "url": `${BASE_URL}/${locale}`,
     "logo": {
       "@type": "ImageObject",
@@ -329,7 +329,7 @@ export function buildArticleSchema(options: ArticleSchemaOptions) {
     },
     "publisher": {
       "@type": "EducationalOrganization",
-      "name": options.locale === "en" ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Đại học Vinh",
+      "name": options.locale === "en" ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
       "logo": {
         "@type": "ImageObject",
         "url": `${BASE_URL}/images/logo.png`
@@ -366,7 +366,7 @@ export function buildPersonSchema(options: PersonSchemaOptions) {
     "jobTitle": options.jobTitle || "Giảng viên",
     "worksFor": {
       "@type": "EducationalOrganization",
-      "name": options.worksFor || (options.locale === "en" ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Đại học Vinh")
+      "name": options.worksFor || (options.locale === "en" ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh")
     },
     "email": options.email || undefined,
     "telephone": options.telephone || undefined,
@@ -393,7 +393,7 @@ export function buildCourseSchema(options: CourseSchemaOptions) {
     "description": options.description,
     "provider": {
       "@type": "EducationalOrganization",
-      "name": options.provider || (options.locale === "en" ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Đại học Vinh"),
+      "name": options.provider || (options.locale === "en" ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh"),
       "url": `${BASE_URL}/${options.locale}`
     },
     "courseCode": options.courseCode || undefined

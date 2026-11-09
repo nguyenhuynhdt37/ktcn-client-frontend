@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
 import { Navigation } from "./navigation";
-import { MenuTreeResponse } from "@/features/menu";
+import type { MenuTreeResponse } from "@/features/menu/types/menu.types";
 
 interface HeaderProps {
   initialMenu: MenuTreeResponse | null;
@@ -46,9 +46,10 @@ export function Header({ initialMenu }: HeaderProps) {
               >
                 <Image
                   src="/images/logo.svg"
-                  alt="Trường Kỹ thuật và Công nghệ - Đại học Vinh"
+                  alt="Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh"
                   fill
                   priority
+                  unoptimized
                   sizes="(max-width: 640px) 256px, 320px"
                   className="object-contain object-left py-0.5"
                 />

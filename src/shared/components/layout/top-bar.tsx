@@ -3,8 +3,9 @@
 import { useState, useEffect, Suspense } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { MapPin, Facebook, MessageSquare, Search, Clock, CloudSun } from "lucide-react";
-import { LanguageSwitcher, Language } from "@/features/language";
-import { ClientNotificationBell } from "@/features/notification";
+import { LanguageSwitcher } from "@/features/language/components/LanguageSwitcher";
+import type { Language } from "@/features/language/types/language.types";
+import { ClientNotificationBell } from "@/features/notification/components/ClientNotificationBell";
 
 interface TopBarProps {
   initialLanguages?: Language[];

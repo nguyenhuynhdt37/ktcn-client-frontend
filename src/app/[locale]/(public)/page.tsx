@@ -3,21 +3,19 @@ import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { constructMetadata } from "@/shared/lib/seo";
 import Image from "next/image";
-import { HomeHeroWidget, BannerPosition, bannerService } from "@/features/banner";
-import { ServicesBar } from "@/features/menu";
-import { MarqueeNotice } from "@/features/notification";
-import { AdmissionSection } from "@/features/admission";
+import { HomeHeroWidget } from "@/features/banner/components/HomeHeroWidget";
+import { BannerPosition } from "@/features/banner/types/banner.types";
+import { bannerService } from "@/features/banner/services/bannerService";
+import { ServicesBar } from "@/features/menu/components/ServicesBar";
+import { MarqueeNotice } from "@/features/notification/components/MarqueeNotice";
+import { AdmissionSection } from "@/features/admission/components/AdmissionSection";
 import { ConsultationCallout } from "@/features/consultation/components/ConsultationCallout";
-import {
-  NewsSection,
-  RecruitmentWidget,
-  articleService,
-  mapPortalArticleToFE,
-  getLocalizedField,
-  formatDate,
-} from "@/features/article";
-import { ResearchSection } from "@/features/research";
-import { StudentActivities } from "@/features/student";
+import { NewsSection } from "@/features/article/components/NewsGrid";
+import { RecruitmentWidget } from "@/features/article/components/RecruitmentWidget";
+import { articleService } from "@/features/article/services/articleService";
+import { mapPortalArticleToFE, getLocalizedField, formatDate } from "@/features/article/utils/map-article";
+import { ResearchSection } from "@/features/research/components/ResearchSection";
+import { StudentActivities } from "@/features/student/components/StudentActivities";
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
@@ -29,10 +27,10 @@ export async function generateMetadata({ params }: HomePageProps) {
 
   const title = isEn
     ? "SET VinhUni - College of Engineering and Technology"
-    : "Trường Kỹ thuật và Công nghệ - Đại học Vinh";
+    : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh";
   const description = isEn
     ? "Welcome to the School of Engineering and Technology - Vinh University. A prestigious center for high-quality education and research in IT, Automation, and Engineering."
-    : "Trường Kỹ thuật và Công nghệ - Đại học Vinh. Nơi đào tạo kỹ sư, cử nhân chất lượng cao các ngành Công nghệ thông tin, Điện tử, Tự động hóa, Ô tô và Công nghệ nhiệt.";
+    : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh. Nơi đào tạo kỹ sư, cử nhân chất lượng cao các ngành Công nghệ thông tin, Điện tử, Tự động hóa, Ô tô và Công nghệ nhiệt.";
 
   return constructMetadata({
     title,

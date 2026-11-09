@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { Link, usePathname } from "@/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import { ChevronDown, ChevronRight, Menu, X } from "lucide-react";
-import { MenuTreeResponse, MenuItemTreeNode, resolveMenuUrl } from "@/features/menu";
+import type { MenuTreeResponse, MenuItemTreeNode } from "@/features/menu/types/menu.types";
+import { resolveMenuUrl } from "@/features/menu/utils/resolve-menu-url";
 import { getLocalizedField } from "@/features/article/utils/map-article";
 
 interface NavigationProps {

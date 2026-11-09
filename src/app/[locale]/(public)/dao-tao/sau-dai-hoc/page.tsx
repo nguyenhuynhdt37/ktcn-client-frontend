@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: isEn ? "Postgraduate education" : "Đào tạo sau đại học",
     description: isEn
       ? "Postgraduate programmes and curriculum records at the College of Engineering and Technology, Vinh University."
-      : "Chương trình đào tạo sau đại học và hồ sơ khung chương trình tại Trường Kỹ thuật và Công nghệ, Đại học Vinh.",
+      : "Chương trình đào tạo sau đại học và hồ sơ khung chương trình tại Trường Kỹ thuật và Công nghệ, Trường Đại học Vinh.",
     slug: isEn ? "academics/postgraduate" : "dao-tao/sau-dai-hoc",
     locale,
     image: "/images/about/activity_predator.jpg",

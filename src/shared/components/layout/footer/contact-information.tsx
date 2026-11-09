@@ -14,8 +14,9 @@ export function ContactInformation() {
       <div className="relative h-11 w-52 sm:w-56">
         <Image
           src="/images/logo.svg"
-          alt="Trường Kỹ thuật và Công nghệ - Đại học Vinh"
+          alt="Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh"
           fill
+          unoptimized
           className="object-contain object-left py-0.5"
           sizes="224px"
         />

@@ -33,7 +33,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   let title = isEn ? "Latest News & Events" : "Tin tức & Sự kiện nổi bật";
   const description = isEn
     ? "Updating the latest news and events from the College of Engineering and Technology - Vinh University."
-    : "Cập nhật tin tức, sự kiện mới nhất từ Trường Kỹ thuật và Công nghệ - Đại học Vinh.";
+    : "Cập nhật tin tức, sự kiện mới nhất từ Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh.";
 
   if (q) {
     title = isEn ? `Search results for "${q}"${pageStr}` : `Kết quả tìm kiếm cho "${q}"${pageStr}`;

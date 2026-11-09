@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     : "Các khoa đào tạo - Trường Kỹ thuật và Công nghệ";
   const description = isEn
     ? "Explore the specialized faculties and academic programs offered by the College of Engineering and Technology, Vinh University."
-    : "Danh sách các khoa chuyên ngành và chương trình đào tạo tại Trường Kỹ thuật và Công nghệ - Đại học Vinh.";
+    : "Danh sách các khoa chuyên ngành và chương trình đào tạo tại Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh.";
 
   return constructMetadata({
     title,

@@ -27,5 +27,5 @@ export function StaffPortrait({ name, src, className = "object-cover", sizes, pr
     );
   }
 
-  return <Image src={src} alt={name} fill className={className} sizes={sizes} priority={priority} unoptimized onError={() => setFailed(true)} />;
+  return <Image src={src} alt={name} fill className={className} sizes={sizes} priority={priority} onError={() => setFailed(true)} />;
 }

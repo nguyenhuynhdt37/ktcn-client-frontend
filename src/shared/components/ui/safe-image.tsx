@@ -4,7 +4,7 @@ import { useRef, useCallback } from "react";
 import Image, { ImageProps } from "next/image";
 
 /**
- * Danh sách ảnh fallback từ gallery Đại học Vinh.
+ * Danh sách ảnh fallback từ gallery Trường Đại học Vinh.
  * Khi ảnh gốc lỗi, sẽ hiển thị 1 ảnh ngẫu nhiên (deterministic) từ danh sách này.
  */
 const FALLBACK_IMAGES = [

@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const title = isEn ? "Weekly Working Calendar" : "Lịch Công Tác Tuần";
   const description = isEn
     ? "Weekly working and event schedule of the College of Engineering and Technology - Vinh University."
-    : "Lịch làm việc và công tác chi tiết hàng tuần của Trường Kỹ thuật và Công nghệ - Đại học Vinh.";
+    : "Lịch làm việc và công tác chi tiết hàng tuần của Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh.";
 
   return constructMetadata({
     title,

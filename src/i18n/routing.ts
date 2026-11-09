@@ -1,3 +1,4 @@
+import { createElement, forwardRef, type ComponentProps, type ForwardedRef } from "react";
 import { defineRouting } from "next-intl/routing";
 import { createNavigation } from "next-intl/navigation";
 
@@ -77,5 +78,18 @@ export const routing = defineRouting({
   },
 });
 
-// Wrappers bao quanh API điều hướng Next.js tương thích với routing i18n
-export const { Link, redirect, usePathname, useRouter, getPathname } = createNavigation(routing);
+// Wrappers bao quanh API điều hướng Next.js tương thích với routing i18n.
+// prefetch mặc định tắt: trang chưa mở không tải JavaScript. Truyền prefetch={true} khi cần.
+const navigation = createNavigation(routing);
+const IntlLink = navigation.Link;
+
+export const { redirect, usePathname, useRouter, getPathname } = navigation;
+
+type LinkProps = ComponentProps<typeof IntlLink>;
+
+export const Link = forwardRef(function Link(
+  { prefetch = false, ...props }: LinkProps,
+  ref: ForwardedRef<HTMLAnchorElement>,
+) {
+  return createElement(IntlLink, { ...props, prefetch, ref });
+});

@@ -16,7 +16,7 @@ const CAMPUS_TIMELINE: TimelineEvent[] = [
     id: "1",
     year: "2002",
     title: "Đặt nền móng đào tạo Kỹ thuật & Công nghệ",
-    description: "Đại học Vinh chính thức mở và tuyển sinh khóa đầu tiên các ngành Công nghệ Thông tin và Kỹ thuật Điện tử - Viễn thông, đặt nền móng lịch sử cho khối ngành công nghệ mũi nhọn.",
+    description: "Trường Đại học Vinh chính thức mở và tuyển sinh khóa đầu tiên các ngành Công nghệ Thông tin và Kỹ thuật Điện tử - Viễn thông, đặt nền móng lịch sử cho khối ngành công nghệ mũi nhọn.",
     icon: <GraduationCap className="w-4 h-4" />,
   },
   {

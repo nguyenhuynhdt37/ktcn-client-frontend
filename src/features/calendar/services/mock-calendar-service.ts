@@ -109,7 +109,7 @@ export function getMockWeekSchedule(mondayStr?: string): WeekSchedule {
         contentEn: "MOU signing ceremony for training and recruitment partnership with tech companies",
         host: "TS. Đặng Thái Sơn",
         hostEn: "Dr. Dang Thai Son",
-        location: "Hội trường Lớn trường Đại học Vinh",
+        location: "Hội trường Lớn Trường Đại học Vinh",
         locationEn: "Main Hall, Vinh University",
         participants: "Lãnh đạo Viện, Trợ lý đối ngoại, giảng viên, và đại diện các doanh nghiệp",
         participantsEn: "Board of Management, External Relations Assistant, lecturers, and corporate reps"
@@ -147,7 +147,7 @@ export function getMockWeekSchedule(mondayStr?: string): WeekSchedule {
         contentEn: "Attending the closing ceremony of the Green Summer volunteer campaign 2026",
         host: "Đại diện Lãnh đạo Viện",
         hostEn: "Representative of Institute Board",
-        location: "Hội trường B trường Đại học Vinh",
+        location: "Hội trường B Trường Đại học Vinh",
         locationEn: "Vinh University Hall B",
         participants: "Liên chi đoàn, Liên chi hội sinh viên, các đội hình tình nguyện",
         participantsEn: "Youth Union assistants, volunteer teams, student union representatives"
@@ -159,7 +159,7 @@ export function getMockWeekSchedule(mondayStr?: string): WeekSchedule {
         contentEn: "Youth Union Delegate Congress of the College of Engineering and Technology",
         host: "Ban thường vụ Đoàn Viện",
         hostEn: "Executive Committee of Youth Union",
-        location: "Hội trường Lớn trường Đại học Vinh",
+        location: "Hội trường Lớn Trường Đại học Vinh",
         locationEn: "Main Hall, Vinh University",
         participants: "Ban Lãnh đạo Viện, đại diện Đoàn Trường ĐH Vinh, các đại biểu triệu tập",
         participantsEn: "Institute Board, Vinh Uni Youth Union reps, and summoned student delegates"

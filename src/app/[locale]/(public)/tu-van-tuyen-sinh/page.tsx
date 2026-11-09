@@ -83,7 +83,7 @@ export default async function ConsultationPage({ params }: ConsultationPageProps
             </div>
             <div className="flex items-start gap-3">
               <MapPin className="text-brand-darkred size-4 shrink-0 mt-0.5" />
-              <span className="leading-relaxed">Tầng 2, Nhà A0, Trường Kỹ thuật & Công nghệ - Đại học Vinh, 182 Lê Duẩn, TP. Vinh, Nghệ An</span>
+              <span className="leading-relaxed">Tầng 2, Nhà A0, Trường Kỹ thuật & Công nghệ - Trường Đại học Vinh, 182 Lê Duẩn, TP. Vinh, Nghệ An</span>
             </div>
           </div>
 

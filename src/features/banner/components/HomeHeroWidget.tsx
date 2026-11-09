@@ -5,7 +5,7 @@ import { Link } from "@/i18n/routing";
 import { Bell, ArrowRight } from "lucide-react";
 import { HeroSlider } from "./HeroSlider";
 import { BannerResponse } from "../types/banner.types";
-import { NoticeItem } from "@/features/notification";
+import type { NoticeItem } from "@/features/notification/types/notification.types";
 
 interface HomeHeroWidgetProps {
   banners: BannerResponse[];

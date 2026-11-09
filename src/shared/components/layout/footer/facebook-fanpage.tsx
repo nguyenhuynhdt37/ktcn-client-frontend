@@ -18,8 +18,9 @@ export function FacebookFanpage() {
         <div className="relative aspect-[3/1] w-full">
           <Image
             src="/images/logo.svg"
-            alt="Trường Kỹ thuật và Công nghệ - Đại học Vinh"
+            alt="Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh"
             fill
+            unoptimized
             sizes="(max-w-768px) 100vw, 260px"
             className="object-contain"
           />

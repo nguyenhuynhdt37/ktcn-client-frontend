@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: isEn ? "Academic programmes" : "Đào tạo",
     description: isEn
       ? "Explore undergraduate engineering programmes at the College of Engineering and Technology, Vinh University."
-      : "Tổng quan hoạt động đào tạo và các chương trình đại học của Trường Kỹ thuật và Công nghệ, Đại học Vinh.",
+      : "Tổng quan hoạt động đào tạo và các chương trình đại học của Trường Kỹ thuật và Công nghệ, Trường Đại học Vinh.",
     slug: isEn ? "academics" : "dao-tao",
     locale,
     image: "/images/about/activity_chmt_1.jpg",
