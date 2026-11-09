@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/routing";
+import { serializeJsonLd } from "@/shared/lib/security";
 import { ChevronRight } from "lucide-react";
 import { useLocale } from "next-intl";
 
@@ -37,7 +38,7 @@ export function Breadcrumb({ items, variant = "white" }: BreadcrumbProps) {
       {/* Nhúng structured data cho Google Bot */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbListSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbListSchema) }}
       />
 
       {/* Breadcrumb UI */}

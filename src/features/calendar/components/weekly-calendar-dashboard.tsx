@@ -4,6 +4,7 @@ import { Link } from "@/i18n/routing";
 import { Calendar, ChevronRight, Clock, User, Printer, ArrowLeft } from "lucide-react";
 import { ArticlePagination } from "@/features/article";
 import { useTranslations } from "next-intl";
+import { sanitizeRichHtml } from "@/shared/lib/security";
 import { useParams } from "next/navigation";
 
 interface CalendarListItem {
@@ -202,7 +203,7 @@ export function WeeklyCalendarDashboard({
         <div className="pt-4 overflow-x-auto">
           <div 
             className="calendar-content-table"
-            dangerouslySetInnerHTML={{ __html: activeArticle.content }}
+            dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(activeArticle.content) }}
           />
         </div>
       </div>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight, Mail, Globe, BookOpen } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
+import { sanitizeRichHtml } from "@/shared/lib/security";
 
 interface LeaderItem {
   id: string | number;
@@ -146,7 +147,7 @@ export function LeaderSlider({ leaders = defaultLeaders }: { leaders?: LeaderIte
                       {leader.biographyHtml ? (
                         <div
                           className="biography-html-content space-y-4 text-sm leading-relaxed font-normal text-slate-600 sm:text-[15px]"
-                          dangerouslySetInnerHTML={{ __html: leader.biographyHtml }}
+                          dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(leader.biographyHtml) }}
                         />
                       ) : (
                         <div className="space-y-4 text-sm leading-relaxed font-normal text-slate-600 sm:text-[15px]">

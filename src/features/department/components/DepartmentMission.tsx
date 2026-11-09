@@ -1,4 +1,5 @@
 import { PortalDepartment } from "../types/department.types";
+import { sanitizeRichHtml } from "@/shared/lib/security";
 import { Compass, Target } from "lucide-react";
 
 interface DepartmentMissionProps {
@@ -27,7 +28,7 @@ export function DepartmentMission({ department, isEn }: DepartmentMissionProps) 
                 </div>
                 <div 
                   className="text-xs sm:text-sm leading-relaxed text-slate-600 rich-text-content"
-                  dangerouslySetInnerHTML={{ __html: department.mission }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(department.mission) }}
                 />
               </div>
             )}
@@ -45,7 +46,7 @@ export function DepartmentMission({ department, isEn }: DepartmentMissionProps) 
                 </div>
                 <div 
                   className="text-xs sm:text-sm leading-relaxed text-slate-600 rich-text-content"
-                  dangerouslySetInnerHTML={{ __html: department.vision }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(department.vision) }}
                 />
               </div>
             )}

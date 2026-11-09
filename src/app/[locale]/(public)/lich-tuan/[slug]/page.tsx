@@ -3,6 +3,7 @@ import { WeeklyCalendarDetailPage } from "@/features/calendar";
 import { articleService } from "@/features/article";
 import { Metadata } from "next";
 import { constructMetadata, buildBreadcrumbSchema } from "@/shared/lib/seo";
+import { serializeJsonLd } from "@/shared/lib/security";
 
 interface PageProps {
   params: Promise<{ slug: string; locale: string }>;
@@ -60,7 +61,7 @@ export default async function CalendarDetailPage({ params, searchParams }: PageP
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }} />
       <WeeklyCalendarDetailPage locale={locale} slug={slug} page={page} />
     </>
   );

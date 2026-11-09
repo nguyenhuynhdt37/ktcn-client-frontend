@@ -3,7 +3,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import Script from "next/script";
 import type { Metadata, Viewport } from "next";
 import { constructMetadata, defaultViewport, buildOrganizationSchema, buildWebSiteSchema } from "@/shared/lib/seo";
-import Image from "next/image";
+import { serializeJsonLd } from "@/shared/lib/security";
 import { Inter, Manrope, JetBrains_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
@@ -50,10 +50,10 @@ export async function generateMetadata({
 
   const title = isEn
     ? "SET VinhUni - College of Engineering and Technology"
-    : "Trường Kỹ thuật và Công nghệ - Đại học Vinh";
+    : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh";
   const description = isEn
     ? "Welcome to the School of Engineering and Technology - Vinh University. A prestigious center for high-quality education and research in IT, Automation, and Engineering."
-    : "Trường Kỹ thuật và Công nghệ - Đại học Vinh. Nơi đào tạo kỹ sư, cử nhân chất lượng cao các ngành Công nghệ thông tin, Điện tử, Tự động hóa, Ô tô và Công nghệ nhiệt.";
+    : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh. Nơi đào tạo kỹ sư, cử nhân chất lượng cao các ngành Công nghệ thông tin, Điện tử, Tự động hóa, Ô tô và Công nghệ nhiệt.";
 
   return constructMetadata({
     title,
@@ -65,10 +65,10 @@ export async function generateMetadata({
 import { TopBar } from "@/shared/components/layout/top-bar";
 import { Header } from "@/shared/components/layout/header";
 import { Footer } from "@/shared/components/layout/footer";
-import { menuService } from "@/features/menu";
-import { languageService } from "@/features/language";
-import { articleService } from "@/features/article";
-import { PushNotificationManager } from "@/features/notification";
+import { menuService } from "@/features/menu/services/menuService";
+import { languageService } from "@/features/language/services/languageService";
+import { articleService } from "@/features/article/services/articleService";
+import { PushNotificationManager } from "@/features/notification/components/PushNotificationManager";
 import { MaintenanceHandler } from "@/shared/components/layout/MaintenanceHandler";
 
 // Helper chuyển tiếng Việt có dấu thành không dấu, thay khoảng trắng bằng gạch ngang
@@ -182,7 +182,7 @@ export default async function RootLayout({
             <p className="text-slate-500 text-sm leading-relaxed mb-8">
               {isEn
                 ? "The College of Engineering and Technology - Vinh University is currently undergoing scheduled upgrades to serve you better. We will be back online shortly. Thank you for your patience!"
-                : "Cổng thông tin Trường Kỹ thuật & Công nghệ - Đại học Vinh đang được bảo trì nâng cấp hệ thống. Vui lòng quay lại sau. Xin chân thành cảm ơn!"}
+                : "Cổng thông tin Trường Kỹ thuật & Công nghệ - Trường Đại học Vinh đang được bảo trì nâng cấp hệ thống. Vui lòng quay lại sau. Xin chân thành cảm ơn!"}
             </p>
 
             <div className="text-xs text-slate-400 border-t border-slate-100 pt-4 flex justify-between items-center">
@@ -282,12 +282,12 @@ export default async function RootLayout({
         <script
           suppressHydrationWarning
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(orgSchema) }}
         />
         <script
           suppressHydrationWarning
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(webSiteSchema) }}
         />
       </head>
       <body suppressHydrationWarning className="min-h-full bg-background text-foreground flex flex-col">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { constructMetadata, buildPersonSchema, buildBreadcrumbSchema } from "@/shared/lib/seo";
+import { serializeJsonLd } from "@/shared/lib/security";
 
 import { lecturerService } from "@/features/lecturer";
 import { StaffHero, StaffBiography, StaffContactCard } from "@/features/lecturer";
@@ -62,8 +63,8 @@ export default async function StaffProfilePage({ params }: PageProps) {
 
   return (
     <div className="bg-background min-h-screen">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }} />
 
       {/* Hero Banner Section */}
       <StaffHero

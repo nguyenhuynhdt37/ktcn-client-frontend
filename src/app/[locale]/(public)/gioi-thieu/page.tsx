@@ -1,6 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { constructMetadata } from "@/shared/lib/seo";
+import { serializeJsonLd } from "@/shared/lib/security";
 import Image from "next/image";
 import {
   AboutOverview,
@@ -48,7 +49,7 @@ export default async function AboutPage({ params }: AboutPageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([
+          __html: serializeJsonLd([
             {
               "@context": "https://schema.org",
               "@type": "EducationalOrganization",
@@ -85,7 +86,7 @@ export default async function AboutPage({ params }: AboutPageProps) {
               "courseCode": course.code,
               "description": locale === "en"
                 ? `Undergraduate education program in ${course.name} at the College of Engineering and Technology, Vinh University.`
-                : `Chương trình đào tạo đại học chính quy ngành ${course.name} tại Trường Kỹ thuật và Công nghệ - Đại học Vinh.`,
+                : `Chương trình đào tạo đại học chính quy ngành ${course.name} tại Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh.`,
               "provider": {
                 "@type": "EducationalOrganization",
                 "name": locale === "en" ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",

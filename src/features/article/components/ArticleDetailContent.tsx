@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server";
 import { Breadcrumb, BreadcrumbItem } from "@/shared/components/ui/breadcrumb";
 import { TableOfContents } from "./TableOfContents";
 import { HeadingItem } from "../utils/parse-headings";
+import { sanitizeRichHtml } from "@/shared/lib/security";
 
 interface ArticleDetailContentProps {
   article: PortalArticleDetail;
@@ -134,7 +135,7 @@ export async function ArticleDetailContent({
               {/* Content (Nội dung chi tiết HTML từ Backend - Đã áp dụng CSS class rich-text-content chuyên biệt) */}
               <div
                 className="rich-text-content"
-                dangerouslySetInnerHTML={{ __html: cleanHtml }}
+                dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(cleanHtml) }}
               />
 
               {/* Danh sách Tags nhãn bài viết */}

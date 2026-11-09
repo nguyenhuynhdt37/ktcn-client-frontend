@@ -1,4 +1,5 @@
 import { PortalDepartment } from "../types/department.types";
+import { sanitizeRichHtml } from "@/shared/lib/security";
 import { Info } from "lucide-react";
 
 interface DepartmentAboutProps {
@@ -26,7 +27,7 @@ export function DepartmentAbout({ department, isEn }: DepartmentAboutProps) {
           {/* Description Content */}
           <div 
             className="text-sm sm:text-base leading-relaxed text-slate-700 rich-text-content max-w-4xl"
-            dangerouslySetInnerHTML={{ __html: department.description }}
+            dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(department.description) }}
           />
         </div>
       </div>

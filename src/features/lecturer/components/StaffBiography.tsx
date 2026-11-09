@@ -1,4 +1,5 @@
 import { StaffItem } from "../types/lecturer.types";
+import { sanitizeRichHtml } from "@/shared/lib/security";
 
 interface StaffBiographyProps {
   staff: StaffItem;
@@ -17,7 +18,7 @@ export function StaffBiography({ staff, isEn }: StaffBiographyProps) {
         {staff.biography ? (
           <div
             className="mt-6 text-sm sm:text-base leading-relaxed text-slate-700 rich-text-content max-w-4xl"
-            dangerouslySetInnerHTML={{ __html: staff.biography }}
+            dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(staff.biography) }}
           />
         ) : (
           <p className="mt-6 text-sm leading-relaxed text-slate-500 font-medium">

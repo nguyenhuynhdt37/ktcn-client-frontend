@@ -3,6 +3,7 @@
 import { Link } from "@/i18n/routing";
 import { ArrowLeft, Calendar, Clock, User, Printer } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { sanitizeRichHtml } from "@/shared/lib/security";
 
 interface CalendarDetailItem {
   id: string;
@@ -127,7 +128,7 @@ export function CalendarDetail({ article }: CalendarDetailProps) {
       <div className="pt-4 overflow-x-auto">
         <div 
           className="calendar-content-table select-text"
-          dangerouslySetInnerHTML={{ __html: article.content }}
+          dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(article.content) }}
         />
       </div>
 

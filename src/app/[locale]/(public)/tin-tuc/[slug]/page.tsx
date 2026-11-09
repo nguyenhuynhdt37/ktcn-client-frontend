@@ -8,6 +8,7 @@ import { getLocalizedField, formatDate } from "@/features/article/utils/map-arti
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Breadcrumb, BreadcrumbItem } from "@/shared/components/ui/breadcrumb";
 import { constructMetadata, buildArticleSchema, buildBreadcrumbSchema } from "@/shared/lib/seo";
+import { sanitizeRichHtml, serializeJsonLd } from "@/shared/lib/security";
 
 interface ArticleDetailPageProps {
   params: Promise<{ slug: string; locale: string }>;
@@ -30,7 +31,7 @@ export async function generateMetadata({ params }: ArticleDetailPageProps): Prom
   const seoTitle = getLocalizedField<string>(article, "seo_title", locale) || title;
   const fallbackDescription = locale === "en" 
     ? `Read article "${title}" on the official website of the College of Engineering and Technology - Vinh University.` 
-    : `Xem chi tiết bài viết "${title}" trên trang thông tin chính thức của Trường Kỹ thuật và Công nghệ - Đại học Vinh.`;
+    : `Xem chi tiết bài viết "${title}" trên trang thông tin chính thức của Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh.`;
   const seoDescription = getLocalizedField<string>(article, "seo_description", locale) || excerpt || fallbackDescription;
 
   return constructMetadata({
@@ -88,7 +89,7 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
   const title = getLocalizedField<string>(article, "title", locale);
   const excerpt = getLocalizedField<string>(article, "excerpt", locale);
   const rawContent = getLocalizedField<string>(article, "content", locale);
-  const { cleanHtml, headings } = parseHeadings(rawContent);
+  const { cleanHtml, headings } = parseHeadings(sanitizeRichHtml(rawContent));
   const categoryName = getLocalizedField<string>(article.category, "name", locale);
 
   // Tự động xây dựng JSON-LD Schema.org chất lượng cao nếu Backend không cung cấp hoặc trả về null
@@ -125,11 +126,11 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
       {/* Chèn cấu trúc dữ liệu JSON-LD Schema.org tối ưu SEO Google */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
       />
 
       <div className="bg-section-alt min-h-screen py-8 sm:py-12">

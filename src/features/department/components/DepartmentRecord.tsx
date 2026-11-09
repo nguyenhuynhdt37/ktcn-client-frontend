@@ -23,6 +23,7 @@ import {
 import { Link } from "@/i18n/routing";
 import { SafeImage } from "@/shared/components/ui/safe-image";
 import { ArticleCard } from "@/features/article";
+import { sanitizeRichHtml } from "@/shared/lib/security";
 import type { PortalDepartment, PortalProgram, PortalGallery, DepartmentOverview } from "../types/department.types";
 
 interface DepartmentRecordProps {
@@ -185,7 +186,7 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
             </h2>
             <div 
               className="mt-4 text-[15px] leading-7 text-slate-700 rich-text-content max-w-none prose prose-slate text-left"
-              dangerouslySetInnerHTML={{ __html: department.description }}
+              dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(department.description) }}
             />
 
             {/* In-container Stats Panel (Flat Style - No Nested Cards) */}
@@ -234,7 +235,7 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
                   </div>
                   <div 
                     className="text-xs sm:text-sm leading-relaxed text-slate-600 rich-text-content text-left"
-                    dangerouslySetInnerHTML={{ __html: department.mission }}
+                    dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(department.mission) }}
                   />
                 </div>
               )}
@@ -252,7 +253,7 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
                   </div>
                   <div 
                     className="text-xs sm:text-sm leading-relaxed text-slate-600 rich-text-content text-left"
-                    dangerouslySetInnerHTML={{ __html: department.vision }}
+                    dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(department.vision) }}
                   />
                 </div>
               )}

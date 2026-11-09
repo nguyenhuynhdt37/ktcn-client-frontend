@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { constructMetadata, buildBreadcrumbSchema } from "@/shared/lib/seo";
+import { serializeJsonLd } from "@/shared/lib/security";
 import { departmentService, DepartmentRecord } from "@/features/department";
 
 interface PageProps {
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const fallbackDescription = locale === "en"
     ? `Information about the ${department.name} at the College of Engineering and Technology, Vinh University.`
-    : `Thông tin giới thiệu về ${department.name} tại Trường Kỹ thuật và Công nghệ - Đại học Vinh.`;
+    : `Thông tin giới thiệu về ${department.name} tại Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh.`;
 
   const rawDescription = department.seo_description || department.short_description || department.description || fallbackDescription;
   const cleanDescription = stripHtml(rawDescription).slice(0, 160) || fallbackDescription;
@@ -69,7 +70,7 @@ export default async function FacultyOverviewPage({ params }: PageProps) {
     url: department.website || undefined,
     parentOrganization: {
       "@type": "EducationalOrganization",
-      name: locale === "en" ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Đại học Vinh",
+      name: locale === "en" ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
       url: `https://ktcn.itup.io.vn/${locale}`
     }
   };
@@ -84,8 +85,8 @@ export default async function FacultyOverviewPage({ params }: PageProps) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }} />
       <DepartmentRecord overview={overview} locale={locale} />
     </>
   );
