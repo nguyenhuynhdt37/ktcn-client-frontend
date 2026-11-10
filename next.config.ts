@@ -40,7 +40,9 @@ const nextConfig: NextConfig = {
     return [
       ...["/images/:path*", "/favicon.ico"].map((source) => ({
         source,
-        headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" },
+        ],
       })),
       {
         source: "/fonts/:path*",
