@@ -90,7 +90,13 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
   const excerpt = getLocalizedField<string>(article, "excerpt", locale);
   const rawContent = getLocalizedField<string>(article, "content", locale);
   const { cleanHtml, headings } = parseHeadings(sanitizeRichHtml(rawContent));
+  const isAboutArticle = ["gioi-thieu", "lich-su-phat-trien", "chuc-nang-nhiem-vu"].includes(
+    article.category.slug
+  );
   const categoryName = getLocalizedField<string>(article.category, "name", locale);
+  const sectionName = isAboutArticle
+    ? (isEn ? "About" : "Giới thiệu")
+    : categoryName;
 
   // Tự động xây dựng JSON-LD Schema.org chất lượng cao nếu Backend không cung cấp hoặc trả về null
   const jsonLd =
@@ -110,7 +116,10 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
 
   const breadcrumbItems: BreadcrumbItem[] = [
     { name: tCommon("home"), href: "/" },
-    { name: categoryName, href: `/tin-tuc?category=${article.category.slug}` },
+    {
+      name: sectionName,
+      href: isAboutArticle ? "/gioi-thieu" : `/tin-tuc?category=${article.category.slug}`,
+    },
     { name: title },
   ];
 
@@ -159,7 +168,7 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
                 {/* Tiêu đề & Meta Info */}
                 <div className="space-y-4 border-b border-slate-100 pb-6">
                   <span className="bg-brand-darkred/8 text-brand-darkred inline-flex min-h-8 items-center rounded-md px-2.5 text-sm font-semibold">
-                    {categoryName}
+                    {sectionName}
                   </span>
 
                   <h1 className="text-3xl leading-tight font-bold tracking-[-0.03em] text-slate-900 sm:text-4xl lg:text-5xl">

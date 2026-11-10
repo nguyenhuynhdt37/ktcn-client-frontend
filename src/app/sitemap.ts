@@ -34,6 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/",
     "/tin-tuc",
     "/gioi-thieu",
+    "/gioi-thieu/can-bo",
     "/gioi-thieu/cac-khoa-dao-tao",
     "/dao-tao",
     "/dao-tao/dai-hoc",

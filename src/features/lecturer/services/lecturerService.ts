@@ -3,6 +3,15 @@ import { httpClient } from "@/shared/api/httpClient";
 import { getLanguageHeader } from "@/shared/api/server-api-helper";
 
 export const lecturerService = {
+  /** Danh bạ công khai toàn trường, không áp dụng bộ lọc ban lãnh đạo mặc định. */
+  async getStaffDirectory(lang: string): Promise<StaffItem[] | null> {
+    return httpClient.get<StaffItem[]>("/api/v1/portal/staffs", {
+      params: { lang },
+      revalidate: 300,
+      tags: ["staff-directory"],
+    });
+  },
+
   async getStaffBySlug(slug: string): Promise<StaffItem | null> {
     return httpClient.get<StaffItem>(`/api/v1/portal/staffs/${slug}`, {
       revalidate: 300,

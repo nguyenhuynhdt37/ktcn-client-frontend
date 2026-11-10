@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { ChevronDown, ChevronRight, Menu, X } from "lucide-react";
 import type { MenuTreeResponse, MenuItemTreeNode } from "@/features/menu/types/menu.types";
 import { resolveMenuUrl } from "@/features/menu/utils/resolve-menu-url";
+import { addStaffDirectoryMenu } from "@/features/menu/utils/add-staff-directory";
 import { getLocalizedField } from "@/features/article/utils/map-article";
 
 interface NavigationProps {
@@ -29,7 +30,7 @@ export function Navigation({ initialMenu }: NavigationProps) {
   }, [pathname]);
 
   // Lấy danh sách items động từ backend (nếu có), nếu không có dùng mảng rỗng []
-  const menuItems: MenuItemTreeNode[] = initialMenu?.items || [];
+  const menuItems: MenuItemTreeNode[] = addStaffDirectoryMenu(initialMenu?.items || [], locale);
 
   const toggleMobileMenu = () => setIsOpen(!isOpen);
 

@@ -1,4 +1,4 @@
-import { Link } from "@/i18n/routing";
+import { getPathname, Link } from "@/i18n/routing";
 import { serializeJsonLd } from "@/shared/lib/security";
 import { ChevronRight } from "lucide-react";
 import { useLocale } from "next-intl";
@@ -17,6 +17,16 @@ export function Breadcrumb({ items, variant = "white" }: BreadcrumbProps) {
   const locale = useLocale();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://set.vinhuni.edu.vn";
 
+  function getItemUrl(href?: string) {
+    if (!href) return `${siteUrl}/${locale}`;
+    if (/^https?:\/\//.test(href)) return href;
+    const path = getPathname({
+      locale: locale === "en" ? "en" : "vi",
+      href: href as Parameters<typeof getPathname>[0]["href"],
+    });
+    return new URL(path, siteUrl).href;
+  }
+
   // Xây dựng Schema.org BreadcrumbList JSON-LD
   const breadcrumbListSchema = {
     "@context": "https://schema.org",
@@ -25,9 +35,7 @@ export function Breadcrumb({ items, variant = "white" }: BreadcrumbProps) {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: item.href
-        ? `${siteUrl}/${locale}${item.href === "/" ? "" : item.href}`
-        : `${siteUrl}/${locale}`,
+      item: getItemUrl(item.href),
     })),
   };
 
