@@ -30,6 +30,7 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin", "vietnamese"],
   weight: ["400", "500", "600", "700"],
+  preload: false,
 });
 
 // Sinh static params cho locales
@@ -222,7 +223,7 @@ export default async function RootLayout({
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-YNL3YLDM52"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
         <Script
           id="google-analytics"
@@ -236,48 +237,6 @@ export default async function RootLayout({
             `,
           }}
         />
-        {/* Script to eliminate Chrome extension hydration mismatches caused by bis_skin_checked */}
-        <script
-          suppressHydrationWarning
-          id="remove-bis-skin-checked"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                const removeBisSkinChecked = (node) => {
-                  if (node.nodeType === 1) {
-                    if (node.hasAttribute('bis_skin_checked')) {
-                      node.removeAttribute('bis_skin_checked');
-                    }
-                    const children = node.getElementsByTagName('*');
-                    for (let i = 0; i < children.length; i++) {
-                      if (children[i].hasAttribute('bis_skin_checked')) {
-                        children[i].removeAttribute('bis_skin_checked');
-                      }
-                    }
-                  }
-                };
-                const observer = new MutationObserver((mutations) => {
-                  mutations.forEach((mutation) => {
-                    if (mutation.type === 'childList') {
-                      mutation.addedNodes.forEach(removeBisSkinChecked);
-                    } else if (mutation.type === 'attributes' && mutation.attributeName === 'bis_skin_checked') {
-                      if (mutation.target.hasAttribute('bis_skin_checked')) {
-                        mutation.target.removeAttribute('bis_skin_checked');
-                      }
-                    }
-                  });
-                });
-                observer.observe(document.documentElement, {
-                  attributes: true,
-                  childList: true,
-                  subtree: true,
-                  attributeFilter: ['bis_skin_checked']
-                });
-              })();
-            `
-          }}
-        />
-
         {/* Injecting System-wide Schemas */}
         <script
           suppressHydrationWarning
@@ -301,7 +260,7 @@ export default async function RootLayout({
             <Header initialMenu={headerMenu} />
             <main className="flex-1 relative bg-gradient-to-b from-[#fcfdfd] via-[#f7faf8]/40 to-[#f6fbf8]/50 overflow-x-clip">
               {/* Page content layered in z-10 */}
-              <div className="relative z-10">{children}</div>
+              <div className="relative z-10 flow-root">{children}</div>
             </main>
             <Footer initialMenu={footerMenu} />
 

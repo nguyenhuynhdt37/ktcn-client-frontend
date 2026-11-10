@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { BrandLogo } from "@/shared/components/ui/brand-logo";
 import { Link } from "@/i18n/routing";
 import { Navigation } from "./navigation";
 import type { MenuTreeResponse } from "@/features/menu/types/menu.types";
@@ -30,6 +30,7 @@ export function Header({ initialMenu }: HeaderProps) {
     <>
       <div ref={sentinelRef} className="h-px" aria-hidden="true" />
       <header
+        data-streamed-chrome=""
         className={`sticky top-0 z-40 w-full border-b transition-[background-color,box-shadow] duration-200 ${
           isSticky
             ? "border-border/80 bg-white/90 shadow-sm backdrop-blur-md"
@@ -44,13 +45,9 @@ export function Header({ initialMenu }: HeaderProps) {
               <div
                 className="relative h-14 w-64 sm:w-72 md:w-80"
               >
-                <Image
-                  src="/images/logo.svg"
-                  alt="Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh"
-                  fill
-                  priority
-                  unoptimized
-                  sizes="(max-width: 640px) 256px, 320px"
+                <BrandLogo
+                  eager
+                  sizes="(max-width: 639px) 256px, (max-width: 767px) 288px, 320px"
                   className="object-contain object-left py-0.5"
                 />
               </div>
@@ -61,6 +58,7 @@ export function Header({ initialMenu }: HeaderProps) {
             <Navigation initialMenu={initialMenu} />
           </div>
         </div>
+        <span hidden data-stream-complete="" />
       </header>
     </>
   );

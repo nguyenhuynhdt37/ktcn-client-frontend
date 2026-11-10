@@ -204,7 +204,7 @@ export default async function HomePage({ params }: HomePageProps) {
       <ConsultationCallout />
 
       {/* Background Overlay Layer with Watercolor Leaves for Homepage only (overflow-hidden prevents empty bottom space) */}
-      <div className="absolute inset-0 z-20 pointer-events-none select-none overflow-hidden">
+      <div className="absolute inset-x-0 top-6 bottom-0 z-20 pointer-events-none select-none overflow-hidden">
         {/* Leaves top-left (Shifted below banner to top-[750px] and made darker) */}
         <div className="absolute top-[750px] -left-16 w-64 h-64 md:w-80 md:h-80 opacity-[0.16] rotate-[35deg] mix-blend-multiply animate-leaf-left">
           <Image

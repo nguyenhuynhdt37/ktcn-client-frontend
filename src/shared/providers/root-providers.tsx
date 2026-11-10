@@ -1,12 +1,6 @@
-"use client";
-
-import { ReactNode } from "react";
-import { QueryProvider } from "./query-provider";
+import { type ReactNode } from "react";
 
 export function RootProviders({ children }: { children: ReactNode }) {
-  return (
-    <QueryProvider>
-      {children}
-    </QueryProvider>
-  );
+  // Current routes use server fetch/axios; mount QueryProvider where a query consumer needs it.
+  return children;
 }

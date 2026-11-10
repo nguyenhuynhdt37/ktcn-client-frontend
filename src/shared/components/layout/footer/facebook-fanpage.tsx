@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { BrandLogo } from "@/shared/components/ui/brand-logo";
 import { useTranslations } from "next-intl";
 
 export function FacebookFanpage() {
@@ -16,12 +16,8 @@ export function FacebookFanpage() {
         className="border border-slate-200/80 relative block w-full max-w-[260px] overflow-hidden rounded-lg bg-white p-3.5 transition-opacity duration-150 hover:opacity-90 shadow-sm"
       >
         <div className="relative aspect-[3/1] w-full">
-          <Image
-            src="/images/logo.svg"
-            alt="Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh"
-            fill
-            unoptimized
-            sizes="(max-w-768px) 100vw, 260px"
+          <BrandLogo
+            sizes="230px"
             className="object-contain"
           />
         </div>

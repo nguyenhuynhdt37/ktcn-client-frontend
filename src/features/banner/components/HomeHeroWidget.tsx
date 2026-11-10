@@ -1,5 +1,4 @@
-"use client";
-
+import type { ComponentProps } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Bell, ArrowRight } from "lucide-react";
@@ -34,13 +33,13 @@ export function HomeHeroWidget({ banners, notices = [], locale }: HomeHeroWidget
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2 text-slate-800">
                 <Bell size={18} className="text-brand-darkred shrink-0" />
-                <h3 className="text-sm font-bold tracking-wider uppercase text-slate-900">
+                <h2 className="text-sm font-bold tracking-wider uppercase text-slate-900">
                   {t("notices_title")}
-                </h3>
+                </h2>
               </div>
 
               <Link
-                href={"/tin-tuc?category_slug=thong-bao" as any}
+                href={{ pathname: "/tin-tuc", query: { category_slug: "thong-bao" } }}
                 className="flex items-center gap-1 text-xs font-bold text-brand-darkred hover:text-brand-darkred-dark transition-colors duration-150"
               >
                 <span>{t("view_all")}</span>
@@ -61,7 +60,7 @@ export function HomeHeroWidget({ banners, notices = [], locale }: HomeHeroWidget
                   return (
                     <Link
                       key={notice.id}
-                      href={notice.href as any}
+                      href={notice.href as ComponentProps<typeof Link>["href"]}
                       className="flex flex-col justify-between p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-brand-darkred/[0.02] hover:border-brand-darkred/25 transition-all duration-200 group"
                     >
                       <div className="space-y-2.5">
@@ -70,9 +69,9 @@ export function HomeHeroWidget({ banners, notices = [], locale }: HomeHeroWidget
                           {notice.date}
                         </span>
                         
-                        <h4 className="text-sm font-bold text-slate-700 leading-snug group-hover:text-brand-darkred line-clamp-3 transition-colors duration-150">
+                        <h3 className="text-sm font-bold text-slate-700 leading-snug group-hover:text-brand-darkred line-clamp-3 transition-colors duration-150">
                           {title}
-                        </h4>
+                        </h3>
                       </div>
 
                       <span className="text-brand-darkred text-[11px] font-bold mt-4 inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">

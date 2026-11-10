@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, type ComponentProps } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
 import useEmblaCarousel from "embla-carousel-react";
@@ -14,7 +14,7 @@ interface HeroSliderProps {
 }
 
 export function HeroSlider({ banners }: HeroSliderProps) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, active: banners.length > 1 });
   const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
   const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -76,7 +76,6 @@ export function HeroSlider({ banners }: HeroSliderProps) {
         <div className="flex">
           {banners.map((banner, index) => {
             const title = getLocalizedField<string>(banner, "title", locale);
-            const description = getLocalizedField<string>(banner, "description", locale);
 
             const SlideContent = (
               <div className="relative aspect-[16/9] md:aspect-[2.39/1] w-full min-w-0 flex-[0_0_100%]">
@@ -84,8 +83,10 @@ export function HeroSlider({ banners }: HeroSliderProps) {
                   src={banner.desktop_image_object_key}
                   alt={title}
                   fill
-                  priority={index === 0}
-                  sizes="100vw"
+                  preload={index === 0}
+                  loading={index === 0 ? undefined : "lazy"}
+                  fetchPriority={index === 0 ? "high" : "auto"}
+                  sizes="(min-width: 1700px) 1360px, (min-width: 1024px) 80vw, 92vw"
                   className="object-cover"
                 />
 
@@ -94,14 +95,14 @@ export function HeroSlider({ banners }: HeroSliderProps) {
             );
 
             // Xác định href dựa trên target_type mới của Banner
-            let bannerHref: any = null;
+            let bannerHref: ComponentProps<typeof Link>["href"] | null = null;
             if (banner.target_type === "ARTICLE" && banner.article_id) {
               bannerHref = { pathname: "/tin-tuc/[slug]" as const, params: { slug: banner.article_id } };
             } else if (banner.target_type === "EXTERNAL" && banner.link_url) {
-              bannerHref = banner.link_url;
+              bannerHref = banner.link_url as ComponentProps<typeof Link>["href"];
             } else if (!banner.target_type && banner.link_url) {
               // Fallback cho dữ liệu banner cũ
-              bannerHref = banner.link_url;
+              bannerHref = banner.link_url as ComponentProps<typeof Link>["href"];
             }
 
             // Nếu banner có link, bọc toàn bộ slide bằng thẻ Link

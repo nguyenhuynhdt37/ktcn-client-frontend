@@ -2,7 +2,7 @@
 
 import { MapPin, Phone, Mail, Globe } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
+import { BrandLogo } from "@/shared/components/ui/brand-logo";
 
 export function ContactInformation() {
   const t = useTranslations("footer");
@@ -12,13 +12,9 @@ export function ContactInformation() {
     <div className="space-y-5">
       {/* Logo */}
       <div className="relative h-11 w-52 sm:w-56">
-        <Image
-          src="/images/logo.svg"
-          alt="Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh"
-          fill
-          unoptimized
+        <BrandLogo
           className="object-contain object-left py-0.5"
-          sizes="224px"
+          sizes="(max-width: 639px) 208px, 224px"
         />
       </div>
       <div className="text-sm font-bold text-slate-900 uppercase tracking-wide">{tCommon("college_name")}</div>
@@ -37,9 +33,12 @@ export function ContactInformation() {
         </p>
         <p className="flex items-center gap-2.5">
           <Mail size={16} className="text-brand-blue/70 shrink-0" aria-hidden="true" />
-          <span>
-            <strong className="text-slate-700">Email:</strong> vienktcn@vinhuni.edu.vn
-          </span>
+          {/* Keep Cloudflare's email decoder from changing React's server HTML. */}
+          <span
+            dangerouslySetInnerHTML={{
+              __html: '<strong class="text-slate-700">Email:</strong> <!--email_off-->vienktcn@vinhuni.edu.vn<!--/email_off-->',
+            }}
+          />
         </p>
         <p className="flex items-center gap-2.5">
           <Globe size={16} className="text-brand-blue/70 shrink-0" aria-hidden="true" />
