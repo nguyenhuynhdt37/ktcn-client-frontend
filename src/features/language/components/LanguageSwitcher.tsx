@@ -151,45 +151,15 @@ export function LanguageSwitcher({ initialLanguages }: LanguageSwitcherProps) {
     setIsOpen(false);
   };
 
-  const renderFlag = (lang: Language) => {
-    if (lang.flag_url) {
-      return (
-        <div className="relative h-3.5 w-5 flex-shrink-0 overflow-hidden border border-white/10">
-          <Image
-            src={lang.flag_url}
-            alt={lang.native_name || lang.name}
-            fill
-            unoptimized
-            sizes="20px"
-            className="object-cover"
-          />
-        </div>
-      );
-    }
-
-    // Flag placeholder emoji
-    const emojis: Record<string, string> = {
-      vi: "🇻🇳",
-      en: "🇬🇧",
-    };
-    return <span className="flex-shrink-0 text-sm">{emojis[lang.code] || "🏳️"}</span>;
-  };
 
   return (
     <div suppressHydrationWarning className="relative inline-block text-left" ref={containerRef}>
-      <button
+      <LanguageSwitcherTrigger
+        language={currentLanguage}
         onClick={() => setIsOpen(!isOpen)}
         disabled={isPending}
-        type="button"
-        className="hover:text-brand-yellow flex min-h-9 cursor-pointer items-center gap-2 rounded-md border border-white/10 bg-white/5 px-2.5 text-sm font-medium text-slate-100 transition-colors duration-150 hover:bg-white/10"
-      >
-        {renderFlag(currentLanguage)}
-        <span>{currentLanguage.native_name}</span>
-        <ChevronDown
-          size={10}
-          className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-        />
-      </button>
+        isOpen={isOpen}
+      />
 
       {isOpen && (
         <div className="animate-in fade-in slide-in-from-top-1 absolute right-0 z-50 mt-1.5 w-36 rounded-none border border-slate-200 bg-white py-1 shadow-lg duration-150">
@@ -216,6 +186,79 @@ export function LanguageSwitcher({ initialLanguages }: LanguageSwitcherProps) {
           })}
         </div>
       )}
+    </div>
+  );
+}
+
+
+function renderFlag(lang: Language) {
+  if (lang.flag_url) {
+    return (
+      <div className="relative h-3.5 w-5 flex-shrink-0 overflow-hidden border border-white/10">
+        <Image
+          src={lang.flag_url}
+          alt={lang.native_name || lang.name}
+          fill
+          unoptimized
+          sizes="20px"
+          className="object-cover"
+        />
+      </div>
+    );
+  }
+
+  // Flag placeholder emoji
+  const emojis: Record<string, string> = {
+    vi: "🇻🇳",
+    en: "🇬🇧",
+  };
+  return <span className="flex-shrink-0 text-sm">{emojis[lang.code] || "🏳️"}</span>;
+}
+
+function LanguageSwitcherTrigger({
+  language,
+  onClick,
+  disabled,
+  isOpen = false,
+}: {
+  language: Language;
+  onClick?: () => void;
+  disabled?: boolean;
+  isOpen?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      type="button"
+      className="hover:text-brand-yellow flex min-h-9 cursor-pointer items-center gap-2 rounded-md border border-white/10 bg-white/5 px-2.5 text-sm font-medium text-slate-100 transition-colors duration-150 hover:bg-white/10"
+    >
+      {renderFlag(language)}
+      <span>{language.native_name}</span>
+      <ChevronDown
+        size={10}
+        className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+      />
+    </button>
+  );
+}
+
+export function LanguageSwitcherPlaceholder({
+  locale,
+  initialLanguages,
+}: LanguageSwitcherProps & { locale: string }) {
+  const language = initialLanguages?.find((item) => item.code === locale) ?? {
+    id: locale,
+    code: locale,
+    name: locale === "en" ? "English" : "Vietnamese",
+    native_name: locale === "en" ? "English" : "Tiếng Việt",
+    flag_id: null,
+    flag_url: null,
+    is_default: locale === "vi",
+  };
+  return (
+    <div className="relative inline-block text-left animate-pulse">
+      <LanguageSwitcherTrigger language={language} disabled />
     </div>
   );
 }

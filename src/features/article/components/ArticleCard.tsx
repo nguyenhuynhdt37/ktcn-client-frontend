@@ -35,7 +35,7 @@ export function ArticleCard({ article, priority = false }: ArticleCardProps) {
             alt={title}
             fill
             priority={priority}
-            sizes="(max-w-768px) 100vw, 240px"
+            sizes="(max-width: 768px) 100vw, 240px"
             className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
           />
         </Link>

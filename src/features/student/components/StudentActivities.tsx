@@ -70,7 +70,7 @@ export function StudentActivities({
                     src={item.imageUrl}
                     alt={title}
                     fill
-                    sizes="(max-w-640px) 100vw, (max-w-1024px) 50vw, 280px"
+                    sizes="(max-width: 639px) calc(100vw - 3rem), (max-width: 1023px) calc(50vw - 2.25rem), (max-width: 1359px) calc(25vw - 1.875rem), 310px"
                     className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
                   />
 

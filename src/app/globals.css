@@ -104,6 +104,13 @@ html {
   overflow-x: clip;
 }
 
+/* Streamed HTML can arrive mid-menu. Paint the chrome as a complete row. */
+@supports selector(:has(*)) {
+  [data-streamed-chrome]:not(:has([data-stream-complete])) {
+    visibility: hidden;
+  }
+}
+
 ::selection {
   background: rgb(244 162 97 / 32%);
   color: var(--foreground);

@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { MapPin, Facebook, MessageSquare, Search, Clock, CloudSun } from "lucide-react";
-import { LanguageSwitcher } from "@/features/language/components/LanguageSwitcher";
+import { LanguageSwitcher, LanguageSwitcherPlaceholder } from "@/features/language/components/LanguageSwitcher";
 import type { Language } from "@/features/language/types/language.types";
 import { ClientNotificationBell } from "@/features/notification/components/ClientNotificationBell";
 
@@ -85,7 +85,7 @@ export function TopBar({ initialLanguages }: TopBarProps) {
   };
 
   return (
-    <div className="bg-brand-darkred-dark relative z-50 border-b border-white/10 text-sm text-white">
+    <div data-streamed-chrome="" className="bg-brand-darkred-dark relative z-50 border-b border-white/10 text-sm text-white">
       <div className="site-container flex min-h-11 items-center justify-between gap-4">
         {/* Địa chỉ, thời gian và thời tiết (Ẩn trên thiết bị di động) */}
         <div className="hidden min-w-0 items-center gap-2 text-white/75 md:flex">
@@ -144,7 +144,7 @@ export function TopBar({ initialLanguages }: TopBarProps) {
             </a>
 
             {/* Component chọn ngôn ngữ i18n Dropdown */}
-            <Suspense fallback={<div className="h-9 w-24 animate-pulse rounded-md bg-white/10" />}>
+            <Suspense fallback={<LanguageSwitcherPlaceholder locale={locale} initialLanguages={initialLanguages} />}>
               <LanguageSwitcher initialLanguages={initialLanguages} />
             </Suspense>
           </div>
@@ -171,6 +171,7 @@ export function TopBar({ initialLanguages }: TopBarProps) {
           </form>
         </div>
       </div>
+      <span hidden data-stream-complete="" />
     </div>
   );
 }

@@ -115,7 +115,7 @@ export async function ArticleDetailContent({
                     fill
                     priority
                     className="object-cover"
-                    sizes="(max-w-1024px) 100vw, 896px"
+                    sizes="(max-width: 1024px) 100vw, 896px"
                   />
                 </div>
               )}

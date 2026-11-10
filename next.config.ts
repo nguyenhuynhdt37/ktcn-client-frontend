@@ -36,7 +36,14 @@ const extraMedia = (process.env.IMAGE_REMOTE_HOSTS ?? "")
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone",
+  async headers() {
+    return ["/images/:path*", "/favicon.ico"].map((source) => ({
+      source,
+      headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
+    }));
+  },
   images: {
+    imageSizes: [32, 48, 64, 96, 128, 256, 320, 384, 480, 512],
     formats: ["image/avif", "image/webp"],
     qualities: [75],
     remotePatterns: [
