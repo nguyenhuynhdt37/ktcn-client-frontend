@@ -1,5 +1,5 @@
 # ⚡ KTCN Frontend Quick Boost & Frontend-Backend Interaction Guide
-> **Trường Kỹ Thuật và Công Nghệ - Đại Học Vinh**  
+> **Trường Kỹ Thuật và Công Nghệ - Trường Đại Học Vinh**  
 > Dự án: `ktcn-client-frontend` (Next.js 16 + React 19 + Tailwind CSS v4)  
 > Tài liệu tóm lược toàn diện từ **Khởi động nhanh**, **Cấu hình môi trường**, **Kiến trúc Next.js 16 RSC**, đến **Toàn bộ luồng tương tác giữa Frontend và Backend FastAPI**.
 

@@ -1,5 +1,5 @@
 # 🔔 Web Push Notification & Thống Kê Truy Cập (Analytics)
-> **Trường Kỹ Thuật và Công Nghệ - Đại Học Vinh**  
+> **Trường Kỹ Thuật và Công Nghệ - Trường Đại Học Vinh**  
 > Nghiệp vụ: **Push Notifications (VAPID) & Visitor Counter** | Mã nguồn: [`src/features/notification`](../../src/features/notification), [`src/shared/components/layout/footer`](../../src/shared/components/layout/footer)
 
 Tài liệu này mô tả chi tiết cơ chế đăng ký và gửi thông báo đẩy trình duyệt không cần mở tab (Web Push Notification qua giao thức VAPID) và hệ thống thống kê lượt truy cập thời gian thực (Visitor Counter).

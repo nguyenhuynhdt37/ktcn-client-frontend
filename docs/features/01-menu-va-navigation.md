@@ -1,5 +1,5 @@
 # 🧭 Menu Điều Hướng & Cây Liên Kết Đa Cấp (Header & Footer)
-> **Trường Kỹ Thuật và Công Nghệ - Đại Học Vinh**  
+> **Trường Kỹ Thuật và Công Nghệ - Trường Đại Học Vinh**  
 > Nghiệp vụ: **Navigation System** | Mã nguồn: [`src/features/menu`](../../src/features/menu)
 
 Tài liệu này mô tả chi tiết cách Frontend tương tác với Backend FastAPI để lấy dữ liệu cây menu phân cấp, giải quyết đường dẫn slug thông minh, và dựng giao diện Mega Menu trên máy tính cũng như Drawer Accordion trên thiết bị di động.

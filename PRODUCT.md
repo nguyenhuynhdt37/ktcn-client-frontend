@@ -7,7 +7,7 @@ brand
 ## Users
 
 Thí sinh và phụ huynh đang tìm hiểu ngành học, thông tin tuyển sinh, học phí,
-học bổng và các mốc đăng ký của Trường Kỹ thuật và Công nghệ - Đại học Vinh.
+học bổng và các mốc đăng ký của Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh.
 Người dùng thường truy cập bằng điện thoại, cần tìm thông tin nhanh, dễ hiểu và
 có một đường dẫn rõ ràng để đăng ký tư vấn.
 

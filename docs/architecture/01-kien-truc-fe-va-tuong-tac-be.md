@@ -1,5 +1,5 @@
 # 🏛️ Kiến Trúc Hệ Thống & Cơ Chế Tương Tác Frontend - Backend
-> **Trường Kỹ Thuật và Công Nghệ - Đại Học Vinh**  
+> **Trường Kỹ Thuật và Công Nghệ - Trường Đại Học Vinh**  
 > Dự án: `ktcn-client-frontend` | Framework: **Next.js 16.2 (App Router)** | Backend: **FastAPI (REST)**
 
 Tài liệu này phân tích chi tiết về kiến trúc phần mềm của cổng thông tin Frontend, mô hình **React Server Components (RSC)** kết hợp **Backend-For-Frontend (BFF)**, và cơ chế giao tiếp đa luồng giữa Trình duyệt người dùng, Máy chủ Next.js và Máy chủ FastAPI Backend.

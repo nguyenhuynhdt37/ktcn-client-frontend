@@ -1,5 +1,5 @@
 # 📰 Quản Lý Tin Tức, Bài Viết, Lượt Xem & SEO Động
-> **Trường Kỹ Thuật và Công Nghệ - Đại Học Vinh**  
+> **Trường Kỹ Thuật và Công Nghệ - Trường Đại Học Vinh**  
 > Nghiệp vụ: **Article CMS & SEO Engine** | Mã nguồn: [`src/features/article`](../../src/features/article)
 
 Tài liệu này mô tả chi tiết cách thức Frontend tương tác với Backend FastAPI để hiển thị danh sách bài viết phân trang, bộ lọc danh mục/tag, trang chi tiết bài viết, cơ chế tự động ghi nhận lượt xem, và quy trình sinh thẻ SEO Metadata cùng cấu trúc Schema.org chuẩn Google.
@@ -114,5 +114,5 @@ Nội dung HTML trả về từ CMS (`article.content`) được đưa qua hàm 
 
 ### 3.4. Cấu Trúc Dữ Liệu Schema.org (JSON-LD)
 Trang chi tiết bài viết tự động chèn hai khối Schema có cấu trúc dạng JSON-LD vào thẻ `<head>`:
-1. **Article Schema**: Định danh đây là bài báo/tin tức học thuật chính thức, chứa thông tin ngày xuất bản (`datePublished`), ngày sửa đổi gần nhất (`dateModified`), tác giả (`author`), tổ chức xuất bản (`publisher`: Trường Kỹ thuật và Công nghệ - Đại học Vinh).
+1. **Article Schema**: Định danh đây là bài báo/tin tức học thuật chính thức, chứa thông tin ngày xuất bản (`datePublished`), ngày sửa đổi gần nhất (`dateModified`), tác giả (`author`), tổ chức xuất bản (`publisher`: Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh).
 2. **BreadcrumbList Schema**: Cung cấp đường dẫn phân cấp điều hướng cho Google (Trang chủ > Chuyên mục > Bài viết).

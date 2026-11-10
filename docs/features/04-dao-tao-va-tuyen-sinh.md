@@ -1,5 +1,5 @@
 # 🎓 Đào Tạo & Đăng Ký Tư Vấn Tuyển Sinh
-> **Trường Kỹ Thuật và Công Nghệ - Đại Học Vinh**  
+> **Trường Kỹ Thuật và Công Nghệ - Trường Đại Học Vinh**  
 > Nghiệp vụ: **Training Programs & Admission Consultation** | Mã nguồn: [`src/features/program`](../../src/features/program), [`src/features/consultation`](../../src/features/consultation)
 
 Tài liệu này mô tả chi tiết cách thức Frontend hiển thị các chương trình đào tạo (Đại học & Sau đại học) và cơ chế xử lý biểu mẫu trực tuyến cho phép thí sinh đăng ký tư vấn tuyển sinh gửi trực tiếp về Backend FastAPI.

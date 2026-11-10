@@ -1,5 +1,5 @@
 # 📚 Trung Tâm Tài Liệu - KTCN Frontend Portal (`ktcn-client-frontend`)
-> **Trường Kỹ Thuật và Công Nghệ - Đại Học Vinh**  
+> **Trường Kỹ Thuật và Công Nghệ - Trường Đại Học Vinh**  
 > Phiên bản tài liệu: **2.0.0 (Production Ready)** | Công nghệ: **Next.js 16.2.9**, **React 19.2.4**, **Tailwind CSS v4**
 
 Chào mừng bạn đến với trung tâm tài liệu kỹ thuật chính thức của dự án **KTCN Client Frontend**. Bộ tài liệu này được biên soạn đầy đủ, chi tiết từ hướng dẫn cài đặt môi trường, cấu hình biến hệ thống, kiến trúc giao tiếp với Backend FastAPI cho đến từng luồng nghiệp vụ cụ thể.
@@ -48,4 +48,4 @@ Chào mừng bạn đến với trung tâm tài liệu kỹ thuật chính thứ
 - [Quy trình triển khai máy chủ (Deployment Guide)](deployment.md)
 
 ---
-*Tài liệu được phát triển và duy trì bởi Đội ngũ Kỹ thuật Cổng thông tin — **Trường Kỹ Thuật và Công Nghệ, Đại Học Vinh**.*
+*Tài liệu được phát triển và duy trì bởi Đội ngũ Kỹ thuật Cổng thông tin — **Trường Kỹ Thuật và Công Nghệ, Trường Đại Học Vinh**.*

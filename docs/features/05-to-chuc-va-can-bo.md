@@ -1,5 +1,5 @@
 # 🏛️ Cơ Cấu Tổ Chức Đơn Vị & Hồ Sơ Cán Bộ Giảng Viên
-> **Trường Kỹ Thuật và Công Nghệ - Đại Học Vinh**  
+> **Trường Kỹ Thuật và Công Nghệ - Trường Đại Học Vinh**  
 > Nghiệp vụ: **Departments & Academic Staff** | Mã nguồn: [`src/features/department`](../../src/features/department), [`src/features/lecturer`](../../src/features/lecturer)
 
 Tài liệu này mô tả chi tiết cách thức Frontend kết nối với Backend FastAPI để kết xuất sơ đồ tổ chức, trang giới thiệu từng bộ môn chuyên môn, và trang hồ sơ khoa học cá nhân của từng cán bộ giảng viên thuộc trường.

@@ -41,7 +41,7 @@ Khi gọi `GET /api/v1/articles/portal/{slug}`, Backend sẽ trả về `PortalA
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Viện Kỹ thuật và Công nghệ - Đại học Vinh",
+      "name": "Viện Kỹ thuật và Công nghệ - Trường Đại học Vinh",
       "logo": {
         "@type": "ImageObject",
         "url": "https://viengktc.example.com/logo.png"

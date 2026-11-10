@@ -1,5 +1,5 @@
 # 🌐 Đa Ngôn Ngữ (i18n): Cơ Chế Đồng Bộ Giữa Next.js & Backend
-> **Trường Kỹ Thuật và Công Nghệ - Đại Học Vinh**  
+> **Trường Kỹ Thuật và Công Nghệ - Trường Đại Học Vinh**  
 > Nghiệp vụ: **Internationalization (i18n)** | Thư viện: **next-intl 4.13** | Backend: **FastAPI Polyglot**
 
 Tài liệu này mô tả chi tiết kiến trúc đa ngôn ngữ của dự án, cơ chế tiền tố URL (`/[locale]/...`), cách thức tự động đồng bộ mã ngôn ngữ giữa Next.js và Backend FastAPI qua HTTP Headers và Query Parameters, cũng như giải pháp bóc tách dữ liệu an toàn tránh lỗi màn hình trắng.

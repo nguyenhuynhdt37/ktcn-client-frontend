@@ -93,11 +93,11 @@ Mọi hành động click chuyển trang đều là các thẻ `<Link>` chuẩn 
 ### A. Siêu dữ liệu SEO Động (Dynamic Metadata API)
 Sử dụng hàm `generateMetadata` của Next.js để sinh thẻ meta theo ngữ cảnh thực tế của bộ lọc:
 *   **Tiêu đề trang (`<title>`)**:
-    *   Mặc định: `Tin tức & Sự kiện nổi bật | Trường Kỹ thuật và Công nghệ - Đại học Vinh`
+    *   Mặc định: `Tin tức & Sự kiện nổi bật | Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh`
     *   Khi tìm kiếm: `Tìm kiếm bài viết: "[Từ khóa]" (Trang [X]/[Tổng]) | SET VinhUni`
     *   Khi lọc Danh mục: `Danh mục: [Tên chuyên mục] (Trang [X]) | SET VinhUni`
     *   Khi lọc Tag: `Bài viết về #[Tên thẻ] (Trang [X]) | SET VinhUni`
-*   **Mô tả trang (`<meta name="description">`)**: Cung cấp nội dung tóm tắt tương ứng, ví dụ: `"Tổng hợp các bài viết gắn thẻ #[Tag] của Trường Kỹ thuật và Công nghệ Đại học Vinh..."`
+*   **Mô tả trang (`<meta name="description">`)**: Cung cấp nội dung tóm tắt tương ứng, ví dụ: `"Tổng hợp các bài viết gắn thẻ #[Tag] của Trường Kỹ thuật và Công nghệ Trường Đại học Vinh..."`
 
 ### B. Ngăn ngừa trùng lặp nội dung (Canonical URL)
 Khi lọc hoặc sắp xếp, URL sẽ sinh ra rất nhiều tham số phụ (ví dụ: `?sort=view_count`, `?dir=desc`). Công cụ tìm kiếm của Google có thể coi đây là các trang riêng biệt nhưng trùng nội dung (Duplicate Content) và phạt trang web.

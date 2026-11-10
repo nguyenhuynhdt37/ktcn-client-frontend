@@ -1,5 +1,5 @@
 # 🖼️ Banners & Slider Hero Trang Chủ
-> **Trường Kỹ Thuật và Công Nghệ - Đại Học Vinh**  
+> **Trường Kỹ Thuật và Công Nghệ - Trường Đại Học Vinh**  
 > Nghiệp vụ: **Banner & Hero Media** | Mã nguồn: [`src/features/banner`](../../src/features/banner)
 
 Tài liệu này mô tả chi tiết cách Frontend kết nối với Backend FastAPI để lấy danh sách ảnh biểu ngữ quảng bá (Banner/Slider), tối ưu hóa hiệu năng hiển thị hình ảnh (Core Web Vitals - LCP) và vận hành thanh trượt đa năng (Embla Carousel).
@@ -18,7 +18,7 @@ Tài liệu này mô tả chi tiết cách Frontend kết nối với Backend Fa
   {
     "id": "banner-uuid-01",
     "title": "Tuyển sinh Đại học Chính quy 2026",
-    "subtitle": "Trường Kỹ thuật và Công nghệ - Đại học Vinh",
+    "subtitle": "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
     "image_url": "http://localhost:9000/media/banners/hero-ts-2026.webp",
     "mobile_image_url": "http://localhost:9000/media/banners/hero-ts-2026-mobile.webp",
     "link_url": "/vi/tu-van-tuyen-sinh",

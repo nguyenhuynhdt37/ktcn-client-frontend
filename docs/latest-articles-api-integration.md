@@ -113,7 +113,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const pageStr = page ? ` - Trang ${page}` : "";
   
   let title = "Tin tức & Sự kiện nổi bật";
-  let description = "Cổng thông tin tổng hợp, cập nhật tin tức, sự kiện mới nhất từ Trường Kỹ thuật và Công nghệ - Đại học Vinh.";
+  let description = "Cổng thông tin tổng hợp, cập nhật tin tức, sự kiện mới nhất từ Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh.";
 
   if (q) {
     title = `Kết quả tìm kiếm cho "${q}"${pageStr}`;

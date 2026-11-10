@@ -1,8 +1,8 @@
 # 🚀 Hướng Dẫn Cài Đặt & Khởi Chạy Frontend (`ktcn-client-frontend`)
-> **Trường Kỹ Thuật và Công Nghệ - Đại Học Vinh**  
+> **Trường Kỹ Thuật và Công Nghệ - Trường Đại Học Vinh**  
 > Dự án: `ktcn-client-frontend` | Phiên bản Framework: **Next.js 16.2.9**, **React 19.2.4**, **Tailwind CSS v4**
 
-Tài liệu này cung cấp hướng dẫn từng bước từ số 0 để cài đặt môi trường, cấu hình biến hệ thống và khởi chạy dự án Frontend cổng thông tin Trường Kỹ thuật và Công nghệ - Đại học Vinh trên môi trường phát triển (Local Development) cũng như đóng gói triển khai máy chủ Production với Docker.
+Tài liệu này cung cấp hướng dẫn từng bước từ số 0 để cài đặt môi trường, cấu hình biến hệ thống và khởi chạy dự án Frontend cổng thông tin Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh trên môi trường phát triển (Local Development) cũng như đóng gói triển khai máy chủ Production với Docker.
 
 ---
 
