@@ -4,7 +4,7 @@ import Script from "next/script";
 import type { Metadata, Viewport } from "next";
 import { constructMetadata, defaultViewport, buildOrganizationSchema, buildWebSiteSchema } from "@/shared/lib/seo";
 import { serializeJsonLd } from "@/shared/lib/security";
-import { Inter, Manrope, JetBrains_Mono } from "next/font/google";
+import { FontPreloads } from "@/shared/components/layout/font-preloads";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -13,25 +13,6 @@ import { RootProviders } from "@/shared/providers/root-providers";
 import { FireworksCelebrate } from "@/shared/components/FireworksCelebrate";
 import { FloatingMessenger } from "@/shared/components/layout/FloatingMessenger";
 import "../globals.css";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin", "vietnamese"],
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-const manrope = Manrope({
-  variable: "--font-heading",
-  subsets: ["latin", "vietnamese"],
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["latin", "vietnamese"],
-  weight: ["400", "500", "600", "700"],
-  preload: false,
-});
 
 // Sinh static params cho locales
 export function generateStaticParams() {
@@ -165,8 +146,9 @@ export default async function RootLayout({
     return (
       <html
         lang={locale}
-        className={`${inter.variable} ${manrope.variable} h-full antialiased`}
+        className="h-full antialiased"
       >
+        <head><FontPreloads /></head>
         <body className="h-full bg-slate-50 text-slate-800 flex flex-col justify-center items-center p-6">
           <MaintenanceHandler />
           <div className="max-w-md w-full text-center bg-white rounded-2xl shadow-xl border border-slate-100 p-8 md:p-12 transition-all duration-300 hover:shadow-2xl">
@@ -216,9 +198,10 @@ export default async function RootLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${inter.variable} ${manrope.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className="h-full antialiased"
     >
       <head suppressHydrationWarning>
+        <FontPreloads />
         {/* Google Analytics */}
         <Script
           async

@@ -37,10 +37,16 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone",
   async headers() {
-    return ["/images/:path*", "/favicon.ico"].map((source) => ({
-      source,
-      headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
-    }));
+    return [
+      ...["/images/:path*", "/favicon.ico"].map((source) => ({
+        source,
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
+      })),
+      {
+        source: "/fonts/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+    ];
   },
   images: {
     imageSizes: [32, 48, 64, 96, 128, 256, 320, 384, 480, 512],
