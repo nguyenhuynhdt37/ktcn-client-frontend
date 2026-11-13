@@ -7,7 +7,7 @@ export const lecturerService = {
   async getStaffDirectory(lang: string): Promise<StaffItem[] | null> {
     return httpClient.get<StaffItem[]>("/api/v1/portal/staffs", {
       params: { lang },
-      revalidate: 300,
+      revalidate: 60, // Thứ tự cán bộ sửa trong admin cần hiện ra sớm
       tags: ["staff-directory"],
     });
   },
@@ -40,7 +40,7 @@ export const lecturerService = {
         department_slug: departmentSlug,
         lang: locale,
       },
-      revalidate: 600, // Cache 10 phút
+      revalidate: 60, // Cache 1 phút để đổi lãnh đạo/thứ tự hiện ra sớm
     });
   },
 };
