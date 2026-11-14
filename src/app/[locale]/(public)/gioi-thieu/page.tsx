@@ -9,7 +9,6 @@ import {
   AboutTimeline,
   AboutMission,
   AboutDepartments,
-  AboutLeadership,
   AboutStats,
   AboutFacilities,
   AboutDomesticPartners,
@@ -102,14 +101,10 @@ export default async function AboutPage({ params }: AboutPageProps) {
       <AboutTimeline />
       <AboutMission />
       <AboutDepartments />
-      <AboutLeadership />
       <AboutStats />
       <AboutFacilities />
-      <AboutAchievements />
       <AboutDomesticPartners />
       <AboutStudentLife />
-      <AlumniTestimonials isEn={locale === "en"} />
-      <AboutPress />
       <ConsultationCallout />
     </>
   );
