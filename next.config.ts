@@ -54,6 +54,9 @@ const nextConfig: NextConfig = {
     imageSizes: [32, 48, 64, 96, 128, 256, 320, 384, 480, 512],
     formats: ["image/avif", "image/webp"],
     qualities: [75],
+    // MinIO nội bộ (vd. 100.x Tailscale) bị Next coi là IP riêng và chặn; chỉ bật khi cần.
+    // Vẫn bị giới hạn bởi remotePatterns bên dưới.
+    dangerouslyAllowLocalIP: process.env.IMAGE_ALLOW_LOCAL_IP === "true",
     remotePatterns: [
       ...localMedia,
       { protocol: "https", hostname: "**.itup.io.vn", pathname: "/**" },

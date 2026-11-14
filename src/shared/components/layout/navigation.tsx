@@ -126,7 +126,7 @@ export function Navigation({ initialMenu }: NavigationProps) {
 
                   {/* Submenu cấp 1 */}
                   {hasSubmenu && (
-                    <ul className="border-neutral-200 animate-slide-down absolute top-full left-0 z-50 hidden min-w-60 rounded-lg border bg-white p-1.5 shadow-md group-focus-within:block group-hover:block">
+                    <ul className="border-neutral-200 animate-slide-down absolute top-full left-0 z-50 hidden w-max min-w-60 rounded-lg border bg-white p-1.5 shadow-md group-focus-within:block group-hover:block">
                       {item.children
                         .filter((sub) => sub.is_visible)
                         .map((subItem) => {
@@ -136,7 +136,7 @@ export function Navigation({ initialMenu }: NavigationProps) {
                           const isSubActive = isItemActive(subItem);
 
                           // CSS classes cho menu cấp 2 - Typographic Highlight
-                          const subLinkClass = `hover:bg-slate-50 hover:text-brand-darkred flex min-h-11 w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors duration-150 ${
+                          const subLinkClass = `hover:bg-slate-50 hover:text-brand-darkred flex min-h-11 w-full items-center justify-between gap-3 whitespace-nowrap rounded-md px-3 py-2 text-left text-sm transition-colors duration-150 ${
                             isSubActive
                               ? "text-brand-darkred bg-brand-darkred/[0.03] font-bold"
                               : "text-slate-700 font-medium"
@@ -180,7 +180,7 @@ export function Navigation({ initialMenu }: NavigationProps) {
 
                               {/* Submenu cấp 2 (nested dropdown) */}
                               {hasSubmenuLevel2 && (
-                                <ul className="border-neutral-200 animate-fade-in absolute top-0 left-full z-50 ml-1.5 hidden min-w-60 rounded-lg border bg-white p-1.5 shadow-md group-focus-within/sub:block group-hover/sub:block">
+                                <ul className="border-neutral-200 animate-fade-in absolute top-0 left-full z-50 ml-1.5 hidden w-max min-w-60 rounded-lg border bg-white p-1.5 shadow-md group-focus-within/sub:block group-hover/sub:block">
                                   {/* Cầu nối hover vô hình giúp di chuột từ menu cha sang con không bị mất */}
                                   <div className="pointer-events-auto absolute top-0 -left-3 h-full w-3 bg-transparent" />
                                   {subItem.children
@@ -195,7 +195,7 @@ export function Navigation({ initialMenu }: NavigationProps) {
                                       const isNestedActive = isItemActive(nestedItem);
 
                                       // CSS classes cho menu cấp 3
-                                      const nestedLinkClass = `hover:bg-slate-50 hover:text-brand-darkred flex min-h-11 items-center rounded-md px-3 py-2 text-sm transition-colors duration-150 ${
+                                      const nestedLinkClass = `hover:bg-slate-50 hover:text-brand-darkred flex min-h-11 items-center whitespace-nowrap rounded-md px-3 py-2 text-sm transition-colors duration-150 ${
                                         isNestedActive
                                           ? "text-brand-darkred bg-brand-darkred/[0.03] font-bold"
                                           : "text-slate-700 font-medium"

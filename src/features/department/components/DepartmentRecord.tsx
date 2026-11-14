@@ -21,6 +21,7 @@ import { SafeImage } from "@/shared/components/ui/safe-image";
 import { ArticleCard } from "@/features/article";
 import { StaffGrid } from "@/features/lecturer/components/StaffGrid";
 import { sanitizeRichHtml } from "@/shared/lib/security";
+import { LeadershipGroups, isLeadershipUnit } from "./LeadershipGroups";
 import type { PortalDepartment, PortalProgram, DepartmentOverview } from "../types/department.types";
 
 interface DepartmentRecordProps {
@@ -38,6 +39,7 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
   } = overview;
 
   const isEn = locale === "en";
+  const isLeadership = isLeadershipUnit(department.slug);
 
   const bannerImage =
     department.banner_object_key ||
@@ -85,8 +87,23 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
       {/* 2. Main Profile Content Container */}
       <article className="site-container bg-white px-4 py-8 sm:px-8 lg:px-10 mt-6 rounded-xl border border-slate-100 shadow-sm">
         
+        {/* Ban lãnh đạo: ảnh đặt trên tiêu đề */}
+        {isLeadership && (
+          <div className="relative mb-8 aspect-[3/2] w-full overflow-hidden rounded-lg border border-slate-200 shadow-sm">
+            <SafeImage
+              src={department.banner_object_key || "/images/about/ban-lanh-dao.jpg"}
+              alt={department.name}
+              fill
+              priority
+              className="object-cover"
+              sizes="(max-width: 1040px) 100vw, 1040px"
+            />
+          </div>
+        )}
+
         {/* Header Section */}
         <header className="border-b-2 border-slate-900 pb-8">
+          {!isLeadership && (
           <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500">
             <span className="text-brand-blue font-mono font-bold">
               {department.code || (isEn ? "Academic Unit" : "Đơn vị học thuật")}
@@ -100,6 +117,7 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
                 : isEn ? "Academic Unit" : "Đơn vị đào tạo"}
             </span>
           </div>
+          )}
           <h1 className="max-w-4xl text-2xl leading-tight font-heading font-extrabold text-slate-950 sm:text-3xl">
             {department.name}
           </h1>
@@ -111,7 +129,7 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
         </header>
 
         {/* Decorative Banner Image */}
-        {bannerImage && (
+        {!isLeadership && bannerImage && (
           <div className="relative mt-6 aspect-[21/9] w-full overflow-hidden rounded-lg border border-slate-200 shadow-sm">
             <SafeImage
               src={bannerImage}
@@ -125,7 +143,7 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
         )}
 
         {/* Section 1: Overview & Stats */}
-        {department.description && (
+        {!isLeadership && department.description && (
           <section id="overview" className="border-b border-slate-200 py-8 scroll-mt-24">
             <p className="text-brand-blue text-xs font-bold tracking-wide">
               {isEn ? "Unit Overview" : "Tổng quan đơn vị"}
@@ -162,7 +180,7 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
         )}
 
         {/* Section 2: Mission & Vision (Flat Style - No Nested Cards) */}
-        {(department.mission || department.vision) && (
+        {!isLeadership && (department.mission || department.vision) && (
           <section id="vision" className="border-b border-slate-200 py-8 scroll-mt-24">
             <p className="text-brand-darkred text-xs font-bold tracking-wide">
               {isEn ? "Strategy & Direction" : "Chiến lược & Định hướng"}
@@ -282,17 +300,21 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
 
         {/* Section 4: Faculty & Staff */}
         <section id="staff" className="border-b border-slate-200 py-8 scroll-mt-24">
-          <p className="text-brand-darkred text-xs font-bold tracking-wide">
-            {isEn ? "Experts & Academics" : "Đội ngũ chuyên gia"}
-          </p>
-          <h2 className="mt-1 text-xl font-heading font-bold text-slate-950">
-            {isEn ? "Faculty Members" : "Đội ngũ cán bộ, giảng viên"}
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1 mb-6 leading-relaxed">
-            {isEn
-              ? "Select a staff member to view their profile and research interests."
-              : "Chọn cán bộ để xem hồ sơ, thông tin liên hệ và hướng nghiên cứu."}
-          </p>
+          {!isLeadership && (
+            <>
+              <p className="text-brand-darkred text-xs font-bold tracking-wide">
+                {isEn ? "Experts & Academics" : "Đội ngũ chuyên gia"}
+              </p>
+              <h2 className="mt-1 text-xl font-heading font-bold text-slate-950">
+                {isEn ? "Faculty Members" : "Đội ngũ cán bộ, giảng viên"}
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1 mb-6 leading-relaxed">
+                {isEn
+                  ? "Select a staff member to view their profile and research interests."
+                  : "Chọn cán bộ để xem hồ sơ, thông tin liên hệ và hướng nghiên cứu."}
+              </p>
+            </>
+          )}
 
           {staffs.length === 0 ? (
             <div className="rounded-xl border border-slate-200 bg-slate-50/30 px-6 py-10 text-center max-w-md mx-auto">
@@ -306,6 +328,8 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
                   : "Danh sách chính thức sẽ hiển thị tại đây sau khi đơn vị hoàn tất kiểm tra thông tin."}
               </p>
             </div>
+          ) : isLeadership ? (
+            <LeadershipGroups staffs={staffs} locale={locale} />
           ) : (
             <StaffGrid staffs={staffs} locale={locale} />
           )}
@@ -358,20 +382,6 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
                     </div>
                   </div>
                 ))}
-              </div>
-            )}
-
-            {department.website && (
-              <div className="pt-4 flex">
-                <a
-                  href={department.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-brand-darkred hover:bg-brand-darkred-dark px-5 text-xs sm:text-sm font-bold text-white transition-colors duration-200 shadow-sm hover:shadow-md cursor-pointer"
-                >
-                  <span>{isEn ? "Visit Unit Website" : "Truy cập website đơn vị"}</span>
-                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
-                </a>
               </div>
             )}
           </section>
