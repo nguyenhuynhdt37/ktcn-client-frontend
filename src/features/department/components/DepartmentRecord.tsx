@@ -87,20 +87,6 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
       {/* 2. Main Profile Content Container */}
       <article className="site-container bg-white px-4 py-8 sm:px-8 lg:px-10 mt-6 rounded-xl border border-slate-100 shadow-sm">
         
-        {/* Ban lãnh đạo: ảnh đặt trên tiêu đề */}
-        {isLeadership && (
-          <div className="relative mb-8 aspect-[3/2] w-full overflow-hidden rounded-lg border border-slate-200 shadow-sm">
-            <SafeImage
-              src={department.banner_object_key || "/images/about/ban-lanh-dao.jpg"}
-              alt={department.name}
-              fill
-              priority
-              className="object-cover"
-              sizes="(max-width: 1040px) 100vw, 1040px"
-            />
-          </div>
-        )}
-
         {/* Header Section */}
         <header className="border-b-2 border-slate-900 pb-8">
           {!isLeadership && (
