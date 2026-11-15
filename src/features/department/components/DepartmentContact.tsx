@@ -1,5 +1,5 @@
 import { PortalDepartment } from "../types/department.types";
-import { MapPin, Phone, Mail, ExternalLink } from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
 
 interface DepartmentContactProps {
   department: PortalDepartment;
@@ -19,7 +19,7 @@ export function DepartmentContact({ department, isEn }: DepartmentContactProps) 
       : null,
   ].filter(Boolean) as Array<{ icon: typeof MapPin; label: string; value: string }>;
 
-  if (contactItems.length === 0 && !department.website) return null;
+  if (contactItems.length === 0) return null;
 
   return (
     <section className="py-14 md:py-20 border-t border-slate-100 bg-white">

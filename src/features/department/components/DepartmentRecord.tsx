@@ -5,7 +5,6 @@ import {
   MapPin, 
   Phone, 
   Mail, 
-  ExternalLink, 
   Users, 
   GraduationCap, 
   Building2, 
@@ -342,7 +341,7 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
         )}
 
         {/* Section 6: Contact Info (Flat Style - No Nested Cards) */}
-        {(contactItems.length > 0 || department.website) && (
+        {contactItems.length > 0 && (
           <section id="contact" className="py-8 scroll-mt-24">
             <h2 className="text-lg sm:text-xl font-heading font-bold text-slate-950 pb-2 relative after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-10 after:bg-brand-darkred">
               {isEn ? "Contact Information" : "Thông tin liên hệ"}
