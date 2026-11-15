@@ -51,21 +51,6 @@ export function DepartmentContact({ department, isEn }: DepartmentContactProps) 
             ))}
           </div>
         )}
-
-        {/* Website CTA Button */}
-        {department.website && (
-          <div className="pt-2">
-            <a
-              href={department.website}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-brand-darkred hover:bg-brand-darkred-dark px-6 text-sm font-bold text-white transition-colors duration-200 shadow-sm hover:shadow-md cursor-pointer"
-            >
-              <span>{isEn ? "Visit Unit Website" : "Truy cập website đơn vị"}</span>
-              <ExternalLink className="h-4 w-4" aria-hidden="true" />
-            </a>
-          </div>
-        )}
       </div>
     </section>
   );
