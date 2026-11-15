@@ -15,7 +15,7 @@ export function FloatingMessenger() {
       href="https://www.facebook.com/Vienktcn"
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-[#006AFF] to-[#00C6FF] text-white shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-xl hover:brightness-105"
+      className="fixed bottom-24 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-[#006AFF] to-[#00C6FF] text-white shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-xl hover:brightness-105"
       aria-label="Messenger"
     >
       <svg viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7 text-white" aria-hidden="true">

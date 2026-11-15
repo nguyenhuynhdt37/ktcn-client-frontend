@@ -12,6 +12,7 @@ import { routing } from "@/i18n/routing";
 import { RootProviders } from "@/shared/providers/root-providers";
 import { FireworksCelebrate } from "@/shared/components/FireworksCelebrate";
 import { FloatingMessenger } from "@/shared/components/layout/FloatingMessenger";
+import { ChatWidget } from "@/features/chatbot";
 import "../globals.css";
 
 // Sinh static params cho locales
@@ -262,6 +263,7 @@ export default async function RootLayout({
 
             {/* Floating Messenger Button (Homepage Only) */}
             <FloatingMessenger />
+            <ChatWidget />
           </RootProviders>
         </NextIntlClientProvider>
       </body>
