@@ -48,6 +48,8 @@ import { TopBar } from "@/shared/components/layout/top-bar";
 import { Header } from "@/shared/components/layout/header";
 import { Footer } from "@/shared/components/layout/footer";
 import { menuService } from "@/features/menu/services/menuService";
+import { syncDepartmentMenuColumns } from "@/features/menu/utils/sync-department-menu";
+import { departmentService } from "@/features/department/services/departmentService";
 import { languageService } from "@/features/language/services/languageService";
 import { articleService } from "@/features/article/services/articleService";
 import { PushNotificationManager } from "@/features/notification/components/PushNotificationManager";
@@ -121,15 +123,23 @@ export default async function RootLayout({
   let isMaintenance = false;
 
   try {
-    const [headerRes, footerRes, langRes, articlesData] = await Promise.all([
+    const [headerRes, footerRes, langRes, articlesData, facultiesRes] = await Promise.all([
       menuService.getMenuTree("header").catch(() => null),
       menuService.getMenuTree("footer").catch(() => null),
       languageService.getLanguages().catch(() => []),
-      articleService.getLatestArticles({ page: 1, pageSize: 100 }).catch(() => null)
+      articleService.getLatestArticles({ page: 1, pageSize: 100 }).catch(() => null),
+      departmentService.getDepartments({ unit_type: "faculty", lang: locale }).catch(() => null),
     ]);
 
     headerMenu = headerRes;
     footerMenu = footerRes;
+    // Cột "Các khoa" ở footer luôn lấy tên/slug từ DB (đồng bộ với trang quản trị)
+    if (footerMenu?.items && facultiesRes?.length) {
+      footerMenu = {
+        ...footerMenu,
+        items: syncDepartmentMenuColumns(footerMenu.items, facultiesRes),
+      };
+    }
     languages = langRes || [];
     articles = articlesData?.items || [];
 
