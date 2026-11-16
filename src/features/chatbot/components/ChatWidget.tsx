@@ -58,6 +58,10 @@ function renderText(text: string): ReactNode[] {
 const chipClass =
   "hover:border-brand-darkred hover:text-brand-darkred rounded-full border border-slate-200 bg-white px-3 py-1.5 text-left text-xs text-slate-700 transition-colors";
 
+// Gợi ý câu hỏi tiếp theo: nhỏ hơn và khác tông (xanh nhạt) để không lẫn với bong bóng trả lời màu trắng.
+const followUpClass =
+  "rounded-full border border-sky-200 bg-sky-50 px-2.5 py-1 text-left text-[11px] leading-snug text-sky-800 transition-colors hover:border-sky-400 hover:bg-sky-100";
+
 export function ChatWidget() {
   const locale = useLocale();
   const lang: ChatLang = locale === "en" ? "en" : "vi";
@@ -214,11 +218,11 @@ export function ChatWidget() {
             )}
 
             {messages.length > 0 && !pending && followUps.length > 0 && (
-              <div>
-                <p className="mb-1.5 text-[11px] font-bold tracking-wide text-slate-400 uppercase">{ui.more}</p>
-                <div className="flex flex-wrap gap-2">
+              <div className="mt-1 border-t border-dashed border-slate-200 pt-2.5">
+                <p className="mb-1.5 text-[10px] font-semibold tracking-wide text-sky-700/70 uppercase">{ui.more}</p>
+                <div className="flex flex-wrap gap-1.5">
                   {followUps.map((q) => (
-                    <button key={q} type="button" onClick={() => void send(q)} className={chipClass}>
+                    <button key={q} type="button" onClick={() => void send(q)} className={followUpClass}>
                       {q}
                     </button>
                   ))}
