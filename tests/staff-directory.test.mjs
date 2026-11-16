@@ -1,8 +1,11 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
+  compareVietnameseStaffName,
   filterStaffs,
   getStaffQualifications,
+  getStaffRolePriority,
+  sortStaffsForDirectory,
 } from "../src/features/lecturer/utils/staff-directory.ts";
 import { addStaffDirectoryMenu } from "../src/features/menu/utils/add-staff-directory.ts";
 
@@ -119,4 +122,75 @@ test("missing About menu gets a usable About entry containing the staff director
   const items = addStaffDirectoryMenu([], "vi");
   assert.equal(items[0].title, "Giới thiệu");
   assert.equal(items[0].children[0].target_info.slug, "gioi-thieu/can-bo");
+});
+
+test("directory sorts leadership first, then deans/vice deans, then ABC by Vietnamese given name", () => {
+  const sample = [
+    {
+      id: "quang",
+      full_name: "Võ Đức Quang",
+      position: { id: "p-gv", name: "Giảng viên" },
+      department: { id: "d1", name: "Khoa KHMT", slug: "khoa-khmt" },
+    },
+    {
+      id: "phong",
+      full_name: "Phan Anh Phong",
+      position: { id: "p-gvc", name: "Giảng viên chính" },
+      department: { id: "d1", name: "Khoa KHMT", slug: "khoa-khmt" },
+    },
+    {
+      id: "chuong",
+      full_name: "Lê Văn Chương",
+      position: { id: "p-ptk", name: "Phó trưởng khoa" },
+      department: { id: "d2", name: "Khoa Tự động hóa", slug: "khoa-tu-dong-hoa" },
+    },
+    {
+      id: "son",
+      full_name: "Cao Thanh Sơn",
+      position: { id: "p-tk", name: "Trưởng khoa" },
+      department: { id: "d3", name: "Khoa CNTT", slug: "khoa-cntt" },
+    },
+    {
+      id: "anh-tk",
+      full_name: "Mai Thế Anh",
+      position: { id: "p-tk", name: "Trưởng khoa" },
+      department: { id: "d2", name: "Khoa Tự động hóa", slug: "khoa-tu-dong-hoa" },
+    },
+    {
+      id: "minh-pht",
+      full_name: "Lê Văn Minh",
+      position: { id: "p-pht", name: "Phó Hiệu trưởng" },
+      department: { id: "d3", name: "Khoa CNTT", slug: "khoa-cntt" },
+    },
+    {
+      id: "viet-pt",
+      full_name: "Hoàng Hữu Việt",
+      position: { id: "p-pt", name: "Phó Hiệu trưởng, phụ trách Trường" },
+      department: { id: "d0", name: "Ban lãnh đạo Trường", slug: "ban-lanh-dao-vien" },
+    },
+    {
+      id: "ninh",
+      full_name: "Nguyễn Quang Ninh",
+      position: { id: "p-gvc", name: "Giảng viên chính" },
+      department: { id: "d3", name: "Khoa CNTT", slug: "khoa-cntt" },
+    },
+  ];
+
+  const sortedIds = sortStaffsForDirectory(sample).map((s) => s.id);
+  assert.deepEqual(sortedIds, [
+    "viet-pt",
+    "minh-pht",
+    "anh-tk",
+    "son",
+    "chuong",
+    "ninh",
+    "phong",
+    "quang",
+  ]);
+  assert.equal(getStaffRolePriority(sample[6]), 1);
+  assert.equal(getStaffRolePriority(sample[5]), 2);
+  assert.equal(getStaffRolePriority(sample[4]), 3);
+  assert.equal(getStaffRolePriority(sample[2]), 4);
+  assert.equal(getStaffRolePriority(sample[0]), 5);
+  assert.ok(compareVietnameseStaffName({ full_name: "Nguyễn Văn Dũng" }, { full_name: "Trần Văn Đạt" }) < 0);
 });

@@ -56,7 +56,15 @@ export function StaffHero({ staff, displayName, credentials }: StaffHeroProps) {
           {staff.department && (
             <div className="mt-4 pt-1">
               <Link
-                href={{ pathname: "/bo-mon/[slug]", params: { slug: staff.department.slug } } as any}
+                href={
+                  (staff.department.slug === "ban-lanh-dao-vien" || staff.department.slug === "institute-board-of-management"
+                    ? "/gioi-thieu/can-bo"
+                    : staff.department.slug.startsWith("van-phong")
+                      ? "/gioi-thieu"
+                      : staff.department.slug.startsWith("khoa-") || staff.department.slug.includes("khoa") || staff.department.slug.startsWith("faculty-")
+                        ? { pathname: "/khoa/[slug]", params: { slug: staff.department.slug } }
+                        : { pathname: "/bo-mon/[slug]", params: { slug: staff.department.slug } }) as any
+                }
                 className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 text-xs sm:text-sm font-bold text-white hover:bg-white hover:text-brand-blue hover:border-white transition-all duration-200"
               >
                 <Building2 className="h-4 w-4 shrink-0" aria-hidden="true" />

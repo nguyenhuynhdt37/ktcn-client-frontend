@@ -44,7 +44,7 @@ export async function AboutDepartments() {
           /* Cards Grid */
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedDepts.map((dept) => {
-              const detailUrl = `/bo-mon/${dept.slug}`;
+              const detailUrl = `/khoa/${dept.slug}`;
 
               return (
                 <div

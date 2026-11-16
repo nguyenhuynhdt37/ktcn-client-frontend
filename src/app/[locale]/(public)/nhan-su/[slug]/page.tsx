@@ -53,9 +53,28 @@ export default async function StaffProfilePage({ params }: PageProps) {
     worksFor: staff.department?.name || undefined,
   });
 
+  const deptSlug = staff.department?.slug || "";
+  const isLeadershipDept = deptSlug === "ban-lanh-dao-vien" || deptSlug === "institute-board-of-management";
+  const isOfficeDept = deptSlug.startsWith("van-phong");
+  const isFacultyDept = deptSlug.startsWith("khoa-") || deptSlug.includes("khoa") || deptSlug.startsWith("faculty-");
+  const deptBreadcrumbHref = isLeadershipDept
+    ? "/gioi-thieu/can-bo"
+    : isOfficeDept
+      ? "/gioi-thieu"
+      : isFacultyDept
+        ? `/khoa/${deptSlug}`
+        : `/bo-mon/${deptSlug}`;
+  const deptJsonLdUrl = isLeadershipDept
+    ? `/${locale}/${isEn ? "about/staff" : "gioi-thieu/can-bo"}`
+    : isOfficeDept
+      ? `/${locale}/${isEn ? "about" : "gioi-thieu"}`
+      : isFacultyDept
+        ? `/${locale}/${isEn ? "faculties" : "khoa"}/${deptSlug}`
+        : `/${locale}/${isEn ? "departments" : "bo-mon"}/${deptSlug}`;
+
   const breadcrumbItems = [
     { name: isEn ? "Home" : "Trang chủ", url: "/" },
-    ...(staff.department ? [{ name: staff.department.name, url: `/${locale}/${isEn ? "departments" : "bo-mon"}/${staff.department.slug}` }] : []),
+    ...(staff.department ? [{ name: staff.department.name, url: deptJsonLdUrl }] : []),
     { name: displayName, url: `/${locale}/${isEn ? "staffs" : "nhan-su"}/${slug}` },
   ];
 
@@ -80,9 +99,7 @@ export default async function StaffProfilePage({ params }: PageProps) {
             { name: isEn ? "Home" : "Trang chủ", href: "/" },
             ...(staff.department ? [{ 
               name: staff.department.name, 
-              href: (staff.department.slug.startsWith("khoa-") || staff.department.slug.includes("khoa"))
-                ? `/khoa/${staff.department.slug}` 
-                : `/bo-mon/${staff.department.slug}` 
+              href: deptBreadcrumbHref
             }] : []),
             { name: displayName },
           ]}
