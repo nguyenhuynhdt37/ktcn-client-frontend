@@ -6,14 +6,21 @@ import { MapPin, Facebook, MessageSquare, Search, Clock, CloudSun } from "lucide
 import { LanguageSwitcher, LanguageSwitcherPlaceholder } from "@/features/language/components/LanguageSwitcher";
 import type { Language } from "@/features/language/types/language.types";
 import { ClientNotificationBell } from "@/features/notification/components/ClientNotificationBell";
+import type { SiteSettings } from "@/features/setting/types/setting.types";
+import { sanitizeExternalUrl } from "@/features/setting/services/settingService";
 
 interface TopBarProps {
   initialLanguages?: Language[];
+  settings?: SiteSettings | null;
 }
 
-export function TopBar({ initialLanguages }: TopBarProps) {
+export function TopBar({ initialLanguages, settings }: TopBarProps) {
   const t = useTranslations("common");
   const locale = useLocale();
+  const isEn = locale === "en";
+  const schoolAddress = (isEn ? settings?.address_en : settings?.address_vi) || t("school_address");
+  const facebookUrl = sanitizeExternalUrl(settings?.facebook_url, "https://www.facebook.com/Vienktcn");
+  const messengerUrl = sanitizeExternalUrl(settings?.messenger_url, "#");
   const [searchQuery, setSearchQuery] = useState("");
   const [timeString, setTimeString] = useState("");
   const [weather, setWeather] = useState<{ temp: number; description: string } | null>(null);
@@ -90,7 +97,7 @@ export function TopBar({ initialLanguages }: TopBarProps) {
         {/* Địa chỉ, thời gian và thời tiết (Ẩn trên thiết bị di động) */}
         <div className="hidden min-w-0 items-center gap-2 text-white/75 md:flex">
           <MapPin size={15} className="text-brand-yellow shrink-0" aria-hidden="true" />
-          <span className="mr-1 truncate">{t("school_address")}</span>
+          <span className="mr-1 truncate">{schoolAddress}</span>
 
           {timeString && (
             <span className="mx-1 hidden text-white/30 lg:inline" aria-hidden="true">
@@ -125,18 +132,18 @@ export function TopBar({ initialLanguages }: TopBarProps) {
           <div className="flex items-center">
             <ClientNotificationBell />
             <a
-              href="https://www.facebook.com/Vienktcn"
-              target="_blank"
-              rel="noopener noreferrer"
+              href={facebookUrl}
+              target={facebookUrl !== "#" ? "_blank" : undefined}
+              rel={facebookUrl !== "#" ? "noopener noreferrer" : undefined}
               className="hover:text-brand-yellow inline-flex size-11 items-center justify-center text-white/75 transition-colors duration-150"
               aria-label="Facebook"
             >
               <Facebook size={16} aria-hidden="true" />
             </a>
             <a
-              href="#"
-              target="_blank"
-              rel="noopener noreferrer"
+              href={messengerUrl}
+              target={messengerUrl !== "#" ? "_blank" : undefined}
+              rel={messengerUrl !== "#" ? "noopener noreferrer" : undefined}
               className="hover:text-brand-yellow inline-flex size-11 items-center justify-center text-white/75 transition-colors duration-150"
               aria-label="Messenger"
             >

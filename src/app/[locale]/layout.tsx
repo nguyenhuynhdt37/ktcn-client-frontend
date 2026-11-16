@@ -50,8 +50,12 @@ import { Footer } from "@/shared/components/layout/footer";
 import { menuService } from "@/features/menu/services/menuService";
 import { syncDepartmentMenuColumns } from "@/features/menu/utils/sync-department-menu";
 import { departmentService } from "@/features/department/services/departmentService";
+import { categoryService } from "@/features/category/services/categoryService";
+import type { FooterDynamicData } from "@/features/setting/components/FooterContent";
 import { languageService } from "@/features/language/services/languageService";
 import { articleService } from "@/features/article/services/articleService";
+import { settingService } from "@/features/setting/services/settingService";
+import type { SiteSettings } from "@/features/setting/types/setting.types";
 import { PushNotificationManager } from "@/features/notification/components/PushNotificationManager";
 import { MaintenanceHandler } from "@/shared/components/layout/MaintenanceHandler";
 
@@ -120,19 +124,25 @@ export default async function RootLayout({
   let footerMenu = null;
   let languages: any[] = [];
   let articles: any[] = [];
+  let siteSettings: SiteSettings | null = null;
   let isMaintenance = false;
+  let footerDynamicData: FooterDynamicData | undefined;
 
   try {
-    const [headerRes, footerRes, langRes, articlesData, facultiesRes] = await Promise.all([
+    const [headerRes, footerRes, langRes, articlesData, facultiesRes, settingsRes, unitsRes, categoriesRes] = await Promise.all([
       menuService.getMenuTree("header").catch(() => null),
       menuService.getMenuTree("footer").catch(() => null),
       languageService.getLanguages().catch(() => []),
       articleService.getLatestArticles({ page: 1, pageSize: 100 }).catch(() => null),
       departmentService.getDepartments({ unit_type: "faculty", lang: locale }).catch(() => null),
+      settingService.getSiteSettings().catch(() => null),
+      departmentService.getDepartments({ lang: locale }).catch(() => null),
+      categoryService.getCategoryTree().catch(() => []),
     ]);
 
     headerMenu = headerRes;
     footerMenu = footerRes;
+    siteSettings = settingsRes;
     // Cột "Các khoa" ở footer luôn lấy tên/slug từ DB (đồng bộ với trang quản trị)
     if (footerMenu?.items && facultiesRes?.length) {
       footerMenu = {
@@ -142,6 +152,27 @@ export default async function RootLayout({
     }
     languages = langRes || [];
     articles = articlesData?.items || [];
+    // Dữ liệu động cho các khối "Danh sách liên kết" lấy từ CSDL (khoa, danh mục, bài mới)
+    const dynamicLink = (label: string, href: string, unitType?: string) => ({
+      label_vi: label,
+      label_en: label,
+      href,
+      open_in_new_tab: false,
+      unit_type: unitType,
+    });
+    footerDynamicData = {
+      departments: (unitsRes || []).map((unit) =>
+        dynamicLink(
+          unit.name,
+          unit.unit_type === "faculty" ? `/khoa/${unit.slug}` : `/bo-mon/${unit.slug}`,
+          unit.unit_type,
+        ),
+      ),
+      categories: (categoriesRes || []).map((item) =>
+        dynamicLink(item.name, `/tin-tuc?category_slug=${item.slug}`),
+      ),
+      latest_articles: articles.slice(0, 20).map((item) => dynamicLink(item.title, `/tin-tuc/${item.slug}`)),
+    };
 
     if (languages.length === 0 || !headerMenu) {
       isMaintenance = true;
@@ -249,13 +280,13 @@ export default async function RootLayout({
             <Suspense fallback={null}>
               <FireworksCelebrate />
             </Suspense>
-            <TopBar initialLanguages={languages} />
-            <Header initialMenu={headerMenu} />
+            <TopBar initialLanguages={languages} settings={siteSettings} />
+            <Header initialMenu={headerMenu} settings={siteSettings} />
             <main className="flex-1 relative bg-gradient-to-b from-[#fcfdfd] via-[#f7faf8]/40 to-[#f6fbf8]/50 overflow-x-clip">
               {/* Page content layered in z-10 */}
               <div className="relative z-10 flow-root">{children}</div>
             </main>
-            <Footer initialMenu={footerMenu} />
+            <Footer initialMenu={footerMenu} settings={siteSettings} dynamicData={footerDynamicData} />
 
             {/* Quản lý đăng ký nhận Web Push Notification */}
             <PushNotificationManager />
