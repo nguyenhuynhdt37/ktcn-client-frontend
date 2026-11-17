@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, type FormEvent } from "react";
+import { useState, useRef, useEffect, type FormEvent } from "react";
 import { useRouter, usePathname } from "@/i18n/routing";
 import { useSearchParams, useParams } from "next/navigation";
 import { Home, Search, Phone, Mail, Menu, X, ChevronDown } from "lucide-react";
@@ -75,6 +75,7 @@ export function CetHeader({
   locale: string;
 }) {
   const [open, setOpen] = useState(false);
+  const nav = useRef<HTMLElement>(null);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -85,6 +86,36 @@ export function CetHeader({
     (isEn ? "COLLEGE OF ENGINEERING AND TECHNOLOGY" : "TRƯỜNG KỸ THUẬT VÀ CÔNG NGHỆ")
   ).replace(/\s*[-–,]\s*(Trường Đại học Vinh|Vinh University)$/i, "");
   const items = menu?.items.filter((item) => item.is_visible) ?? [];
+  // Each dropdown is a native <details>, which never closes by itself. Keep one branch open at a
+  // time and close everything on an outside click or after following a link (the header lives in
+  // the layout, so it survives client-side navigation).
+  useEffect(() => {
+    const root = nav.current;
+    if (!root) return;
+    const closeAll = (keep?: Element) => {
+      root.querySelectorAll<HTMLDetailsElement>("details[open]").forEach((details) => {
+        if (!keep || !details.contains(keep)) details.open = false;
+      });
+    };
+    const onToggle = (event: Event) => {
+      const details = event.target as HTMLDetailsElement;
+      if (details.open) closeAll(details);
+    };
+    const onClick = (event: MouseEvent) => {
+      if ((event.target as HTMLElement).closest("a")) closeAll();
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (!root.contains(event.target as Node)) closeAll();
+    };
+    root.addEventListener("toggle", onToggle, true);
+    root.addEventListener("click", onClick);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      root.removeEventListener("toggle", onToggle, true);
+      root.removeEventListener("click", onClick);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, []);
   function search(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const value = String(new FormData(event.currentTarget).get("search") ?? "").trim();
@@ -198,6 +229,7 @@ export function CetHeader({
         </div>
       </header>
       <nav
+        ref={nav}
         className={styles.mainnav}
         aria-label={isEn ? "Main navigation" : "Điều hướng chính"}
         onKeyDown={(event) => {
