@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowUp, Palette, Check, X } from "lucide-react";
 import styles from "../cet.module.css";
 
@@ -16,9 +16,43 @@ const themes = [
 export function CetTheme({ children, locale }: { children: ReactNode; locale: string }) {
   const [theme, setTheme] = useState("red");
   const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
   const isEn = locale === "en";
+
+  // Publish the sticky nav's real height as --cet-nav-h so in-page anchors
+  // (scroll-margin-top) clear it at every breakpoint.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    let observer: ResizeObserver | undefined;
+    let observed: Element | null = null;
+    let frame = 0;
+    const publish = () => {
+      if (observed) {
+        root.style.setProperty("--cet-nav-h", `${Math.round(observed.getBoundingClientRect().height)}px`);
+      }
+    };
+    const attach = () => {
+      const nav = root.querySelector(`.${styles.mainnav}`);
+      if (!nav) return false;
+      observed = nav;
+      publish();
+      if (typeof ResizeObserver !== "undefined") {
+        observer = new ResizeObserver(publish);
+        observer.observe(nav);
+      }
+      return true;
+    };
+    if (!attach()) frame = requestAnimationFrame(attach);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+      root.style.removeProperty("--cet-nav-h");
+    };
+  }, []);
+
   return (
-    <div className={styles.site} data-cet-theme={theme}>
+    <div className={styles.site} data-cet-theme={theme} ref={rootRef}>
       {children}
       <div
         className={styles.themePicker}

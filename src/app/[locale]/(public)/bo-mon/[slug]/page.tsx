@@ -4,6 +4,11 @@ import { setRequestLocale } from "next-intl/server";
 import { constructMetadata, buildBreadcrumbSchema } from "@/shared/lib/seo";
 import { serializeJsonLd } from "@/shared/lib/security";
 import { departmentService, DepartmentRecord } from "@/features/department";
+import { isLeadershipUnit } from "@/features/department/components/LeadershipGroups";
+import { isCetTheme } from "@/features/cet/utils/theme";
+import { CetLeadership } from "@/features/cet/components/CetLeadership";
+import { CetFaculty } from "@/features/cet/components/CetFaculty";
+import { getCetFacultySummaries } from "@/features/cet/services/department-data";
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -82,11 +87,26 @@ export default async function DepartmentOverviewPage({ params }: PageProps) {
 
   const breadcrumbSchema = buildBreadcrumbSchema(breadcrumbItems);
 
+  let content = <DepartmentRecord overview={overview} locale={locale} />;
+  if (isCetTheme()) {
+    if (isLeadershipUnit(department.slug)) {
+      content = (
+        <CetLeadership
+          overview={overview}
+          faculties={await getCetFacultySummaries(locale)}
+          locale={locale}
+        />
+      );
+    } else {
+      content = <CetFaculty overview={overview} locale={locale} />;
+    }
+  }
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }} />
-      <DepartmentRecord overview={overview} locale={locale} />
+      {content}
     </>
   );
 }

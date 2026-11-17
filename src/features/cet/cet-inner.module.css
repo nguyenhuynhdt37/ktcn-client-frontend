@@ -1,0 +1,786 @@
+.pageBand {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(110deg, var(--cet-dark), var(--cet) 60%, var(--cet-light));
+  color: #fff;
+}
+.watermark {
+  position: absolute;
+  width: 640px;
+  height: 640px;
+  object-fit: contain;
+  opacity: 0.09;
+  right: -140px;
+  top: -200px;
+  pointer-events: none;
+}
+.bandInner {
+  position: relative;
+  padding-block: 2rem 2.2rem;
+}
+.crumbs {
+  margin: 0 0 0.6rem;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.5rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #ffffffdf;
+}
+.crumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.crumbs li + li::before {
+  content: "/";
+  opacity: 0.7;
+}
+.crumbs a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.crumbs [aria-current="page"] {
+  overflow-wrap: anywhere;
+}
+.pageTitle {
+  margin: 0;
+  color: #fff;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 2.5rem;
+  align-items: start;
+  padding-block: 2.5rem 3.5rem;
+}
+.layout > * {
+  min-width: 0;
+}
+.sideCard {
+  border: 1px solid var(--cet-line);
+  border-top: 3px solid var(--cet);
+  border-radius: 6px;
+  background: #fff;
+  padding: 1.25rem 1.25rem 1rem;
+}
+.sideCard + .sideCard {
+  margin-top: 1.5rem;
+}
+.sideTitle {
+  margin: 0 0 0.8rem;
+  color: var(--cet);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.sideList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sideList li + li {
+  border-top: 1px solid var(--cet-line);
+}
+.sideList a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding-block: 0.4rem;
+  color: var(--cet-ink);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.sideList a:hover {
+  color: var(--cet);
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.35rem 1rem;
+  border: 1px solid var(--cet-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--cet-ink);
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+.pill:hover {
+  border-color: var(--cet);
+  color: var(--cet);
+}
+.pillActive,
+.pillActive:hover {
+  border-color: var(--cet);
+  background: var(--cet);
+  color: #fff;
+}
+.emptyState {
+  padding: 2.5rem 1.5rem;
+  border: 1px dashed var(--cet-line);
+  border-radius: 6px;
+  background: var(--cet-soft);
+  color: var(--cet-muted);
+  text-align: center;
+  line-height: 1.6;
+}
+
+@media (max-width: 991px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+  }
+}
+@media (max-width: 575px) {
+  .pageTitle {
+    font-size: 1.5rem;
+  }
+  .watermark {
+    width: 420px;
+    height: 420px;
+    right: -120px;
+    top: -120px;
+  }
+}
+
+/* News list */
+.pillRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0 0 1.75rem;
+  padding: 0;
+  list-style: none;
+}
+.newsList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.newsList > li {
+  min-width: 0;
+  display: flex;
+}
+.newsList > li > article {
+  width: 100%;
+}
+.newsList .placeholderThumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--cet-dark), var(--cet));
+  color: #fff;
+}
+/* Keeps the small pill look of base.tag but extends the tap target to >= 44px. */
+.newsList .cardTag {
+  position: relative;
+}
+.newsList .cardTag::after {
+  content: "";
+  position: absolute;
+  inset: -11px -6px;
+}
+.newsList .cardTag + h3 {
+  margin-top: 0.9rem;
+}
+.activeFilter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  margin: 0 0 1.25rem;
+  color: var(--cet-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.activeFilter strong {
+  color: var(--cet-ink);
+}
+.activeFilter a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--cet);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.pagination {
+  margin-top: 2.25rem;
+}
+.paginationList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pageLink,
+.pageEllipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--cet-line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--cet-ink);
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+.pageLink:hover {
+  border-color: var(--cet);
+  color: var(--cet);
+}
+.pageCurrent,
+.pageCurrent:hover {
+  border-color: var(--cet);
+  background: var(--cet);
+  color: #fff;
+  font-weight: 600;
+}
+.pageEllipsis {
+  border-color: transparent;
+  background: transparent;
+  color: var(--cet-muted);
+}
+.emptyState a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 0.5rem;
+  color: var(--cet);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+  .newsList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Article detail */
+.articleMain {
+  min-width: 0;
+  max-width: 100%;
+}
+.categoryPill {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 0.9rem;
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  background: var(--cet-soft);
+  color: var(--cet);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.articleTitle {
+  margin: 0 0 1rem;
+  color: var(--cet-ink);
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.5rem;
+  margin: 0 0 1.5rem;
+  padding: 0 0 1.25rem;
+  border-bottom: 1px solid var(--cet-line);
+  list-style: none;
+  color: var(--cet-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.metaRow li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+.metaRow svg {
+  flex: none;
+  color: var(--cet);
+}
+.metaRow span,
+.metaRow time {
+  overflow-wrap: anywhere;
+}
+.cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 0 0 1.5rem;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--cet-soft);
+}
+.cover img {
+  object-fit: cover;
+}
+.articleExcerpt {
+  margin: 0 0 1.5rem;
+  padding: 0.9rem 1.1rem;
+  border-left: 4px solid var(--cet-gold);
+  border-radius: 0 6px 6px 0;
+  background: var(--cet-soft);
+  color: var(--cet-ink);
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.articleBody {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.articleBody p {
+  text-align: left;
+}
+div.articleBody a {
+  color: var(--cet);
+}
+div.articleBody a:hover {
+  color: var(--cet-dark);
+}
+.articleBody img,
+.articleBody video,
+.articleBody iframe,
+.articleBody figure {
+  max-width: 100%;
+}
+.articleBody table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.articleBody pre {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-wrap: normal;
+}
+.tagRow,
+.shareRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.9rem;
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--cet-line);
+}
+.shareRow {
+  margin-top: 1.25rem;
+}
+.tagRow + .shareRow {
+  padding-top: 0;
+  border-top: 0;
+}
+.rowLabel {
+  color: var(--cet-ink);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.inlineList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.inlineList li {
+  min-width: 0;
+}
+.inlineList .pill {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.shareLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0.35rem 1rem;
+  border: 1px solid var(--cet-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--cet);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.shareLink:hover {
+  border-color: var(--cet);
+  background: var(--cet-soft);
+  color: var(--cet-dark);
+}
+@media (max-width: 575px) {
+  .articleTitle {
+    font-size: 1.6rem;
+  }
+}
+
+/* Organisation / leadership */
+.orgSection {
+  padding-block: 2.5rem 1rem;
+}
+.orgSection + .orgSection {
+  padding-block: 1.5rem 1rem;
+}
+.orgPage {
+  padding-bottom: 3.5rem;
+}
+.groupTitle {
+  margin: 0 0 1rem;
+  color: var(--cet-ink);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.groupBlock + .groupBlock {
+  margin-top: 2rem;
+}
+.staffGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.staffGrid > li {
+  min-width: 0;
+  display: flex;
+}
+.staffCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.1rem;
+  width: 100%;
+  padding: 1.25rem;
+  border: 1px solid var(--cet-line);
+  border-radius: 8px;
+  background: #fff;
+}
+.avatar {
+  position: relative;
+  flex: none;
+  display: block;
+  width: 96px;
+  height: 96px;
+  overflow: hidden;
+  border: 2px solid var(--cet);
+  border-radius: 50%;
+  background: var(--cet-soft);
+}
+.avatarImage {
+  object-fit: cover;
+  object-position: top;
+}
+.avatarFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--cet);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.staffBody {
+  min-width: 0;
+  flex: 1;
+}
+.staffName {
+  margin: 0;
+  color: var(--cet-ink);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.staffName a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: inherit;
+}
+.staffName a:hover {
+  color: var(--cet);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.staffPosition {
+  margin: 0.15rem 0 0;
+  color: var(--cet);
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.dutyLabel {
+  margin: 0.7rem 0 0.1rem;
+  color: var(--cet-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.dutyText {
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--cet-ink);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.orgFacultyGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.orgFacultyGrid > li {
+  min-width: 0;
+  display: flex;
+}
+.orgFaculty {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--cet-line);
+  border-top: 4px solid var(--cet);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--cet-ink);
+}
+.orgFaculty:hover {
+  border-color: var(--cet);
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--cet) 7%, transparent);
+}
+.orgFaculty h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.orgFaculty:hover h3 {
+  color: var(--cet);
+}
+.orgFaculty p {
+  margin: 0;
+  color: var(--cet-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.contactCard {
+  max-width: 520px;
+}
+.contactList {
+  display: grid;
+  gap: 0.5rem 1rem;
+  margin: 0;
+}
+.contactList > div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+}
+.contactList dt {
+  color: var(--cet-muted);
+  font-size: 0.9rem;
+}
+.contactList dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+.contactList a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--cet);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 991px) {
+  .orgFacultyGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 767px) {
+  .staffGrid,
+  .orgFacultyGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 399px) {
+  .staffCard {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .staffBody {
+    width: 100%;
+  }
+  .contactList > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
+
+/* Faculty / department page */
+.layoutSingle {
+  grid-template-columns: minmax(0, 1fr);
+}
+.facultyMain > * + * {
+  margin-top: 2.75rem;
+}
+/* Clear the sticky main nav (.mainnav in cet.module.css, top: 0) plus a 1rem gap.
+   --cet-nav-h is the measured nav height, written by CetTheme (kept live with a
+   ResizeObserver); 4.5rem is only the pre-hydration fallback. */
+.facultySection {
+  scroll-margin-top: calc(var(--cet-nav-h, 4.5rem) + 1rem);
+}
+.subBlock {
+  margin-top: 1.5rem;
+}
+.subTitle {
+  margin: 0 0 0.5rem;
+  color: var(--cet-ink);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.programGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.programGrid > li {
+  min-width: 0;
+  display: flex;
+}
+.orgFaculty .tileSummary {
+  margin-top: 0.4rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.facultyNews {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.facultyNews > li {
+  min-width: 0;
+  display: flex;
+}
+.facultyNews > li > article {
+  width: 100%;
+}
+.facultyNews .placeholderThumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--cet-dark), var(--cet));
+  color: #fff;
+}
+.facultyNews .newsTileTitle {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.facultyNews .newsTileTitle a {
+  display: -webkit-box;
+  min-height: 44px;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.facultyStaffList {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.facultyStaff {
+  align-items: center;
+}
+.facultyStaff .avatar {
+  width: 88px;
+  height: 110px;
+  border-width: 1px;
+  border-radius: 10px;
+}
+.facultyStaff .avatarFallback {
+  font-size: 1.6rem;
+}
+.staffBio {
+  margin-top: 0.35rem;
+  -webkit-line-clamp: 2;
+}
+
+@media (max-width: 575px) {
+  .programGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

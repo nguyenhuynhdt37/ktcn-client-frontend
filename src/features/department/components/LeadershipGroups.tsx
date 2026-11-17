@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/routing";
 import { StaffPortrait } from "@/features/lecturer/components/StaffPortrait";
 import { getStaffQualifications } from "@/features/lecturer/utils/staff-directory";
+import { leaderGroup } from "@/features/cet/utils/inner";
 import type { DepartmentOverview } from "../types/department.types";
 
 type LeaderItem = DepartmentOverview["staffs"][number];
@@ -16,31 +17,12 @@ export function isLeadershipUnit(slug: string): boolean {
   return LEADERSHIP_SLUGS.includes(slug);
 }
 
-/** Bỏ dấu + lowercase để so khớp chức vụ ổn định. */
-function normalize(value: string): string {
-  return value
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/đ/gi, "d")
-    .toLowerCase();
-}
-
-/** Xếp nhóm: 0 = Hiệu trưởng, 1 = Phó Hiệu trưởng, 2 = khác. */
-function getGroup(position: string | null | undefined, isEn: boolean) {
-  const p = normalize(position ?? "");
-  const isDeputy = /(^|\b)(pho hieu truong|vice rector|vice president|deputy)/.test(p);
-  const isHead = !isDeputy && /(hieu truong|rector|president)/.test(p);
-  if (isHead) return { order: 0, label: isEn ? "Rector" : "Hiệu trưởng" };
-  if (isDeputy) return { order: 1, label: isEn ? "Vice Rectors" : "Phó Hiệu trưởng" };
-  return { order: 2, label: isEn ? "Other Leaders" : "Thành viên khác" };
-}
-
 export function LeadershipGroups({ staffs, locale }: LeadershipGroupsProps) {
   const isEn = locale === "en";
 
   const groups = new Map<number, { label: string; items: LeaderItem[] }>();
   for (const staff of staffs) {
-    const g = getGroup(staff.position_name, isEn);
+    const g = leaderGroup(staff.position_name, isEn);
     const bucket = groups.get(g.order) ?? { label: g.label, items: [] };
     bucket.items.push(staff);
     groups.set(g.order, bucket);

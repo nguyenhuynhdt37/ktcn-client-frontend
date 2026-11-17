@@ -4,6 +4,8 @@ import { setRequestLocale } from "next-intl/server";
 import { constructMetadata, buildBreadcrumbSchema } from "@/shared/lib/seo";
 import { serializeJsonLd } from "@/shared/lib/security";
 import { departmentService, DepartmentRecord } from "@/features/department";
+import { isCetTheme } from "@/features/cet/utils/theme";
+import { CetFaculty } from "@/features/cet/components/CetFaculty";
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -87,7 +89,11 @@ export default async function FacultyOverviewPage({ params }: PageProps) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }} />
-      <DepartmentRecord overview={overview} locale={locale} />
+      {isCetTheme() ? (
+        <CetFaculty overview={overview} locale={locale} />
+      ) : (
+        <DepartmentRecord overview={overview} locale={locale} />
+      )}
     </>
   );
 }

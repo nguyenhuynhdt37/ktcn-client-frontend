@@ -19,6 +19,14 @@ không thay đổi database, backend hoặc admin.
   dịch riêng theo ngôn ngữ; không dùng lại slug tiếng Việt cho bài tiếng Anh.
 - Menu dùng được bằng bàn phím và trên điện thoại; nội dung có trạng thái rỗng/lỗi.
 - CSS Modules cô lập phần giao diện mới; không nạp Bootstrap hoặc script của template.
+- Bốn loại trang trong đã chuyển sang giao diện mới, chỉ hiển thị khi `FRONTEND_THEME=cet-v2`:
+  - Danh sách tin và tìm kiếm (`/vi/tim-kiem`): các nút chuyên mục lấy từ cây
+    chuyên mục thật, lọc theo thẻ có ghi chú và liên kết xóa bộ lọc, phân trang, thẻ "Đọc nhiều".
+  - Chi tiết bài viết: ảnh bìa, thẻ, chia sẻ, thẻ "Tin liên quan" (ẩn nếu không có bài liên quan).
+  - Ban lãnh đạo (`/vi/bo-mon/ban-lanh-dao-vien`): nhóm Hiệu trưởng, Phó Hiệu trưởng, thành viên khác.
+  - Trang khoa/bộ môn: sidebar mục (Giới thiệu, Chương trình đào tạo, Tin tức, Cán bộ), thẻ cán bộ,
+    thông tin liên hệ.
+- Đào tạo, Giới thiệu, Lịch tuần, Nhân sự và Tư vấn tuyển sinh vẫn dùng nội dung cũ.
 
 ## Kiểm tra
 
@@ -26,6 +34,9 @@ không thay đổi database, backend hoặc admin.
 Kiểm tra thực tế trang chủ, tìm kiếm, bài viết, menu, tiếng Anh và viewport
 320 / 768 / 1024 / 1440 px. Kiểm tra website test cũ vẫn trả HTTP 200 và container cũ
 không bị tạo lại sau khi triển khai.
+
+Kiểm tra cục bộ dùng `.env.local` với `FRONTEND_THEME=cet-v2` và `NEXT_PUBLIC_API_URL`
+trỏ tới API test; xóa hoặc đổi biến `FRONTEND_THEME` để so sánh với giao diện cũ.
 
 ## Triển khai và khôi phục
 

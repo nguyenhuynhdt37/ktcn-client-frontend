@@ -7,8 +7,11 @@ import { articleService, TableOfContents, parseHeadings } from "@/features/artic
 import { getLocalizedField, formatDate } from "@/features/article/utils/map-article";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Breadcrumb, BreadcrumbItem } from "@/shared/components/ui/breadcrumb";
-import { constructMetadata, buildArticleSchema, buildBreadcrumbSchema } from "@/shared/lib/seo";
+import { constructMetadata, buildArticleSchema, buildBreadcrumbSchema, BASE_URL } from "@/shared/lib/seo";
 import { sanitizeRichHtml, serializeJsonLd } from "@/shared/lib/security";
+import { isCetTheme } from "@/features/cet/utils/theme";
+import { getCetRelatedArticles } from "@/features/cet/services/article-data";
+import { CetArticleDetail } from "@/features/cet/components/CetArticleDetail";
 
 interface ArticleDetailPageProps {
   params: Promise<{ slug: string; locale: string }>;
@@ -65,13 +68,20 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
     notFound();
   }
 
+  const cet = isCetTheme();
+
   // Gọi song song danh sách tin mới nhất (Sidebar) và các bài viết liên quan (Sidebar)
-  const sidebarNewsPromise = articleService.getLatestArticles({ 
-    page: 1, 
-    pageSize: 5, 
-    excludeCategorySlugs: ["lich-tuan", "weekly-calendar", "gioi-thieu", "chuc-nang-nhiem-vu", "lich-su-phat-trien"] 
-  });
-  const relatedNewsPromise = articleService.getArticlesByCategory(article.category.slug, 1, 5);
+  // (giao diện CET tự lấy tin liên quan riêng nên bỏ qua hai lời gọi này)
+  const sidebarNewsPromise = cet
+    ? Promise.resolve(null)
+    : articleService.getLatestArticles({
+        page: 1,
+        pageSize: 5,
+        excludeCategorySlugs: ["lich-tuan", "weekly-calendar", "gioi-thieu", "chuc-nang-nhiem-vu", "lich-su-phat-trien"]
+      });
+  const relatedNewsPromise = cet
+    ? Promise.resolve(null)
+    : articleService.getArticlesByCategory(article.category.slug, 1, 5);
 
   const [sidebarNewsData, relatedNewsData] = await Promise.all([
     sidebarNewsPromise,
@@ -130,7 +140,7 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
     }))
   );
 
-  return (
+  const jsonLdScripts = (
     <>
       {/* Chèn cấu trúc dữ liệu JSON-LD Schema.org tối ưu SEO Google */}
       <script
@@ -141,6 +151,31 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
       />
+    </>
+  );
+
+  if (cet) {
+    const related = await getCetRelatedArticles(article.category.slug, article.id);
+    // BASE_URL = NEXT_PUBLIC_SITE_URL với giá trị dự phòng tuyệt đối (không bao giờ undefined)
+    const siteUrl = BASE_URL.replace(/\/+$/, "");
+    const shareUrl = `${siteUrl}/${locale}/${slug}`;
+    return (
+      <>
+        {jsonLdScripts}
+        <CetArticleDetail
+          article={article}
+          related={related}
+          cleanHtml={cleanHtml}
+          locale={locale}
+          shareUrl={shareUrl}
+        />
+      </>
+    );
+  }
+
+  return (
+    <>
+      {jsonLdScripts}
 
       <div className="bg-section-alt min-h-screen py-8 sm:py-12">
         <div className="site-container space-y-6">

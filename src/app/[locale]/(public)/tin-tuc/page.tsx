@@ -3,6 +3,9 @@ import { articleService, ArticlePortalContainer } from "@/features/article";
 import { categoryService } from "@/features/category";
 import { setRequestLocale } from "next-intl/server";
 import { constructMetadata } from "@/shared/lib/seo";
+import { isCetTheme } from "@/features/cet/utils/theme";
+import { getCetNewsData } from "@/features/cet/services/news-data";
+import { CetNewsList } from "@/features/cet/components/CetNewsList";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -78,7 +81,18 @@ export default async function NewsAggregatePage({ params, searchParams }: PagePr
   setRequestLocale(locale);
 
   const { page, q, category, category_slug, tag, tag_slug, sort_by, sort_dir } = await searchParams;
-  
+
+  if (isCetTheme()) {
+    const parsedPage = parseInt(page || "1", 10);
+    const data = await getCetNewsData({
+      q: q || "",
+      category: category_slug || category || "",
+      tag: tag_slug || tag || "",
+      page: Number.isFinite(parsedPage) && parsedPage >= 1 ? parsedPage : 1,
+    });
+    return <CetNewsList data={data} locale={locale} />;
+  }
+
   const currentPage = parseInt(page || "1");
   const searchQuery = q || "";
   const categorySlug = category_slug || category || "";
