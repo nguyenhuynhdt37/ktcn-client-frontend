@@ -1,0 +1,29 @@
+# Install as a separate file in the gateway's watched dynamic configuration directory.
+# Keep the existing test and production routing files unchanged.
+http:
+  routers:
+    test-v2-ktcn-router:
+      entryPoints: [websecure]
+      rule: Host(`test-v2-ktcn.itup.io.vn`)
+      service: test-v2-ktcn-svc
+      middlewares: [test-v2-ktcn-robots]
+      tls:
+        certResolver: letsencrypt
+    test-v2-ktcn-api-router:
+      entryPoints: [websecure]
+      rule: Host(`test-v2-ktcn.itup.io.vn`) && PathPrefix(`/api/`)
+      priority: 100
+      service: test-api-ktcn-svc
+      middlewares: [test-v2-ktcn-robots]
+      tls:
+        certResolver: letsencrypt
+  services:
+    test-v2-ktcn-svc:
+      loadBalancer:
+        servers:
+          - url: http://10.10.10.100:13003
+  middlewares:
+    test-v2-ktcn-robots:
+      headers:
+        customResponseHeaders:
+          X-Robots-Tag: noindex, nofollow

@@ -16,6 +16,8 @@ import { articleService } from "@/features/article/services/articleService";
 import { mapPortalArticleToFE, getLocalizedField, formatDate } from "@/features/article/utils/map-article";
 import { ResearchSection } from "@/features/research/components/ResearchSection";
 import { StudentActivities } from "@/features/student/components/StudentActivities";
+import { CetHome } from "@/features/cet/components/CetHome";
+import { getCetHomeData } from "@/features/cet/services/home-data";
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
@@ -44,6 +46,9 @@ export default async function HomePage({ params }: HomePageProps) {
 
   // Cấu hình static rendering locale
   setRequestLocale(locale);
+  if (process.env.FRONTEND_THEME === "cet-v2") {
+    return <CetHome data={await getCetHomeData(locale)} locale={locale} />;
+  }
   const tCommon = await getTranslations({ locale, namespace: "common" });
 
   const newsCategorySlug = "tin-tuc-va-su-kien";

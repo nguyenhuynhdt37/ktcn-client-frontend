@@ -58,6 +58,10 @@ import { settingService } from "@/features/setting/services/settingService";
 import type { SiteSettings } from "@/features/setting/types/setting.types";
 import { PushNotificationManager } from "@/features/notification/components/PushNotificationManager";
 import { MaintenanceHandler } from "@/shared/components/layout/MaintenanceHandler";
+import { CetHeader } from "@/features/cet/components/CetHeader";
+import { CetFooter } from "@/features/cet/components/CetFooter";
+import { CetTheme } from "@/features/cet/components/CetTheme";
+import type { PortalDepartment } from "@/features/department/types/department.types";
 
 // Helper chuyển tiếng Việt có dấu thành không dấu, thay khoảng trắng bằng gạch ngang
 function toSlug(str: string): string {
@@ -127,6 +131,7 @@ export default async function RootLayout({
   let siteSettings: SiteSettings | null = null;
   let isMaintenance = false;
   let footerDynamicData: FooterDynamicData | undefined;
+  let cetFaculties: PortalDepartment[] = [];
 
   try {
     const [headerRes, footerRes, langRes, articlesData, facultiesRes, settingsRes, unitsRes, categoriesRes] = await Promise.all([
@@ -143,6 +148,7 @@ export default async function RootLayout({
     headerMenu = headerRes;
     footerMenu = footerRes;
     siteSettings = settingsRes;
+    cetFaculties = facultiesRes || [];
     // Cột "Các khoa" ở footer luôn lấy tên/slug từ DB (đồng bộ với trang quản trị)
     if (footerMenu?.items && facultiesRes?.length) {
       footerMenu = {
@@ -277,6 +283,17 @@ export default async function RootLayout({
 
         <NextIntlClientProvider messages={messages}>
           <RootProviders>
+            {process.env.FRONTEND_THEME === "cet-v2" ? (
+              <CetTheme locale={locale}>
+                <Suspense fallback={null}>
+                  <CetHeader menu={headerMenu} settings={siteSettings} locale={locale} />
+                </Suspense>
+                <main id="cet-main">{children}</main>
+                <CetFooter settings={siteSettings} departments={cetFaculties} locale={locale} />
+                <PushNotificationManager />
+                <ChatWidget />
+              </CetTheme>
+            ) : <>
             <Suspense fallback={null}>
               <FireworksCelebrate />
             </Suspense>
@@ -293,6 +310,7 @@ export default async function RootLayout({
 
             {/* Floating Messenger Button (Homepage Only) */}
             <ChatWidget />
+            </>}
           </RootProviders>
         </NextIntlClientProvider>
       </body>
