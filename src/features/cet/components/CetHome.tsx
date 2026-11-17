@@ -22,7 +22,7 @@ import styles from "../cet.module.css";
 
 export function CetHome({ data, locale }: { data: CetHomeData; locale: string }) {
   const isEn = locale === "en";
-  const { news, notices, programs, faculties, banner, settings } = data;
+  const { news, notices, programs, faculties, settings } = data;
   const empty = isEn ? "No content has been published yet." : "Chưa có nội dung được đăng tải.";
   const quickLinks = [
     { title: isEn ? "Weekly calendar" : "Lịch tuần", href: "/lich-tuan", icon: CalendarDays },
@@ -98,31 +98,6 @@ export function CetHome({ data, locale }: { data: CetHomeData; locale: string })
                 {isEn ? "Organisation" : "Cơ cấu tổ chức"}
               </CetLink>
             </div>
-            {banner && (
-              <div className={styles.banner}>
-                {banner.link_url ? (
-                  <CetLink
-                    href={banner.link_url}
-                    locale={locale}
-                    target={banner.open_in_new_tab ? "_blank" : undefined}
-                  >
-                    <SafeImage
-                      src={banner.desktop_image_object_key}
-                      alt={getLocalizedField<string>(banner, "title", locale)}
-                      fill
-                      sizes="(min-width: 992px) 600px, 100vw"
-                    />
-                  </CetLink>
-                ) : (
-                  <SafeImage
-                    src={banner.desktop_image_object_key}
-                    alt={getLocalizedField<string>(banner, "title", locale)}
-                    fill
-                    sizes="(min-width: 992px) 600px, 100vw"
-                  />
-                )}
-              </div>
-            )}
           </div>
           <aside className={styles.notice} aria-labelledby="cet-notice-title">
             <h2 id="cet-notice-title">

@@ -18,7 +18,18 @@ export function CetFooter({
     (isEn ? settings?.college_name_en : settings?.college_name_vi) ||
     (isEn ? "College of Engineering and Technology" : "Trường Kỹ thuật và Công nghệ");
   const address = isEn ? settings?.address_en : settings?.address_vi;
-  const links = [...(settings?.quick_links ?? []), ...(settings?.external_links ?? [])];
+  const seenLinks = new Set(["vinhuni.edu.vn"]);
+  const links = [...(settings?.quick_links ?? []), ...(settings?.external_links ?? [])]
+    .filter((link) => {
+      const key = link.href
+        .trim()
+        .replace(/^https?:\/\/(?:www\.)?/i, "")
+        .replace(/\/$/, "");
+      if (!key || seenLinks.has(key)) return false;
+      seenLinks.add(key);
+      return true;
+    })
+    .slice(0, 2);
   return (
     <footer className={styles.footer} id="lien-he">
       <div className={`${styles.container} ${styles.footerGrid}`}>
