@@ -149,33 +149,33 @@
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  padding-block: 1rem;
+  padding-block: 0.6rem;
 }
 .brand {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   min-width: 0;
 }
 .brand img {
   flex: 0 0 auto;
-  width: 84px;
-  height: 84px;
+  width: 64px;
+  height: 64px;
   object-fit: contain;
 }
 .university {
-  font-size: 1.4rem;
+  font-size: 0.9rem;
   line-height: 1.15;
-  font-weight: 500;
+  font-weight: 600;
   color: #0b4f9c;
 }
 .college {
   color: var(--cet);
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   font-weight: 800;
-  letter-spacing: 0.035em;
-  line-height: 1.4;
-  margin-top: 0.35rem;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  margin-top: 0.15rem;
   text-transform: uppercase;
 }
 .desktopSearch {
@@ -975,10 +975,10 @@
     height: 54px;
   }
   .university {
-    font-size: clamp(0.8rem, 3.3vw, 1.1rem);
+    font-size: clamp(0.65rem, 2.6vw, 0.85rem);
   }
   .college {
-    font-size: clamp(0.65rem, 2.3vw, 0.8rem);
+    font-size: clamp(0.8rem, 3.4vw, 1.1rem);
     letter-spacing: 0.015em;
   }
   .heroGrid {

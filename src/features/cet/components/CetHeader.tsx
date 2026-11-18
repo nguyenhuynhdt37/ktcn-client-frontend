@@ -274,7 +274,7 @@ export function CetHeader({
               />
               <div>
                 <div className={styles.university}>
-                  {isEn ? "- VINH UNIVERSITY -" : "- TRƯỜNG ĐẠI HỌC VINH -"}
+                  {isEn ? "VINH UNIVERSITY" : "TRƯỜNG ĐẠI HỌC VINH"}
                 </div>
                 <div className={styles.college}>{name}</div>
               </div>
