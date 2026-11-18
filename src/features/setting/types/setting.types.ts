@@ -7,6 +7,14 @@ export interface FooterLinkItem {
   open_in_new_tab: boolean;
 }
 
+export interface HomeShortcutItem {
+  label_vi: string;
+  label_en: string;
+  href: string;
+  icon: string;
+  open_in_new_tab: boolean;
+}
+
 export interface SiteSettings {
   footer_builder?: FooterBuilder | null;
   header_logo_width?: number;
@@ -36,4 +44,5 @@ export interface SiteSettings {
   developer_url: string;
   quick_links: FooterLinkItem[];
   external_links: FooterLinkItem[];
+  home_shortcuts?: HomeShortcutItem[];
 }

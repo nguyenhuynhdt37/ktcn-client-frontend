@@ -784,3 +784,113 @@ div.articleBody a:hover {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Documents (Văn bản – Biểu mẫu, Bài giảng – Giáo trình) */
+.docPage {
+  padding-block: 2rem 3rem;
+}
+.docSearch {
+  display: flex;
+  max-width: 420px;
+  margin: 1.25rem 0 1.5rem;
+}
+.docSearch input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 0.9rem;
+  border: 1px solid var(--cet-line);
+  border-right: 0;
+  border-radius: 5px 0 0 5px;
+  background: #fff;
+  color: var(--cet-ink);
+  font: inherit;
+}
+.docSearch button {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 0 5px 5px 0;
+  background: var(--cet);
+  color: #fff;
+  cursor: pointer;
+}
+.docList {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.docItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--cet-line);
+  border-radius: 8px;
+  background: #fff;
+}
+.docIcon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--cet-soft);
+  color: var(--cet);
+}
+.docBody {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.docBody h3 {
+  margin: 0;
+  color: var(--cet-ink);
+  font-size: 1.02rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.docBody p {
+  margin: 0.25rem 0 0;
+  color: var(--cet-muted);
+  font-size: 0.92rem;
+}
+.docMeta {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--cet-muted);
+  font-size: 0.82rem;
+}
+.docDownload {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1px solid var(--cet);
+  border-radius: 5px;
+  color: var(--cet);
+  font-weight: 600;
+}
+.docDownload:hover {
+  background: var(--cet);
+  color: #fff;
+}
+
+@media (max-width: 767px) {
+  .docItem {
+    flex-wrap: wrap;
+  }
+  .docBody {
+    flex-basis: calc(100% - 60px);
+  }
+  .docDownload {
+    width: 100%;
+    justify-content: center;
+  }
+}

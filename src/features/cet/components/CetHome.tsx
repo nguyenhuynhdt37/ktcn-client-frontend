@@ -6,6 +6,9 @@ import {
   BriefcaseBusiness,
   CalendarDays,
   ChevronRight,
+  Download,
+  Link as LinkIcon,
+  type LucideIcon,
   Cpu,
   FileText,
   GraduationCap,
@@ -16,38 +19,45 @@ import {
 } from "lucide-react";
 import { SafeImage } from "@/shared/components/ui/safe-image";
 import { getLocalizedField, formatDate } from "@/features/article/utils/map-article";
+import type { HomeShortcutItem } from "@/features/setting/types/setting.types";
 import type { CetHomeData } from "../services/home-data";
 import { CetLink } from "./CetLink";
 import styles from "../cet.module.css";
+
+const SHORTCUT_ICONS: Record<string, LucideIcon> = {
+  calendar: CalendarDays,
+  mail: Mail,
+  "file-text": FileText,
+  "book-open": BookOpen,
+  briefcase: BriefcaseBusiness,
+  "message-circle": MessageCircle,
+  link: LinkIcon,
+  download: Download,
+  "graduation-cap": GraduationCap,
+  users: Users,
+};
+
+const DEFAULT_SHORTCUTS: HomeShortcutItem[] = [
+  { label_vi: "Lịch tuần", label_en: "Weekly calendar", href: "/lich-tuan", icon: "calendar", open_in_new_tab: false },
+  { label_vi: "Thư điện tử", label_en: "Webmail", href: "https://outlook.office.com/", icon: "mail", open_in_new_tab: true },
+  { label_vi: "Văn bản – Biểu mẫu", label_en: "Documents & forms", href: "/tai-lieu/van-ban-bieu-mau", icon: "file-text", open_in_new_tab: false },
+  { label_vi: "Bài giảng – Giáo trình", label_en: "Lectures & textbooks", href: "/tai-lieu/bai-giang-giao-trinh", icon: "book-open", open_in_new_tab: false },
+  { label_vi: "Thông tin việc làm", label_en: "Career opportunities", href: "/tin-tuc?category_slug=tuyen-dung", icon: "briefcase", open_in_new_tab: false },
+  { label_vi: "Hỏi đáp", label_en: "Questions & answers", href: "/tu-van-tuyen-sinh", icon: "message-circle", open_in_new_tab: false },
+];
 
 export function CetHome({ data, locale }: { data: CetHomeData; locale: string }) {
   const isEn = locale === "en";
   const { news, notices, programs, faculties, settings } = data;
   const empty = isEn ? "No content has been published yet." : "Chưa có nội dung được đăng tải.";
-  const quickLinks = [
-    { title: isEn ? "Weekly calendar" : "Lịch tuần", href: "/lich-tuan", icon: CalendarDays },
-    { title: isEn ? "Webmail" : "Thư điện tử", href: "https://outlook.office.com/", icon: Mail },
-    {
-      title: isEn ? "Documents & forms" : "Văn bản – Biểu mẫu",
-      href: "/tin-tuc?category_slug=van-ban-bieu-mau",
-      icon: FileText,
-    },
-    {
-      title: isEn ? "E-learning" : "Bài giảng – Giáo trình",
-      href: "https://elearning.vinhuni.edu.vn/",
-      icon: BookOpen,
-    },
-    {
-      title: isEn ? "Career opportunities" : "Thông tin việc làm",
-      href: "/tin-tuc?category_slug=tuyen-dung",
-      icon: BriefcaseBusiness,
-    },
-    {
-      title: isEn ? "Questions & answers" : "Hỏi đáp",
-      href: "/tu-van-tuyen-sinh",
-      icon: MessageCircle,
-    },
-  ];
+  const quickLinks = (settings?.home_shortcuts?.length ? settings.home_shortcuts : DEFAULT_SHORTCUTS).map(
+    (item) => ({
+      title: (isEn ? item.label_en : item.label_vi) || item.label_vi,
+      href: item.href,
+      icon: SHORTCUT_ICONS[item.icon] ?? LinkIcon,
+      newTab: item.open_in_new_tab || /^https?:/i.test(item.href),
+    }),
+  );
   const school =
     (isEn ? settings?.college_name_en : settings?.college_name_vi) ||
     (isEn ? "College of Engineering and Technology" : "Trường Kỹ thuật và Công nghệ");
@@ -128,12 +138,12 @@ export function CetHome({ data, locale }: { data: CetHomeData; locale: string })
       </section>
       <nav className={styles.quick} aria-label={isEn ? "Quick access" : "Truy cập nhanh"}>
         <div className={styles.container}>
-          {quickLinks.map(({ title, href, icon: Icon }) => (
+          {quickLinks.map(({ title, href, icon: Icon, newTab }) => (
             <CetLink
               key={href}
               href={href}
               locale={locale}
-              target={href.startsWith("http") ? "_blank" : undefined}
+              target={newTab ? "_blank" : undefined}
             >
               <Icon size={25} strokeWidth={1.6} aria-hidden="true" />
               <span>{title}</span>

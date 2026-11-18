@@ -92,7 +92,7 @@ export function CetNewsList({ data, locale }: { data: CetNewsData; locale: strin
     { title: isEn ? "Weekly calendar" : "Lịch tuần", href: "/lich-tuan" },
     {
       title: isEn ? "Documents & forms" : "Văn bản – Biểu mẫu",
-      href: "/tin-tuc?category_slug=van-ban-bieu-mau",
+      href: "/tai-lieu/van-ban-bieu-mau",
     },
     {
       title: isEn ? "Scholarships" : "Học bổng",

@@ -17,6 +17,7 @@ export function localizedPortalHref(raw: string, locale: string): string {
     "/dao-tao/dai-hoc",
     "/dao-tao/sau-dai-hoc",
     "/lich-tuan",
+    "/tai-lieu",
   ] as const;
   for (const route of routes) {
     const prefix = `${route}/`;

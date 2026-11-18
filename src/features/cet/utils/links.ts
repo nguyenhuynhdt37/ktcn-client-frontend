@@ -26,6 +26,7 @@ export function languageSwitchTarget(
     "/dao-tao/dai-hoc/[slug]": "/dao-tao/dai-hoc",
     "/dao-tao/sau-dai-hoc/[slug]": "/dao-tao/sau-dai-hoc",
     "/lich-tuan/[slug]": "/lich-tuan",
+    "/tai-lieu/[slug]": "/tai-lieu/van-ban-bieu-mau",
   };
   if (hasSlug) return { pathname: detailParents[pathname] ?? "/tin-tuc", query: {} };
   if (pathname === "/tin-tuc") return { pathname, query: query.q ? { q: query.q } : {} };
