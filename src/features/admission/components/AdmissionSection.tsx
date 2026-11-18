@@ -87,18 +87,17 @@ interface AdmissionSectionProps {
 export function AdmissionSection({
   tabs = defaultTabs,
   initialArticles,
-  categorySlug = "tuyen-sinh",
 }: AdmissionSectionProps) {
   const tCommon = useTranslations("common");
   const tAdmission = useTranslations("admission");
+  const tArticle = useTranslations("article");
   const locale = useLocale();
 
   const [activeTab, setActiveTab] = useState(tabs[0]?.id || "regular");
-  const [tabPosts, setTabPosts] = useState<Record<string, AdmissionPost[]>>({
-    regular: initialArticles && initialArticles.length > 0 ? initialArticles : [],
-  });
+  const [tabPosts, setTabPosts] = useState<Record<string, AdmissionPost[]>>({});
   const [loadingTabs, setLoadingTabs] = useState<Record<string, boolean>>({});
 
+  const cacheKey = `${locale}:${activeTab}`;
   const currentSlugs = tabCategorySlugMap[activeTab] || { vi: "tuyen-sinh", en: "admissions" };
   const currentCategorySlug = locale === "en" ? currentSlugs.en : currentSlugs.vi;
 
@@ -107,16 +106,33 @@ export function AdmissionSection({
     if (activeTab === "regular" && initialArticles && initialArticles.length > 0) {
       return;
     }
-    // Bỏ qua nếu đã tải rồi
-    if (tabPosts[activeTab] && tabPosts[activeTab].length > 0) {
+    // Bỏ qua nếu đã tải rồi cho locale hiện tại
+    if (tabPosts[cacheKey]) {
       return;
     }
 
+    const controller = new AbortController();
+    let isMounted = true;
+
     const fetchTabArticles = async () => {
-      setLoadingTabs((prev) => ({ ...prev, [activeTab]: true }));
+      setLoadingTabs((prev) => ({ ...prev, [cacheKey]: true }));
       try {
         const slug = locale === "en" ? tabCategorySlugMap[activeTab].en : tabCategorySlugMap[activeTab].vi;
-        const response = await axiosClient.get<{ items: any[] }>("/api/v1/portal/articles", {
+        const response = await axiosClient.get<{
+          items: Array<{
+            id: string | number;
+            title: string;
+            title_en?: string;
+            excerpt?: string;
+            thumbnail_object_key?: string;
+            category?: { name?: string; name_en?: string };
+            published_at?: string;
+            created_at: string;
+            slug: string;
+            is_pinned?: boolean;
+          }>;
+        }>("/api/v1/portal/articles", {
+          signal: controller.signal,
           params: {
             category_slug: slug,
             page: 1,
@@ -126,14 +142,16 @@ export function AdmissionSection({
           },
         });
 
+        if (!isMounted) return;
+
         const mapped = (response.data.items || []).map((item) => ({
           id: item.id,
           title: item.title,
           titleEn: item.title_en,
           excerpt: item.excerpt || "",
           imageUrl: item.thumbnail_object_key || "/images/no-image-dhv.jpg",
-          category: item.category ? item.category.name : "",
-          categoryEn: item.category ? item.category.name_en : "",
+          category: item.category?.name || "",
+          categoryEn: item.category?.name_en || "",
           categoryHref: `/tin-tuc?category_slug=${slug}`,
           date: new Intl.DateTimeFormat(locale === "en" ? "en-US" : "vi-VN", {
             day: "2-digit",
@@ -144,20 +162,28 @@ export function AdmissionSection({
           isPinned: item.is_pinned,
         }));
 
-        setTabPosts((prev) => ({ ...prev, [activeTab]: mapped }));
+        setTabPosts((prev) => ({ ...prev, [cacheKey]: mapped }));
       } catch (error) {
+        if (!isMounted || controller.signal.aborted) return;
         console.error("Error fetching tab articles:", error);
       } finally {
-        setLoadingTabs((prev) => ({ ...prev, [activeTab]: false }));
+        if (isMounted) {
+          setLoadingTabs((prev) => ({ ...prev, [cacheKey]: false }));
+        }
       }
     };
 
-    fetchTabArticles();
-  }, [activeTab, locale, initialArticles]);
+    void fetchTabArticles();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [activeTab, cacheKey, locale, initialArticles, tabPosts]);
 
   const displayTabs = useMemo(() => {
     return tabs.map((tab) => {
-      const dynamicPosts = tabPosts[tab.id];
+      const dynamicPosts = tabPosts[`${locale}:${tab.id}`];
       if (dynamicPosts && dynamicPosts.length > 0) {
         return {
           ...tab,
@@ -172,9 +198,10 @@ export function AdmissionSection({
       }
       return tab;
     });
-  }, [tabs, tabPosts, initialArticles]);
+  }, [tabs, tabPosts, initialArticles, locale]);
 
   const currentTab = displayTabs.find((t) => t.id === activeTab);
+  const isTabLoading = Boolean(loadingTabs[cacheKey]);
 
   return (
     <div className="space-y-6">
@@ -182,7 +209,7 @@ export function AdmissionSection({
       <div className="flex items-center justify-between gap-4">
         <h2 className="section-heading">{tCommon("admission_title")}</h2>
         <Link
-          href={`/tin-tuc?category_slug=${currentCategorySlug}` as any}
+          href={`/tin-tuc?category_slug=${currentCategorySlug}`}
           className="group text-brand-darkred hover:bg-brand-darkred/5 hover:text-brand-darkred-dark inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 text-sm font-semibold transition-colors duration-150"
         >
           <span>{tCommon("view_all")}</span>
@@ -217,8 +244,8 @@ export function AdmissionSection({
 
       {/* Content Tab panel (Grid 3 card đều nhau phẳng đẹp) */}
       <div className="mt-4">
-        {loadingTabs[activeTab] ? (
-          <div className="flex min-h-48 items-center justify-center gap-2 text-sm text-slate-400 font-medium">
+        {isTabLoading ? (
+          <div className="flex min-h-48 items-center justify-center gap-2 text-sm text-slate-600 font-medium">
             <LoaderCircle className="size-5 animate-spin text-brand-blue" aria-hidden="true" />
             <span>{locale === "en" ? "Loading admissions info..." : "Đang tải thông tin tuyển sinh..."}</span>
           </div>
@@ -233,7 +260,7 @@ export function AdmissionSection({
                   className="group border-border hover:border-brand-blue/25 flex flex-col overflow-hidden rounded-xl border bg-white transition-[border-color,transform] duration-200 hover:-translate-y-0.5"
                 >
                   <Link
-                    href={post.href as any}
+                    href={post.href as React.ComponentProps<typeof Link>["href"]}
                     className="border-border-subtle bg-surface relative block aspect-[16/10] overflow-hidden border-b"
                   >
                     <SafeImage
@@ -249,13 +276,13 @@ export function AdmissionSection({
                       <div className="absolute top-2 left-2 z-10">
                         <span className="flex items-center gap-1 rounded-md bg-amber-600 px-2 py-1 text-xs font-semibold text-white">
                           <Pin size={12} className="fill-white" aria-hidden="true" />
-                          <span>Ghim</span>
+                          <span>{tArticle("pinned")}</span>
                         </span>
                       </div>
                     )}
                   </Link>
                   <div className="flex flex-1 flex-col space-y-3 p-5">
-                    <Link href={post.href as any}>
+                    <Link href={post.href as React.ComponentProps<typeof Link>["href"]}>
                       <h3 className="group-hover:text-brand-darkred line-clamp-3 text-base leading-snug font-semibold text-slate-800 transition-colors duration-150">
                         {title}
                       </h3>
@@ -280,7 +307,7 @@ export function AdmissionSection({
             })}
           </div>
         ) : (
-          <div className="py-12 text-center text-sm font-medium text-slate-400">
+          <div className="py-12 text-center text-sm font-medium text-slate-600">
             {tAdmission("empty")}
           </div>
         )}

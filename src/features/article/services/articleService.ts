@@ -37,7 +37,7 @@ export const articleService = {
    * Lấy chi tiết bài viết theo slug
    */
   async getArticleDetail(slug: string): Promise<PortalArticleDetail | null> {
-    return httpClient.get<PortalArticleDetail>(`/api/v1/portal/articles/${slug}`, {
+    return httpClient.get<PortalArticleDetail>(`/api/v1/portal/articles/${encodeURIComponent(slug)}`, {
       revalidate: 600, // Cache 10 phút
       forwardCookies: true,
     });
@@ -51,7 +51,7 @@ export const articleService = {
     page: number = 1,
     pageSize: number = 10
   ): Promise<PortalArticlePaginationResponse | null> {
-    return httpClient.get<PortalArticlePaginationResponse>(`/api/v1/portal/categories/${categorySlug}/articles`, {
+    return httpClient.get<PortalArticlePaginationResponse>(`/api/v1/portal/categories/${encodeURIComponent(categorySlug)}/articles`, {
       params: {
         page,
         page_size: pageSize,

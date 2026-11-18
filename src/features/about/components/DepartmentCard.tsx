@@ -149,7 +149,7 @@ export function DepartmentCard({ department }: DepartmentCardProps) {
             {/* Nội dung lộ trình (Cuộn nếu quá dài) */}
             <div className="p-6 overflow-y-auto space-y-6 flex-1 bg-slate-50/30">
               <div className="relative border-l border-slate-200 ml-3.5 space-y-6">
-                {currentRoadmap.map((item, index) => (
+                {currentRoadmap.map((item) => (
                   <div key={item.year} className="relative pl-7 group/step">
                     {/* Điểm nút trên trục dọc */}
                     <div className="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full border-4 border-white bg-slate-300 group-hover/step:bg-brand-darkred group-hover/step:border-brand-darkred/20 transition-all shadow-sm flex items-center justify-center text-[10px] font-bold text-slate-600 group-hover/step:text-white" />

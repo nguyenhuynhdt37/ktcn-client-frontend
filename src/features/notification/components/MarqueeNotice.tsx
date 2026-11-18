@@ -1,5 +1,6 @@
 "use client";
 
+import type { ComponentProps } from "react";
 import { Link } from "@/i18n/routing";
 import { Volume2 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -26,16 +27,27 @@ export function MarqueeNotice({ notices = [] }: MarqueeNoticeProps) {
         {/* Khung chạy chữ */}
         <div className="relative h-6 flex-1 overflow-hidden">
           <div className="animate-marquee absolute top-0 flex cursor-pointer gap-10 whitespace-nowrap hover:[animation-play-state:paused]">
-            {/* Render 2 bộ notices để tạo hiệu ứng chạy vòng lặp vô tận (infinite loop) */}
-            {[...notices, ...notices].map((notice, idx) => (
+            {notices.map((notice) => (
               <Link
-                key={`${notice.id}-${idx}`}
-                href={notice.href as any}
+                key={`primary-${notice.id}`}
+                href={notice.href as ComponentProps<typeof Link>["href"]}
                 className="hover:text-brand-darkred flex min-h-6 items-center text-sm font-medium text-slate-700 transition-colors duration-150"
               >
                 <span>{notice.title}</span>
               </Link>
             ))}
+            <div aria-hidden="true" className="flex gap-10">
+              {notices.map((notice) => (
+                <Link
+                  key={`clone-${notice.id}`}
+                  href={notice.href as ComponentProps<typeof Link>["href"]}
+                  tabIndex={-1}
+                  className="hover:text-brand-darkred flex min-h-6 items-center text-sm font-medium text-slate-700 transition-colors duration-150"
+                >
+                  <span>{notice.title}</span>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </div>

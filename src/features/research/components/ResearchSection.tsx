@@ -25,6 +25,7 @@ export function ResearchSection({
   hideHeader?: boolean;
 }) {
   const t = useTranslations("common");
+  const tArticle = useTranslations("article");
 
   if (articles.length === 0) return null;
 
@@ -46,7 +47,7 @@ export function ResearchSection({
             {t("research_title")}
           </h2>
           <Link
-            href={`/tin-tuc?category_slug=${categorySlug}` as any}
+            href={`/tin-tuc?category_slug=${categorySlug}`}
             className="group text-brand-darkred hover:bg-brand-darkred/5 hover:text-brand-darkred-dark inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 text-sm font-semibold transition-colors duration-150"
           >
             <span>{t("view_all")}</span>
@@ -65,7 +66,7 @@ export function ResearchSection({
           <article className="group flex flex-col border border-border rounded-xl bg-white transition-all duration-300 hover:border-border-subtle hover:shadow-sm lg:col-span-1 overflow-hidden">
             {/* Ảnh đại diện lớn */}
             <Link
-              href={bigArticle.href as any}
+              href={bigArticle.href}
               className="relative block aspect-[16/10] overflow-hidden border-b border-slate-100 bg-slate-50"
             >
               <SafeImage
@@ -79,7 +80,7 @@ export function ResearchSection({
                 <div className="absolute top-2 left-2 z-10">
                   <span className="flex items-center gap-1 rounded-md bg-amber-600 px-2 py-1 text-xs font-semibold text-white">
                     <Pin size={8} className="fill-white" />
-                    <span>Ghim</span>
+                    <span>{tArticle("pinned")}</span>
                   </span>
                 </div>
               )}
@@ -87,7 +88,7 @@ export function ResearchSection({
 
             {/* Nội dung bài viết lớn */}
             <div className="flex flex-1 flex-col space-y-2 p-6">
-              <Link href={bigArticle.href as any}>
+              <Link href={bigArticle.href}>
                 <h3 className="group-hover:text-brand-darkred line-clamp-2 text-base leading-snug font-bold text-slate-900 transition-colors duration-200 sm:text-lg">
                   {bigArticle.title}
                 </h3>
@@ -101,7 +102,7 @@ export function ResearchSection({
               {/* Meta info */}
               <div className="border-border-subtle mt-auto flex items-center justify-between border-t pt-3 text-xs font-medium text-slate-600">
                 <Link
-                  href={bigArticle.categoryHref as any}
+                  href={bigArticle.categoryHref}
                   className="text-brand-darkred flex max-w-[140px] items-center gap-1 truncate font-semibold"
                 >
                   <FolderOpen size={11} className="text-slate-400" />
@@ -137,7 +138,7 @@ export function ResearchSection({
                 </div>
                 {/* Tiêu đề & meta */}
                 <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
-                  <Link href={article.href as any}>
+                  <Link href={article.href}>
                     <h4 className="group-hover:text-brand-darkred line-clamp-2 text-sm leading-snug font-semibold text-slate-800 transition-colors duration-150">
                       {article.title}
                     </h4>
@@ -172,7 +173,7 @@ export function ResearchSection({
                 </div>
                 {/* Tiêu đề & meta */}
                 <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
-                  <Link href={article.href as any}>
+                  <Link href={article.href}>
                     <h4 className="group-hover:text-brand-darkred line-clamp-2 text-sm leading-snug font-semibold text-slate-800 transition-colors duration-150">
                       {article.title}
                     </h4>

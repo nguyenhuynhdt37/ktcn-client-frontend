@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { constructMetadata, buildBreadcrumbSchema } from "@/shared/lib/seo";
+import { constructMetadata, buildBreadcrumbSchema, BASE_URL } from "@/shared/lib/seo";
 import { serializeJsonLd } from "@/shared/lib/security";
 import { departmentService, DepartmentRecord } from "@/features/department";
 import { isLeadershipUnit } from "@/features/department/components/LeadershipGroups";
@@ -60,13 +60,16 @@ export default async function DepartmentOverviewPage({ params }: PageProps) {
 
   // NẾU ĐƠN VỊ LÀ KHOA -> CHUYỂN HƯỚNG SANG /khoa/[slug]
   if (department.unit_type === "faculty") {
-    redirect(`/${locale}/khoa/${slug}`);
+    const encodedSlug = encodeURIComponent(slug);
+    redirect(isEn ? `/en/faculties/${encodedSlug}` : `/vi/khoa/${encodedSlug}`);
   }
 
+  const siteUrl = BASE_URL.replace(/\/+$/, "");
+  const encodedSlug = encodeURIComponent(slug);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
-    "@id": `https://ktcn.itup.io.vn/${locale}/${locale === "en" ? "departments" : "bo-mon"}/${slug}#department`,
+    "@id": `${siteUrl}/${locale}/${isEn ? "departments" : "bo-mon"}/${encodedSlug}#department`,
     name: department.name,
     description: department.short_description || department.description || undefined,
     email: department.email || undefined,
@@ -74,8 +77,8 @@ export default async function DepartmentOverviewPage({ params }: PageProps) {
     url: department.website || undefined,
     parentOrganization: {
       "@type": "EducationalOrganization",
-      name: locale === "en" ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
-      url: `https://ktcn.itup.io.vn/${locale}`
+      name: isEn ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
+      url: `${siteUrl}/${locale}`
     }
   };
 

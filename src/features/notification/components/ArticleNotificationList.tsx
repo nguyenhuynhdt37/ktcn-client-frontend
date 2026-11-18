@@ -87,7 +87,7 @@ export function ArticleNotificationList() {
                   <span
                     className={cn(
                       "mt-2 size-2.5 shrink-0 rounded-full",
-                      isUnread ? "bg-brand-orange" : "bg-border",
+                      isUnread ? "bg-brand-darkred" : "bg-border",
                     )}
                     aria-hidden="true"
                   />

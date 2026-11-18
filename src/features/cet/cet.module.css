@@ -253,8 +253,9 @@
   position: absolute;
   top: 100%;
   left: 0;
-  width: 300px;
-  max-width: calc(100vw - 3rem);
+  width: max-content;
+  min-width: 260px;
+  max-width: min(360px, calc(100vw - 2rem));
   padding: 0.4rem 0;
   border-top: 3px solid var(--cet-gold);
   border-radius: 0 0 6px 6px;
@@ -264,6 +265,7 @@
   list-style: none;
   z-index: 50;
 }
+.submenu[data-align="right"],
 .menuList > li:nth-last-child(-n + 3) > .dropdown > .submenu {
   left: auto;
   right: 0;
@@ -272,10 +274,16 @@
 .submenu .navLabel,
 .submenu summary {
   display: flex;
+  align-items: center;
   padding: 0.6rem 1rem;
   font-size: 0.87rem;
   min-height: 44px;
   line-height: 1.5;
+}
+.submenu summary {
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
 }
 .submenu a:hover,
 .submenu summary:hover {

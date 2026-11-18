@@ -42,7 +42,7 @@ export function NewsSection({
         <div className="flex items-center justify-between gap-4">
           <h2 className="section-heading">{displayTitle}</h2>
           <Link
-            href={categorySlug ? (`/tin-tuc?category_slug=${categorySlug}` as any) : "/tin-tuc"}
+            href={categorySlug ? `/tin-tuc?category_slug=${categorySlug}` : "/tin-tuc"}
             className="group text-brand-darkred hover:bg-brand-darkred/5 hover:text-brand-darkred-dark inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-md px-2 text-sm font-semibold transition-colors duration-150"
           >
             <span>{t("view_all")}</span>
@@ -64,7 +64,7 @@ export function NewsSection({
           >
             {/* Ảnh đại diện */}
             <Link
-              href={article.href as any}
+              href={article.href}
               className="border-border-subtle bg-surface relative block aspect-[16/10] overflow-hidden border-b"
             >
               <SafeImage
@@ -78,7 +78,7 @@ export function NewsSection({
                 <div className="absolute top-3 left-3 z-10 select-none">
                   <span className="flex items-center gap-1 rounded-md bg-amber-600 px-2 py-1 text-xs font-semibold text-white">
                     <Pin size={12} className="fill-white" aria-hidden="true" />
-                    <span>Ghim</span>
+                    <span>{tArticle("pinned")}</span>
                   </span>
                 </div>
               )}
@@ -86,7 +86,7 @@ export function NewsSection({
 
             {/* Nội dung card */}
             <div className="flex flex-1 flex-col space-y-3 p-6">
-              <Link href={article.href as any}>
+              <Link href={article.href}>
                 <h3 className="group-hover:text-brand-darkred line-clamp-3 text-base leading-snug font-semibold text-slate-800 transition-colors duration-150">
                   {article.title}
                 </h3>
@@ -100,7 +100,7 @@ export function NewsSection({
               {/* Meta info */}
               <div className="border-border-subtle mt-auto flex items-center justify-between gap-3 border-t pt-4 text-xs font-medium text-slate-600">
                 <Link
-                  href={article.categoryHref as any}
+                  href={article.categoryHref}
                   className="text-brand-darkred flex max-w-[140px] items-center gap-1.5 truncate"
                 >
                   <FolderOpen size={14} className="text-brand-darkred/70" aria-hidden="true" />

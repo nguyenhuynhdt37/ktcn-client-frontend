@@ -243,7 +243,8 @@
     "morning": "Morning",
     "afternoon": "Afternoon",
     "evening": "Evening",
-    "no_schedule": "No scheduled events"
+    "no_schedule": "No scheduled events",
+    "view_all": "View details"
   },
   "about": {
     "hero_alt": "School of Engineering and Technology - Vinh University",

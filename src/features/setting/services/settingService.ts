@@ -1,5 +1,6 @@
 import { httpClient } from "@/shared/api/httpClient";
 import { env } from "@/shared/config/env";
+import { safePortalHref } from "@/shared/lib/security";
 import type { SiteSettings } from "../types/setting.types";
 
 export const settingService = {
@@ -29,15 +30,5 @@ export function resolveSettingMediaUrl(urlOrKey?: string | null): string | null 
 }
 
 export function sanitizeExternalUrl(url?: string | null, fallback = "#"): string {
-  const val = (url || "").trim();
-  if (!val) return fallback;
-  const lowered = val.toLowerCase();
-  if (
-    lowered.startsWith("javascript:") ||
-    lowered.startsWith("data:") ||
-    lowered.startsWith("vbscript:")
-  ) {
-    return fallback;
-  }
-  return val;
+  return safePortalHref(url, fallback);
 }

@@ -102,7 +102,7 @@ export function InteractiveTimeline() {
   );
 }
 
-function TimelineItem({ event, index, isEven }: { event: TimelineEvent; index: number; isEven: boolean }) {
+function TimelineItem({ event, isEven }: { event: TimelineEvent; index: number; isEven: boolean }) {
   const [active, setActive] = useState(false);
   const itemRef = useRef<HTMLDivElement>(null);
 

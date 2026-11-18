@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
-import { useRouter } from "@/i18n/routing";
+import { useMemo, useState, useTransition } from "react";
+import { useRouter, type RouterHref } from "@/i18n/routing";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -26,9 +26,9 @@ export function CategorySidebarTree({ tree }: CategorySidebarTreeProps) {
   // Quản lý trạng thái mở rộng của danh mục cha theo ID danh mục
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
-  // Tự động mở rộng các danh mục cha khi load trang nếu có danh mục con đang được chọn
-  useEffect(() => {
-    if (!activeCategorySlug) return;
+  // Tự động xác định các danh mục cha cần mở rộng nếu có danh mục con đang được chọn
+  const activePathSet = useMemo(() => {
+    if (!activeCategorySlug) return new Set<string>();
 
     const findActivePath = (
       nodes: CategoryTreeNode[],
@@ -47,16 +47,7 @@ export function CategorySidebarTree({ tree }: CategorySidebarTreeProps) {
       return null;
     };
 
-    const activePath = findActivePath(tree, activeCategorySlug);
-    if (activePath && activePath.length > 0) {
-      setExpanded((prev) => {
-        const next = { ...prev };
-        activePath.forEach((id) => {
-          next[id] = true;
-        });
-        return next;
-      });
-    }
+    return new Set(findActivePath(tree, activeCategorySlug) ?? []);
   }, [activeCategorySlug, tree]);
 
   // Hàm sinh URL giữ nguyên các query params khác của trang
@@ -79,24 +70,27 @@ export function CategorySidebarTree({ tree }: CategorySidebarTreeProps) {
     const url = getCategoryUrl(slug);
     startTransition(() => {
       // scroll: false ngăn Next.js tự động cuộn trang lên đầu
-      router.push(url as any, { scroll: false });
+      router.push(url as RouterHref, { scroll: false });
     });
   };
 
   const handleToggleExpand = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
-    setExpanded((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+    setExpanded((prev) => {
+      const current = prev[id] ?? activePathSet.has(id);
+      return {
+        ...prev,
+        [id]: !current,
+      };
+    });
   };
 
   // Render một Node danh mục và các node con của nó đệ quy
   const renderNode = (node: CategoryTreeNode, depth: number = 0) => {
     const isSelected = isCategorySlugMatch(node, activeCategorySlug);
     const hasChildren = node.children && node.children.length > 0;
-    const isExpanded = !!expanded[node.id];
+    const isExpanded = expanded[node.id] ?? activePathSet.has(node.id);
     const categoryName = resolveCategoryName(node, locale);
     const localizedSlug = resolveCategorySlug(node, locale);
 
@@ -139,9 +133,11 @@ export function CategorySidebarTree({ tree }: CategorySidebarTreeProps) {
                 <button
                   onClick={(e) => handleToggleExpand(e, node.id)}
                   type="button"
-                  className="cursor-pointer p-3 text-slate-400 transition hover:text-slate-600"
+                  aria-expanded={isExpanded}
+                  aria-label={`${isExpanded ? (locale === "en" ? "Collapse" : "Thu gọn") : locale === "en" ? "Expand" : "Mở rộng"} ${categoryName}`}
+                  className="cursor-pointer p-3 text-slate-600 transition hover:text-slate-900"
                 >
-                  {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                  {isExpanded ? <ChevronUp size={14} aria-hidden="true" /> : <ChevronDown size={14} aria-hidden="true" />}
                 </button>
               </div>
             )}

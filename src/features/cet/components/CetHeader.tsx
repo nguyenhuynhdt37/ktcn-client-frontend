@@ -11,6 +11,7 @@ import type {
 } from "@/features/menu/types/menu.types";
 import type { SiteSettings } from "@/features/setting/types/setting.types";
 import { resolveMenuUrl } from "@/features/menu/utils/resolve-menu-url";
+import { getLocalizedField } from "@/features/article/utils/map-article";
 import { CetLink } from "./CetLink";
 import { languageSwitchTarget } from "../utils/links";
 import styles from "../cet.module.css";
@@ -18,10 +19,11 @@ import styles from "../cet.module.css";
 function MenuEntry({ item, locale }: { item: PortalMenuItemTreeNode; locale: string }) {
   const children = item.children?.filter((child) => child.is_visible) ?? [];
   const href = resolveMenuUrl(item, locale);
+  const title = getLocalizedField<string>(item, "title", locale);
   const details = useRef<HTMLDetailsElement>(null);
   if (!children.length)
     return href === "#" ? (
-      <span className={styles.navLabel}>{item.title}</span>
+      <span className={styles.navLabel}>{title}</span>
     ) : (
       <CetLink
         className={styles.navLink}
@@ -29,7 +31,7 @@ function MenuEntry({ item, locale }: { item: PortalMenuItemTreeNode; locale: str
         locale={locale}
         target={item.open_in_new_tab ? "_blank" : undefined}
       >
-        {item.title}
+        {title}
       </CetLink>
     );
   return (
@@ -37,14 +39,30 @@ function MenuEntry({ item, locale }: { item: PortalMenuItemTreeNode; locale: str
       ref={details}
       className={styles.dropdown}
       onKeyDown={(event) => {
-        if (event.key === "Escape" && details.current) {
+        if (event.key === "Escape" && details.current?.open) {
+          event.stopPropagation();
           details.current.open = false;
           details.current.querySelector("summary")?.focus();
         }
       }}
     >
-      <summary>
-        {item.title}
+      <summary
+        onKeyDown={(event) => {
+          if (event.key === "ArrowDown" && details.current) {
+            event.preventDefault();
+            if (!details.current.open) {
+              details.current.open = true;
+            }
+            requestAnimationFrame(() => {
+              const firstItem = details.current?.querySelector<HTMLElement>(
+                ":scope > ul a, :scope > ul summary",
+              );
+              firstItem?.focus();
+            });
+          }
+        }}
+      >
+        <span>{title}</span>
         <ChevronDown size={14} aria-hidden="true" />
       </summary>
       <ul className={styles.submenu}>
@@ -76,10 +94,16 @@ export function CetHeader({
 }) {
   const [open, setOpen] = useState(false);
   const nav = useRef<HTMLElement>(null);
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
   const pathname = usePathname();
+  const [prevPathname, setPrevPathname] = useState(pathname);
   const searchParams = useSearchParams();
   const params = useParams();
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setOpen(false);
+  }
   const isEn = locale === "en";
   const name = (
     (isEn ? settings?.college_name_en : settings?.college_name_vi) ||
@@ -87,35 +111,66 @@ export function CetHeader({
   ).replace(/\s*[-–,]\s*(Trường Đại học Vinh|Vinh University)$/i, "");
   const items = menu?.items.filter((item) => item.is_visible) ?? [];
   // Each dropdown is a native <details>, which never closes by itself. Keep one branch open at a
-  // time and close everything on an outside click or after following a link (the header lives in
-  // the layout, so it survives client-side navigation).
+  // time and close everything on an outside click, focus leaving nav, or navigation.
   useEffect(() => {
     const root = nav.current;
     if (!root) return;
     const closeAll = (keep?: Element) => {
       root.querySelectorAll<HTMLDetailsElement>("details[open]").forEach((details) => {
-        if (!keep || !details.contains(keep)) details.open = false;
+        if (!keep || !details.contains(keep)) {
+          details.open = false;
+          details.querySelector<HTMLElement>(":scope > ul")?.removeAttribute("data-align");
+        }
       });
     };
     const onToggle = (event: Event) => {
       const details = event.target as HTMLDetailsElement;
-      if (details.open) closeAll(details);
+      const submenu = details.querySelector<HTMLElement>(":scope > ul");
+      if (details.open) {
+        closeAll(details);
+        if (submenu && details.parentElement?.parentElement?.classList.contains(styles.menuList)) {
+          submenu.removeAttribute("data-align");
+          const rect = submenu.getBoundingClientRect();
+          if (rect.right > window.innerWidth - 16) {
+            submenu.setAttribute("data-align", "right");
+          }
+        }
+      } else {
+        submenu?.removeAttribute("data-align");
+      }
     };
     const onClick = (event: MouseEvent) => {
       if ((event.target as HTMLElement).closest("a")) closeAll();
     };
     const onPointerDown = (event: PointerEvent) => {
-      if (!root.contains(event.target as Node)) closeAll();
+      if (!root.contains(event.target as Node)) {
+        closeAll();
+        setOpen(false);
+      }
+    };
+    const onFocusOut = (event: FocusEvent) => {
+      const nextTarget = event.relatedTarget as Node | null;
+      if (!nextTarget || !root.contains(nextTarget)) {
+        closeAll();
+      }
     };
     root.addEventListener("toggle", onToggle, true);
     root.addEventListener("click", onClick);
+    root.addEventListener("focusout", onFocusOut);
     document.addEventListener("pointerdown", onPointerDown);
     return () => {
       root.removeEventListener("toggle", onToggle, true);
       root.removeEventListener("click", onClick);
+      root.removeEventListener("focusout", onFocusOut);
       document.removeEventListener("pointerdown", onPointerDown);
     };
   }, []);
+  useEffect(() => {
+    nav.current?.querySelectorAll<HTMLDetailsElement>("details[open]").forEach((details) => {
+      details.open = false;
+      details.querySelector<HTMLElement>(":scope > ul")?.removeAttribute("data-align");
+    });
+  }, [pathname]);
   function search(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const value = String(new FormData(event.currentTarget).get("search") ?? "").trim();
@@ -233,7 +288,10 @@ export function CetHeader({
         className={styles.mainnav}
         aria-label={isEn ? "Main navigation" : "Điều hướng chính"}
         onKeyDown={(event) => {
-          if (event.key === "Escape") setOpen(false);
+          if (event.key === "Escape" && open) {
+            setOpen(false);
+            mobileToggleRef.current?.focus();
+          }
         }}
       >
         <div className={styles.container}>
@@ -243,6 +301,7 @@ export function CetHeader({
               {isEn ? "Home" : "Trang chủ"}
             </CetLink>
             <button
+              ref={mobileToggleRef}
               type="button"
               aria-label={isEn ? "Toggle menu" : "Mở menu"}
               aria-expanded={open}

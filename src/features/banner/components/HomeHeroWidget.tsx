@@ -49,7 +49,7 @@ export function HomeHeroWidget({ banners, notices = [], locale }: HomeHeroWidget
 
             {/* Danh sách thông báo dạng card lưới tinh tế */}
             {activeNotices.length === 0 ? (
-              <div className="py-8 text-center text-slate-400 text-sm font-light">
+              <div className="py-8 text-center text-slate-600 text-sm font-light">
                 {isEn ? "No notifications available." : "Hiện chưa có thông báo nào mới."}
               </div>
             ) : (

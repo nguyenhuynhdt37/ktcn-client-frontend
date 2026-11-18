@@ -74,7 +74,7 @@ export function ArticleCard({ article, priority = false }: ArticleCardProps) {
           {/* Chuyên mục */}
           {article.category && (
             <Link
-              href={`/tin-tuc?category_slug=${article.category.slug}` as any}
+              href={`/tin-tuc?category_slug=${article.category.slug}`}
               className="bg-brand-darkred/5 text-brand-darkred hover:text-brand-darkred-dark flex min-h-8 items-center gap-1.5 rounded-md px-2 font-semibold transition-colors duration-150"
             >
               <FolderOpen size={14} className="text-brand-darkred/70" aria-hidden="true" />
@@ -85,7 +85,7 @@ export function ArticleCard({ article, priority = false }: ArticleCardProps) {
           {/* Tác giả */}
           {article.author && (
             <Link
-              href={`/tin-tuc?author_username=${article.author.username}` as any}
+              href={`/tin-tuc?author_username=${article.author.username}`}
               className="bg-surface hover:text-brand-darkred flex min-h-8 items-center gap-1.5 rounded-md px-2 font-medium text-slate-600 transition-colors duration-150"
             >
               <User size={14} className="text-slate-600" aria-hidden="true" />
@@ -117,7 +117,7 @@ export function ArticleCard({ article, priority = false }: ArticleCardProps) {
                 return (
                   <Link
                     key={t.slug}
-                    href={`/tin-tuc?tag_slug=${t.slug}` as any}
+                    href={`/tin-tuc?tag_slug=${t.slug}`}
                     className="border-border bg-surface hover:bg-surface-hover flex min-h-8 items-center gap-1 rounded-md border px-2 text-xs font-medium text-slate-600 transition-colors duration-150"
                     style={t.color ? { color: t.color, borderColor: `${t.color}30` } : undefined}
                   >

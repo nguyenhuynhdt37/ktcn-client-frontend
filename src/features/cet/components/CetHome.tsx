@@ -34,7 +34,7 @@ export function CetHome({ data, locale }: { data: CetHomeData; locale: string })
     },
     {
       title: isEn ? "E-learning" : "Bài giảng – Giáo trình",
-      href: "http://elearning.vinhuni.edu.vn/",
+      href: "https://elearning.vinhuni.edu.vn/",
       icon: BookOpen,
     },
     {

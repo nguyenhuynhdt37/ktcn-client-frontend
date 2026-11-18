@@ -110,7 +110,7 @@ export async function AboutDepartments() {
 
                       {/* Action button */}
                       <Link
-                        href={detailUrl as any}
+                        href={detailUrl}
                         className="pt-2 flex items-center justify-between text-xs font-bold text-brand-darkred hover:text-brand-darkred-dark group/link"
                       >
                         <span>{isEn ? "Explore Department" : "Khám phá khoa"}</span>

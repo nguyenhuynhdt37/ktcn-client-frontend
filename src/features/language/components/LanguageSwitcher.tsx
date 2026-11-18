@@ -6,11 +6,27 @@ import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/routing";
 import { ChevronDown, Check } from "lucide-react";
 import Image from "next/image";
+import { languageSwitchTarget } from "@/features/cet/utils/links";
+import { safePortalHref } from "@/shared/lib/security";
 import { languageService } from "../services/languageService";
 import { Language } from "../types/language.types";
 
 interface LanguageSwitcherProps {
   initialLanguages?: Language[];
+}
+
+function persistLocalePreference(nextLocale: string) {
+  if (typeof document !== "undefined") {
+    document.cookie = `locale=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
+    document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
+  }
+  if (typeof localStorage !== "undefined") {
+    try {
+      localStorage.setItem("lang", nextLocale);
+    } catch {
+      // ignore storage errors in restricted contexts
+    }
+  }
 }
 
 export function LanguageSwitcher({ initialLanguages }: LanguageSwitcherProps) {
@@ -22,37 +38,48 @@ export function LanguageSwitcher({ initialLanguages }: LanguageSwitcherProps) {
   const searchParams = useSearchParams();
   const params = useParams();
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const [apiLanguages, setApiLanguages] = useState<Language[]>(initialLanguages || []);
+  const [fetchedLanguages, setFetchedLanguages] = useState<Language[]>([]);
+  const hasInitialLanguages = Boolean(initialLanguages && initialLanguages.length > 0);
+  const apiLanguages = hasInitialLanguages ? initialLanguages! : fetchedLanguages;
 
-  // Đóng dropdown khi click ra ngoài
+  // Đóng dropdown khi click ra ngoài hoặc nhấn Escape
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    if (!isOpen) return;
+    function handlePointerDown(event: PointerEvent) {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        triggerRef.current?.focus();
+      }
+    }
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
 
   // Fetch danh sách ngôn ngữ động từ API nếu chưa có dữ liệu từ Server-side (SSR fallback)
   useEffect(() => {
-    if (initialLanguages && initialLanguages.length > 0) {
-      setApiLanguages(initialLanguages);
-      return;
-    }
+    if (hasInitialLanguages) return;
 
     let isMounted = true;
     languageService.getLanguages().then((langs) => {
       if (isMounted && langs && langs.length > 0) {
-        setApiLanguages(langs);
+        setFetchedLanguages(langs);
       }
     });
     return () => {
       isMounted = false;
     };
-  }, [initialLanguages]);
+  }, [hasInitialLanguages]);
 
   // Danh sách các locale FE Client đang thực sự hỗ trợ dịch
   const supportedLocales = ["vi", "en"];
@@ -79,7 +106,6 @@ export function LanguageSwitcher({ initialLanguages }: LanguageSwitcherProps) {
     },
   ];
 
-  // Lọc lấy các ngôn ngữ từ API được FE hỗ trợ, nếu API trống thì dùng static
   const languages =
     apiLanguages.length > 0
       ? apiLanguages.filter((lang) => supportedLocales.includes(lang.code))
@@ -94,80 +120,52 @@ export function LanguageSwitcher({ initialLanguages }: LanguageSwitcherProps) {
     }
 
     // 1. Cập nhật Cookie (để SSR đọc được) và localStorage
-    document.cookie = `locale=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
-    document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
-    localStorage.setItem("lang", nextLocale);
+    persistLocalePreference(nextLocale);
 
     const query = Object.fromEntries(searchParams.entries());
+    const target = languageSwitchTarget(pathname, query, Boolean(params?.slug));
 
-    // 2. Xử lý chuyển hướng thông minh cho trang chi tiết động (slug) để tránh 404
-    if (params && params.slug) {
-      const pathnameStr = pathname as string;
-      const isCalendarPage =
-        pathnameStr.includes("/lich-tuan") || pathnameStr.includes("/weekly-calendar");
-
-      startTransition(() => {
-        if (isCalendarPage) {
-          router.push({ pathname: "/lich-tuan" }, { locale: nextLocale, scroll: false });
-        } else {
-          router.push({ pathname: "/tin-tuc" }, { locale: nextLocale, scroll: false });
-        }
-      });
-      setIsOpen(false);
-      return;
-    }
-
-    // 3. Xử lý trang tìm kiếm/tin tức: loại bỏ các filter slug tiếng Việt không tương thích
-    if (pathname === "/tin-tuc") {
-      const cleanQuery: Record<string, string> = {};
-      if (query.q) {
-        cleanQuery.q = query.q;
-      }
-      startTransition(() => {
-        router.push(
-          {
-            pathname: "/tin-tuc",
-            query: cleanQuery,
-          },
-          { locale: nextLocale, scroll: false },
-        );
-      });
-      setIsOpen(false);
-      return;
-    }
-
-    // 4. Các trang tĩnh thông thường khác
     startTransition(() => {
-      // scroll: false để giữ vị trí cuộn trang hiện tại của người dùng
-      router.push(
-        {
-          pathname: pathname as any,
-          params: params as any,
-          query: query,
-        },
-        { locale: nextLocale, scroll: false },
-      );
+      router.push(target as Parameters<typeof router.push>[0], {
+        locale: nextLocale,
+        scroll: false,
+      });
     });
     setIsOpen(false);
   };
 
-
   return (
-    <div suppressHydrationWarning className="relative inline-block text-left" ref={containerRef}>
+    <div
+      suppressHydrationWarning
+      className="relative inline-block text-left"
+      ref={containerRef}
+      onBlur={(event) => {
+        if (!containerRef.current?.contains(event.relatedTarget as Node)) {
+          setIsOpen(false);
+        }
+      }}
+    >
       <LanguageSwitcherTrigger
+        ref={triggerRef}
         language={currentLanguage}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen((prev) => !prev)}
         disabled={isPending}
         isOpen={isOpen}
       />
 
       {isOpen && (
-        <div className="animate-in fade-in slide-in-from-top-1 absolute right-0 z-50 mt-1.5 w-36 rounded-none border border-slate-200 bg-white py-1 shadow-lg duration-150">
+        <div
+          role="listbox"
+          aria-label={locale === "en" ? "Select language" : "Chọn ngôn ngữ"}
+          className="animate-in fade-in slide-in-from-top-1 absolute right-0 z-50 mt-1.5 w-36 rounded-md border border-slate-200 bg-white py-1 shadow-lg duration-150"
+        >
           {languages.map((lang) => {
             const isSelected = lang.code === locale;
             return (
               <button
                 key={lang.code}
+                role="option"
+                aria-selected={isSelected}
                 onClick={() => handleLanguageChange(lang.code)}
                 type="button"
                 className={`flex w-full cursor-pointer items-center justify-between px-3 py-2 text-left text-xs font-semibold transition ${
@@ -180,7 +178,7 @@ export function LanguageSwitcher({ initialLanguages }: LanguageSwitcherProps) {
                   {renderFlag(lang)}
                   <span>{lang.native_name}</span>
                 </div>
-                {isSelected && <Check size={12} className="text-brand-darkred" />}
+                {isSelected && <Check size={12} className="text-brand-darkred" aria-hidden="true" />}
               </button>
             );
           })}
@@ -190,13 +188,13 @@ export function LanguageSwitcher({ initialLanguages }: LanguageSwitcherProps) {
   );
 }
 
-
 function renderFlag(lang: Language) {
-  if (lang.flag_url) {
+  const safeFlagUrl = lang.flag_url ? safePortalHref(lang.flag_url, "") : "";
+  if (safeFlagUrl && safeFlagUrl !== "#") {
     return (
       <div className="relative h-3.5 w-5 flex-shrink-0 overflow-hidden border border-white/10">
         <Image
-          src={lang.flag_url}
+          src={safeFlagUrl}
           alt={lang.native_name || lang.name}
           fill
           unoptimized
@@ -207,7 +205,6 @@ function renderFlag(lang: Language) {
     );
   }
 
-  // Flag placeholder emoji
   const emojis: Record<string, string> = {
     vi: "🇻🇳",
     en: "🇬🇧",
@@ -215,33 +212,37 @@ function renderFlag(lang: Language) {
   return <span className="flex-shrink-0 text-sm">{emojis[lang.code] || "🏳️"}</span>;
 }
 
-function LanguageSwitcherTrigger({
-  language,
-  onClick,
-  disabled,
-  isOpen = false,
-}: {
-  language: Language;
-  onClick?: () => void;
-  disabled?: boolean;
-  isOpen?: boolean;
-}) {
+import { forwardRef } from "react";
+
+const LanguageSwitcherTrigger = forwardRef<
+  HTMLButtonElement,
+  {
+    language: Language;
+    onClick?: () => void;
+    disabled?: boolean;
+    isOpen?: boolean;
+  }
+>(function LanguageSwitcherTrigger({ language, onClick, disabled, isOpen = false }, ref) {
   return (
     <button
+      ref={ref}
       onClick={onClick}
       disabled={disabled}
       type="button"
+      aria-haspopup="listbox"
+      aria-expanded={isOpen}
       className="hover:text-brand-yellow flex min-h-9 cursor-pointer items-center gap-2 rounded-md border border-white/10 bg-white/5 px-2.5 text-sm font-medium text-slate-100 transition-colors duration-150 hover:bg-white/10"
     >
       {renderFlag(language)}
       <span>{language.native_name}</span>
       <ChevronDown
         size={10}
+        aria-hidden="true"
         className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
       />
     </button>
   );
-}
+});
 
 export function LanguageSwitcherPlaceholder({
   locale,

@@ -1,7 +1,7 @@
 "use client";
 
 import { Link } from "@/i18n/routing";
-import { Calendar, ChevronRight, Clock, User, Printer, ArrowLeft } from "lucide-react";
+import { Calendar, ChevronRight, Clock, User, Printer } from "lucide-react";
 import { ArticlePagination } from "@/features/article";
 import { useTranslations } from "next-intl";
 import { sanitizeRichHtml } from "@/shared/lib/security";
@@ -157,7 +157,7 @@ export function WeeklyCalendarDashboard({
             <div className="p-1.5 bg-brand-darkred/5 border border-brand-darkred/10 text-brand-darkred">
               <Calendar size={18} />
             </div>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
               {isEn ? "Weekly Calendar" : "Chi tiết lịch công tác tuần"}
             </span>
           </div>
@@ -185,7 +185,7 @@ export function WeeklyCalendarDashboard({
           )}
 
           {/* Author and Date metadata */}
-          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 font-medium pt-1">
+          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 font-medium pt-1">
             <span className="flex items-center gap-1">
               <Clock size={12} />
               <span>{activeArticle.publishedAt}</span>
@@ -215,7 +215,7 @@ export function WeeklyCalendarDashboard({
         </h3>
 
         {listItems.length === 0 ? (
-          <p className="text-xs text-slate-400 italic text-center py-4">
+          <p className="text-xs text-slate-600 italic text-center py-4">
             {t("no_schedule")}
           </p>
         ) : (
@@ -225,7 +225,7 @@ export function WeeklyCalendarDashboard({
               return (
                 <Link
                   key={item.id}
-                  href={`/lich-tuan/${item.slug}?page=${currentPage}` as any}
+                  href={`/lich-tuan/${item.slug}?page=${currentPage}`}
                   className={`flex items-start gap-1 p-3 transition-all duration-150 rounded-sm text-left border border-l-4 ${
                     isActive
                       ? "bg-brand-darkred/[0.04] border-brand-darkred/30 border-l-brand-darkred text-brand-darkred font-bold"
@@ -246,7 +246,7 @@ export function WeeklyCalendarDashboard({
                     </span>
                     {item.excerpt && (
                       <span className={`block text-[11px] leading-none ${
-                        isActive ? "text-brand-darkred/80 font-bold" : "text-slate-400 font-medium"
+                        isActive ? "text-brand-darkred/80 font-bold" : "text-slate-600 font-medium"
                       }`}>
                         {item.excerpt}
                       </span>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
+import { buildCspReportOnlyHeader } from "./shared/lib/security";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -37,13 +38,23 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  // 2. Chạy next-intl middleware để xử lý redirect/detect locale
+  // 2. Tạo nonce cho CSP Report-Only và gắn vào request headers trước khi render SSR
+  const nonce = btoa(crypto.randomUUID());
+  const cspReportOnly = buildCspReportOnlyHeader({ nonce });
+  request.headers.set("x-nonce", nonce);
+  request.headers.set("Content-Security-Policy-Report-Only", cspReportOnly);
+
+  // 3. Chạy next-intl middleware để xử lý redirect/detect locale
   const response = intlMiddleware(request);
 
-  // 3. Thêm các headers bảo mật
+  // 4. Thêm các headers bảo mật
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  response.headers.set("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  response.headers.set("x-nonce", nonce);
+  response.headers.set("Content-Security-Policy-Report-Only", cspReportOnly);
 
   return response;
 }

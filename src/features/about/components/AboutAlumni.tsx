@@ -133,7 +133,7 @@ export function AboutAlumni() {
                     <Quote className="w-6 h-6 rotate-180" />
                   </div>
                   <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed italic relative z-10">
-                    "{isEn ? item.quoteEn : item.quoteVi}"
+                    &ldquo;{isEn ? item.quoteEn : item.quoteVi}&rdquo;
                   </p>
                 </div>
               </div>

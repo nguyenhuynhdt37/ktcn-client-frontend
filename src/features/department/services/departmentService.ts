@@ -3,7 +3,7 @@ import type { DepartmentOverview, PortalDepartment } from "../types/department.t
 
 export const departmentService = {
   getOverview(slug: string, lang?: string): Promise<DepartmentOverview | null> {
-    return httpClient.get<DepartmentOverview>(`/api/v1/portal/departments/${slug}/overview`, {
+    return httpClient.get<DepartmentOverview>(`/api/v1/portal/departments/${encodeURIComponent(slug)}/overview`, {
       params: lang ? { lang } : undefined,
       revalidate: 300,
       tags: [`department-${slug}`],
@@ -11,7 +11,7 @@ export const departmentService = {
   },
 
   getDepartment(slug: string): Promise<PortalDepartment | null> {
-    return httpClient.get<PortalDepartment>(`/api/v1/portal/departments/${slug}`, {
+    return httpClient.get<PortalDepartment>(`/api/v1/portal/departments/${encodeURIComponent(slug)}`, {
       revalidate: 300,
       tags: [`department-${slug}`],
     });

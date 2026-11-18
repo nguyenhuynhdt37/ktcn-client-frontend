@@ -46,8 +46,8 @@ export async function generateMetadata({ params }: ArticleDetailPageProps): Prom
     type: "article",
     publishedTime: article.published_at,
     modifiedTime: article.updated_at || undefined,
-    authors: [article.author.full_name || article.author.username],
-    robots: article.robots ? article.robots.split(",").map(r => r.trim()) as any : undefined,
+    authors: [article.author?.full_name || article.author?.username || (locale === "en" ? "Editorial Board" : "Ban biên tập")],
+    robots: article.robots ? article.robots.split(",").map((r) => r.trim()) : undefined,
   });
 }
 
@@ -70,6 +70,12 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
 
   const cet = isCetTheme();
 
+  const categorySlug = article.category?.slug || "";
+  const authorDisplayName =
+    article.author?.full_name ||
+    article.author?.username ||
+    (isEn ? "Editorial Board" : "Ban biên tập");
+
   // Gọi song song danh sách tin mới nhất (Sidebar) và các bài viết liên quan (Sidebar)
   // (giao diện CET tự lấy tin liên quan riêng nên bỏ qua hai lời gọi này)
   const sidebarNewsPromise = cet
@@ -79,9 +85,10 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
         pageSize: 5,
         excludeCategorySlugs: ["lich-tuan", "weekly-calendar", "gioi-thieu", "chuc-nang-nhiem-vu", "lich-su-phat-trien"]
       });
-  const relatedNewsPromise = cet
-    ? Promise.resolve(null)
-    : articleService.getArticlesByCategory(article.category.slug, 1, 5);
+  const relatedNewsPromise =
+    cet || !categorySlug
+      ? Promise.resolve(null)
+      : articleService.getArticlesByCategory(categorySlug, 1, 5);
 
   const [sidebarNewsData, relatedNewsData] = await Promise.all([
     sidebarNewsPromise,
@@ -101,9 +108,13 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
   const rawContent = getLocalizedField<string>(article, "content", locale);
   const { cleanHtml, headings } = parseHeadings(sanitizeRichHtml(rawContent));
   const isAboutArticle = ["gioi-thieu", "lich-su-phat-trien", "chuc-nang-nhiem-vu"].includes(
-    article.category.slug
+    categorySlug
   );
-  const categoryName = getLocalizedField<string>(article.category, "name", locale);
+  const categoryName = article.category
+    ? getLocalizedField<string>(article.category, "name", locale)
+    : isEn
+      ? "News"
+      : "Tin tức";
   const sectionName = isAboutArticle
     ? (isEn ? "About" : "Giới thiệu")
     : categoryName;
@@ -118,7 +129,7 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
           image: (article.cover_url || article.thumbnail_url || article.og_image_url) ?? undefined,
           datePublished: article.published_at,
           dateModified: article.updated_at || article.published_at,
-          authorName: article.author.full_name || article.author.username,
+          authorName: authorDisplayName,
           slug,
           locale,
           categoryName,
@@ -128,7 +139,11 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
     { name: tCommon("home"), href: "/" },
     {
       name: sectionName,
-      href: isAboutArticle ? "/gioi-thieu" : `/tin-tuc?category=${article.category.slug}`,
+      href: isAboutArticle
+        ? "/gioi-thieu"
+        : categorySlug
+          ? `/tin-tuc?category=${encodeURIComponent(categorySlug)}`
+          : "/tin-tuc",
     },
     { name: title },
   ];
@@ -155,7 +170,9 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
   );
 
   if (cet) {
-    const related = await getCetRelatedArticles(article.category.slug, article.id);
+    const related = categorySlug
+      ? await getCetRelatedArticles(categorySlug, article.id)
+      : [];
     // BASE_URL = NEXT_PUBLIC_SITE_URL với giá trị dự phòng tuyệt đối (không bao giờ undefined)
     const siteUrl = BASE_URL.replace(/\/+$/, "");
     const shareUrl = `${siteUrl}/${locale}/${slug}`;
@@ -198,7 +215,7 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
             )}
 
             {/* Cột bài viết (luôn rộng full 9/12 trên desktop để bài viết rộng rãi) */}
-            <main className="lg:col-span-9">
+            <div className="lg:col-span-9">
               <article className="border-border space-y-7 rounded-xl border bg-white p-5 sm:p-8 lg:p-10">
                 {/* Tiêu đề & Meta Info */}
                 <div className="space-y-4 border-b border-slate-100 pb-6">
@@ -214,7 +231,7 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
                     <div className="flex items-center gap-1.5">
                       <User size={16} className="text-slate-600" aria-hidden="true" />
                       <span className="text-slate-700">
-                        {article.author.full_name || article.author.username}
+                        {authorDisplayName}
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5">
@@ -293,7 +310,7 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
                   </div>
                 )}
               </article>
-            </main>
+            </div>
 
             {/* Cột phải (3/12): Sidebar các danh mục tin phụ (Sticky trên màn hình desktop) */}
             <aside className="space-y-6 lg:col-span-3 lg:sticky lg:top-28 lg:self-start lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto pr-1">
@@ -386,13 +403,15 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
                     })}
                   </ul>
 
-                  <Link
-                    href={{ pathname: "/tin-tuc", query: { category_slug: article.category.slug } }}
-                    className="border-border-subtle text-brand-darkred flex min-h-11 items-center justify-center border-t pt-2 text-sm font-semibold hover:underline"
-                  >
-                    {locale === "en" ? `More from ${categoryName}` : `Xem thêm ${categoryName}`}{" "}
-                    &rarr;
-                  </Link>
+                  {categorySlug && (
+                    <Link
+                      href={{ pathname: "/tin-tuc", query: { category_slug: categorySlug } }}
+                      className="border-border-subtle text-brand-darkred flex min-h-11 items-center justify-center border-t pt-2 text-sm font-semibold hover:underline"
+                    >
+                      {locale === "en" ? `More from ${categoryName}` : `Xem thêm ${categoryName}`}{" "}
+                      &rarr;
+                    </Link>
+                  )}
                 </div>
               )}
             </aside>

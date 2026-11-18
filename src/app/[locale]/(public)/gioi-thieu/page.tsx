@@ -2,7 +2,6 @@ import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { constructMetadata } from "@/shared/lib/seo";
 import { serializeJsonLd } from "@/shared/lib/security";
-import Image from "next/image";
 import {
   AboutOverview,
   AboutVideo,
@@ -12,9 +11,6 @@ import {
   AboutStats,
   AboutFacilities,
   AboutDomesticPartners,
-  AboutAchievements,
-  AboutPress,
-  AlumniTestimonials,
   AboutStudentLife,
 } from "@/features/about";
 import { ConsultationCallout } from "@/features/consultation";

@@ -171,7 +171,7 @@ export default async function HomePage({ params }: HomePageProps) {
       {/* 2. Dịch vụ nhanh */}
       <ServicesBar />
 
-      <main className="w-full">
+      <div className="w-full">
         {/* 3. Tin tức & Sự kiện */}
         <div className="py-14 md:py-20 max-w-[1360px] mx-auto px-6">
           <NewsSection articles={newsArticles} categorySlug={newsCategorySlug} />
@@ -203,7 +203,7 @@ export default async function HomePage({ params }: HomePageProps) {
             <RecruitmentWidget items={recruitmentList} categorySlug={recruitmentCategorySlug} />
           </div>
         </div>
-      </main>
+      </div>
 
       {/* 7. Biểu mẫu đăng ký tư vấn tuyển sinh */}
       <ConsultationCallout />

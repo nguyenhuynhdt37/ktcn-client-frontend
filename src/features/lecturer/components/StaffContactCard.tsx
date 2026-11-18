@@ -1,4 +1,5 @@
 import { StaffItem } from "../types/lecturer.types";
+import { safePortalHref } from "@/shared/lib/security";
 import { Mail, Phone, MapPin, Globe, ExternalLink } from "lucide-react";
 
 interface StaffContactCardProps {
@@ -7,6 +8,7 @@ interface StaffContactCardProps {
 }
 
 export function StaffContactCard({ staff, isEn }: StaffContactCardProps) {
+  const safeWebsite = staff.website ? safePortalHref(staff.website, "") : "";
   const contactItems = [
     staff.email
       ? { icon: Mail, label: "Email", value: staff.email, href: `mailto:${staff.email}` }
@@ -22,8 +24,8 @@ export function StaffContactCard({ staff, isEn }: StaffContactCardProps) {
     staff.office
       ? { icon: MapPin, label: isEn ? "Office" : "Văn phòng", value: staff.office }
       : null,
-    staff.website
-      ? { icon: Globe, label: "Website", value: staff.website, href: staff.website }
+    safeWebsite && safeWebsite !== "#"
+      ? { icon: Globe, label: "Website", value: staff.website!, href: safeWebsite }
       : null,
   ].filter(Boolean) as Array<{ icon: typeof Mail; label: string; value: string; href?: string }>;
 
@@ -57,7 +59,7 @@ export function StaffContactCard({ staff, isEn }: StaffContactCardProps) {
                 key={i}
                 href={item.href}
                 target={item.href.startsWith("http") ? "_blank" : undefined}
-                rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
                 className="block hover:bg-slate-50 rounded-xl -mx-2 px-2 transition-colors duration-200"
               >
                 {content}
@@ -73,11 +75,11 @@ export function StaffContactCard({ staff, isEn }: StaffContactCardProps) {
         </p>
       )}
 
-      {staff.website && (
+      {safeWebsite && safeWebsite !== "#" && (
         <a
-          href={staff.website}
+          href={safeWebsite}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-brand-darkred hover:bg-brand-darkred-dark px-4 text-sm font-bold text-white transition-colors duration-200 shadow-sm hover:shadow-md cursor-pointer"
         >
           <span>{isEn ? "Open Website" : "Mở website"}</span>

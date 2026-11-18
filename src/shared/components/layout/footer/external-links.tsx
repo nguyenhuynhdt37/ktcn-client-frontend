@@ -28,7 +28,7 @@ export function ExternalLinks({ links }: { links?: FooterLinkItem[] | null }) {
           ? links!.map((link, idx) => {
               const label = isEn ? link.label_en || link.label_vi : link.label_vi || link.label_en;
               const href = sanitizeExternalUrl(link.href, "#");
-              const isExternal = href.startsWith("http://") || href.startsWith("https://") || href === "#";
+              const isExternal = href === "#" || /^(https?:|mailto:|tel:)/i.test(href);
               return (
                 <li key={`${href}-${idx}`}>
                   {isExternal ? (
@@ -43,7 +43,7 @@ export function ExternalLinks({ links }: { links?: FooterLinkItem[] | null }) {
                     </a>
                   ) : (
                     <Link
-                      href={href as any}
+                      href={href}
                       target={link.open_in_new_tab ? "_blank" : undefined}
                       className="hover:text-brand-darkred flex min-h-11 items-center gap-1.5 rounded-md text-sm font-medium text-slate-600 transition-colors duration-150"
                     >

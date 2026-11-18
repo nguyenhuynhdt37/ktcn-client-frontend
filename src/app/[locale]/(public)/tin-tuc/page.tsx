@@ -65,11 +65,12 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
       vi: `tim-kiem${queryStr}`,
       en: `search${queryStr}`,
     },
-    robots: q ? ["noindex", "follow"] as any : undefined,
+    robots: q ? ["noindex", "follow"] : undefined,
   });
 }
 
 import { Suspense } from "react";
+import type { GetLatestArticlesParams } from "@/features/article/types/article.types";
 
 // ──────────────────────────────────────────────
 // 2. MAIN COMPONENT (Server Component)
@@ -93,12 +94,13 @@ export default async function NewsAggregatePage({ params, searchParams }: PagePr
     return <CetNewsList data={data} locale={locale} />;
   }
 
-  const currentPage = parseInt(page || "1");
+  const parsedPage = Number.parseInt(page || "1", 10);
+  const currentPage = Number.isFinite(parsedPage) && parsedPage >= 1 ? parsedPage : 1;
   const searchQuery = q || "";
   const categorySlug = category_slug || category || "";
   const tagSlug = tag_slug || tag || "";
-  const sortBy = sort_by || "publish_at";
-  const sortDir = sort_dir || "desc";
+  const sortBy = (sort_by || "publish_at") as NonNullable<GetLatestArticlesParams["sortBy"]>;
+  const sortDir = (sort_dir || "desc") as NonNullable<GetLatestArticlesParams["sortDir"]>;
 
   // Gọi API đồng thời phía Server-side để tối ưu Core Web Vitals
   const [articlesData, categoriesData, tagsData] = await Promise.all([
@@ -109,8 +111,8 @@ export default async function NewsAggregatePage({ params, searchParams }: PagePr
       categorySlug: categorySlug,
       excludeCategorySlugs: categorySlug ? undefined : ["lich-tuan", "weekly-calendar", "gioi-thieu", "lich-su-phat-trien", "chuc-nang-nhiem-vu"],
       tagSlug: tagSlug,
-      sortBy: sortBy as any,
-      sortDir: sortDir as any,
+      sortBy,
+      sortDir,
     }),
     categoryService.getCategoryTree(),
     articleService.getPopularTags(),

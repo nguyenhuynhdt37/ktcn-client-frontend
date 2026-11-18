@@ -28,6 +28,7 @@ export function StudentActivities({
   hideHeader?: boolean;
 }) {
   const t = useTranslations("common");
+  const tArticle = useTranslations("article");
   const locale = useLocale();
 
   if (activities.length === 0) return null;
@@ -41,7 +42,7 @@ export function StudentActivities({
               {t("student_activities_title")}
             </h2>
             <Link
-              href={`/tin-tuc?category_slug=${categorySlug}` as any}
+              href={`/tin-tuc?category_slug=${categorySlug}`}
               className="group text-brand-darkred hover:bg-brand-darkred/5 hover:text-brand-darkred-dark inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 text-sm font-semibold transition-colors duration-150"
             >
               <span>{t("view_all")}</span>
@@ -63,7 +64,7 @@ export function StudentActivities({
                 className="group flex flex-col overflow-hidden rounded-xl border border-border bg-white transition-all duration-300 hover:border-border-subtle hover:shadow-sm"
               >
                 <Link
-                  href={item.href as any}
+                  href={item.href}
                   className="relative block aspect-[16/10] overflow-hidden border-b border-slate-100 bg-slate-50"
                 >
                   <SafeImage
@@ -79,20 +80,20 @@ export function StudentActivities({
                     <div className="absolute top-2 left-2 z-10">
                       <span className="flex items-center gap-1 rounded-md bg-amber-600 px-2 py-1 text-xs font-semibold text-white">
                         <Pin size={8} className="fill-white" />
-                        <span>Ghim</span>
+                        <span>{tArticle("pinned")}</span>
                       </span>
                     </div>
                   )}
                 </Link>
                 <div className="flex flex-1 flex-col space-y-2 p-4.5">
-                  <Link href={item.href as any}>
+                  <Link href={item.href}>
                     <h3 className="group-hover:text-brand-darkred line-clamp-3 text-sm leading-snug font-bold text-slate-800 transition-colors duration-200">
                       {title}
                     </h3>
                   </Link>
                   <div className="border-border-subtle mt-auto flex items-center justify-between border-t pt-3 text-xs font-medium text-slate-600">
                     <Link
-                      href={item.categoryHref as any}
+                      href={item.categoryHref}
                       className="hover:text-brand-darkred flex max-w-[120px] items-center gap-1 truncate font-semibold text-slate-600 transition-colors duration-150"
                     >
                       <FolderOpen size={11} className="text-slate-400" />

@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { unstable_noStore as noStore } from "next/cache";
+import { headers } from "next/headers";
 import Script from "next/script";
 import type { Metadata, Viewport } from "next";
 import { constructMetadata, defaultViewport, buildOrganizationSchema, buildWebSiteSchema } from "@/shared/lib/seo";
@@ -48,12 +49,15 @@ import { TopBar } from "@/shared/components/layout/top-bar";
 import { Header } from "@/shared/components/layout/header";
 import { Footer } from "@/shared/components/layout/footer";
 import { menuService } from "@/features/menu/services/menuService";
+import type { PortalMenuItemTreeNode } from "@/features/menu/types/menu.types";
 import { syncDepartmentMenuColumns } from "@/features/menu/utils/sync-department-menu";
 import { departmentService } from "@/features/department/services/departmentService";
 import { categoryService } from "@/features/category/services/categoryService";
 import type { FooterDynamicData } from "@/features/setting/components/FooterContent";
 import { languageService } from "@/features/language/services/languageService";
+import type { Language } from "@/features/language/types/language.types";
 import { articleService } from "@/features/article/services/articleService";
+import type { PortalArticleListResponse } from "@/features/article/types/article.types";
 import { settingService } from "@/features/setting/services/settingService";
 import type { SiteSettings } from "@/features/setting/types/setting.types";
 import { PushNotificationManager } from "@/features/notification/components/PushNotificationManager";
@@ -76,7 +80,10 @@ function toSlug(str: string): string {
     .replace(/-+/g, "-"); // remove duplicate -
 }
 
-function resolveMenuTreeSlugs(items: any[], articles: any[]) {
+function resolveMenuTreeSlugs(
+  items: PortalMenuItemTreeNode[],
+  articles: PortalArticleListResponse[],
+) {
   for (const item of items) {
     if (item.target_type === "ARTICLE" || item.target_type === "PAGE") {
       if (!item.target_info?.slug) {
@@ -110,10 +117,11 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }) {
   noStore();
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const { locale } = await params;
 
   // Kiểm tra xem locale có hợp lệ không
-  if (!routing.locales.includes(locale as any)) {
+  if (!routing.locales.includes(locale as (typeof routing.locales)[number])) {
     notFound();
   }
 
@@ -126,8 +134,8 @@ export default async function RootLayout({
   // Load menu, languages và articles từ Server song song để tối ưu Core Web Vitals
   let headerMenu = null;
   let footerMenu = null;
-  let languages: any[] = [];
-  let articles: any[] = [];
+  let languages: Language[] = [];
+  let articles: PortalArticleListResponse[] = [];
   let siteSettings: SiteSettings | null = null;
   let isMaintenance = false;
   let footerDynamicData: FooterDynamicData | undefined;
@@ -252,11 +260,13 @@ export default async function RootLayout({
         {/* Google Analytics */}
         <Script
           async
+          nonce={nonce}
           src="https://www.googletagmanager.com/gtag/js?id=G-YNL3YLDM52"
           strategy="lazyOnload"
         />
         <Script
           id="google-analytics"
+          nonce={nonce}
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `

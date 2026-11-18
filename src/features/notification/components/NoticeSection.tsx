@@ -80,7 +80,7 @@ export function NoticeSection({
       <div className="flex items-center justify-between gap-4">
         <h2 className="section-heading">{t("notices_title")}</h2>
         <Link
-          href={`/tin-tuc?category_slug=${categorySlug}` as any}
+          href={`/tin-tuc?category_slug=${categorySlug}`}
           className="group text-brand-darkred hover:bg-brand-darkred/5 hover:text-brand-darkred-dark inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 text-sm font-semibold transition-colors duration-150"
         >
           <span>{t("view_all")}</span>
@@ -97,7 +97,7 @@ export function NoticeSection({
           const title = locale === "en" ? notice.titleEn || notice.title : notice.title;
           return (
             <li key={notice.id} className="group py-4 first:pt-0">
-              <Link href={notice.href as any} className="block space-y-2 rounded-md">
+              <Link href={notice.href} className="block space-y-2 rounded-md">
                 <h4 className="group-hover:text-brand-darkred line-clamp-2 text-base leading-snug font-semibold text-slate-800 transition-colors duration-150">
                   {title}
                 </h4>
@@ -131,7 +131,7 @@ export function ScholarshipSection({
       <div className="flex items-center justify-between gap-4">
         <h2 className="section-heading">{t("scholarships_title")}</h2>
         <Link
-          href={`/tin-tuc?category_slug=${categorySlug}` as any}
+          href={`/tin-tuc?category_slug=${categorySlug}`}
           className="group text-brand-darkred hover:bg-brand-darkred/5 hover:text-brand-darkred-dark inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 text-sm font-semibold transition-colors duration-150"
         >
           <span>{t("view_all")}</span>
@@ -152,7 +152,7 @@ export function ScholarshipSection({
               className="group border-border hover:border-brand-blue/25 flex gap-4 rounded-lg border bg-white p-3.5 transition-colors duration-150"
             >
               <Link
-                href={item.href as any}
+                href={item.href}
                 className="bg-surface relative block h-16 w-24 shrink-0 overflow-hidden rounded-md"
               >
                 <SafeImage
@@ -164,7 +164,7 @@ export function ScholarshipSection({
                 />
               </Link>
               <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
-                <Link href={item.href as any}>
+                <Link href={item.href}>
                   <h4 className="group-hover:text-brand-darkred line-clamp-2 text-sm leading-snug font-semibold text-slate-800 transition-colors duration-150">
                     {title}
                   </h4>

@@ -36,15 +36,10 @@ function getClientLocale(): string {
   return "vi";
 }
 
-// Interceptor xử lý Request
+// Interceptor xử lý Request (xác thực phiên nếu có qua HttpOnly cookie với withCredentials: true, không đọc JWT từ localStorage)
 axiosClient.interceptors.request.use(
   (config) => {
     if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      
       // Đính kèm ngôn ngữ hiện tại vào Accept-Language header
       config.headers["Accept-Language"] = getClientLocale();
     }

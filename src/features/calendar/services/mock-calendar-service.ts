@@ -38,7 +38,6 @@ export function getMockWeekSchedule(mondayStr?: string): WeekSchedule {
   monday = getMonday(monday);
 
   const days: DaySchedule[] = [];
-  const dayNamesVi = ["Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy", "Chủ Nhật"];
 
   // Tạo lịch trình cho 7 ngày từ Thứ Hai đến Chủ Nhật
   for (let i = 0; i < 7; i++) {

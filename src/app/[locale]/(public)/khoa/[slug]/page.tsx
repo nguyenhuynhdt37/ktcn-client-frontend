@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { constructMetadata, buildBreadcrumbSchema } from "@/shared/lib/seo";
+import { constructMetadata, buildBreadcrumbSchema, BASE_URL } from "@/shared/lib/seo";
 import { serializeJsonLd } from "@/shared/lib/security";
 import { departmentService, DepartmentRecord } from "@/features/department";
 import { isCetTheme } from "@/features/cet/utils/theme";
@@ -58,13 +58,16 @@ export default async function FacultyOverviewPage({ params }: PageProps) {
 
   // NẾU ĐƠN VỊ KHÔNG PHẢI LÀ KHOA -> CHUYỂN HƯỚNG SANG /bo-mon/[slug]
   if (department.unit_type !== "faculty") {
-    redirect(`/${locale}/bo-mon/${slug}`);
+    const encodedSlug = encodeURIComponent(slug);
+    redirect(isEn ? `/en/departments/${encodedSlug}` : `/vi/bo-mon/${encodedSlug}`);
   }
 
+  const siteUrl = BASE_URL.replace(/\/+$/, "");
+  const encodedSlug = encodeURIComponent(slug);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
-    "@id": `https://ktcn.itup.io.vn/${locale}/${locale === "en" ? "faculties" : "khoa"}/${slug}#department`,
+    "@id": `${siteUrl}/${locale}/${isEn ? "faculties" : "khoa"}/${encodedSlug}#department`,
     name: department.name,
     description: department.short_description || department.description || undefined,
     email: department.email || undefined,
@@ -72,8 +75,8 @@ export default async function FacultyOverviewPage({ params }: PageProps) {
     url: department.website || undefined,
     parentOrganization: {
       "@type": "EducationalOrganization",
-      name: locale === "en" ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
-      url: `https://ktcn.itup.io.vn/${locale}`
+      name: isEn ? "College of Engineering and Technology - Vinh University" : "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",
+      url: `${siteUrl}/${locale}`
     }
   };
 

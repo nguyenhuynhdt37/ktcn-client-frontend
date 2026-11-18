@@ -1,12 +1,14 @@
 import { PortalArticleResponse, PortalArticleListResponse } from "../types/article.types";
 
 // Lấy trường dịch động từ Backend dựa trên locale hiện tại
-export function getLocalizedField<T>(item: any, field: string, locale: string): T {
-  if (!item) return "" as any;
+export function getLocalizedField<T>(item: unknown, field: string, locale: string): T {
+  if (!item || typeof item !== "object") return "" as unknown as T;
+  const record = item as Record<string, unknown>;
 
   // 1. Hỗ trợ đối tượng translations đa ngôn ngữ từ Backend (ví dụ: Menu)
-  if (item.translations && typeof item.translations === "object") {
-    const translation = item.translations[locale];
+  if (record.translations && typeof record.translations === "object") {
+    const translations = record.translations as Record<string, Record<string, unknown> | undefined>;
+    const translation = translations[locale];
     if (translation && translation[field] !== undefined && translation[field] !== null && translation[field] !== "") {
       return translation[field] as T;
     }
@@ -14,7 +16,7 @@ export function getLocalizedField<T>(item: any, field: string, locale: string): 
 
   // 2. Fallback sang format field_locale (ví dụ: title_en) hoặc trường gốc phẳng
   const localizedKey = `${field}_${locale}`;
-  return (item[localizedKey] || item[field] || "") as T;
+  return (record[localizedKey] || record[field] || "") as T;
 }
 
 // Định dạng ngày theo locale của Next.js (vi-VN hoặc en-US)

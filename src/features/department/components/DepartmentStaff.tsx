@@ -88,7 +88,7 @@ export function DepartmentStaff({ staffs, isEn }: DepartmentStaffProps) {
                   className="w-[180px] sm:w-[220px] shrink-0"
                 >
                   <Link
-                    href={{ pathname: "/nhan-su/[slug]", params: { slug: staff.slug } } as any}
+                    href={{ pathname: "/nhan-su/[slug]", params: { slug: staff.slug } }}
                     className="group flex flex-col justify-between border border-slate-200/80 rounded-2xl bg-white overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 h-full"
                   >
                     {/* Portrait Container - aspect-[4/5] vertical portrait style */}

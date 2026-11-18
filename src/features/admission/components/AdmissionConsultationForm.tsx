@@ -86,7 +86,7 @@ export function AdmissionConsultationForm() {
           department: "",
           note: "",
         });
-      } catch (err) {
+      } catch {
         setStatus("error");
       }
     });

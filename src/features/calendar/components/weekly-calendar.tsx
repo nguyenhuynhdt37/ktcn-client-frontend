@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/routing";
-import { WeekSchedule, DaySchedule, CalendarSessionItem } from "../types/calendar.types";
+import { WeekSchedule } from "../types/calendar.types";
 import { ChevronLeft, ChevronRight, Calendar, MapPin, User, Users, Clock } from "lucide-react";
 import { getLocale } from "next-intl/server";
 import { getMonday, formatDateString } from "../services/mock-calendar-service";
@@ -80,7 +80,7 @@ export async function WeeklyCalendar({ schedule, currentDateStr }: WeeklyCalenda
         {/* Bộ nút chuyển đổi tuần */}
         <div className="flex flex-wrap items-center gap-2 select-none self-start md:self-center">
           <Link
-            href={`/lich-tuan?week=${prevWeekMonday}` as any}
+            href={`/lich-tuan?week=${prevWeekMonday}`}
             className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold text-slate-600 bg-white border border-slate-100/60 hover:border-brand-darkred hover:text-brand-darkred transition duration-150 rounded-sm cursor-pointer "
           >
             <ChevronLeft size={14} />
@@ -88,14 +88,14 @@ export async function WeeklyCalendar({ schedule, currentDateStr }: WeeklyCalenda
           </Link>
 
           <Link
-            href={`/lich-tuan?week=${thisWeekMonday}` as any}
+            href={`/lich-tuan?week=${thisWeekMonday}`}
             className="inline-flex items-center px-5 py-2.5 text-xs font-bold text-slate-700 bg-slate-50 border border-slate-100/60 hover:bg-slate-100 hover:border-slate-100 transition duration-150 rounded-sm cursor-pointer "
           >
             {isEn ? "Current Week" : "Tuần này"}
           </Link>
 
           <Link
-            href={`/lich-tuan?week=${nextWeekMonday}` as any}
+            href={`/lich-tuan?week=${nextWeekMonday}`}
             className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold text-slate-600 bg-white border border-slate-100/60 hover:border-brand-darkred hover:text-brand-darkred transition duration-150 rounded-sm cursor-pointer "
           >
             <span>{isEn ? "Next Week" : "Tuần sau"}</span>
@@ -157,7 +157,7 @@ export async function WeeklyCalendar({ schedule, currentDateStr }: WeeklyCalenda
               const totalRows = sessions.reduce((acc, s) => acc + s.items.length, 0);
               let renderedDayColumn = false;
 
-              return sessions.map((session, sIdx) => {
+              return sessions.map((session) => {
                 return session.items.map((item, iIdx) => {
                   const isFirstRowOfDay = !renderedDayColumn;
                   renderedDayColumn = true;

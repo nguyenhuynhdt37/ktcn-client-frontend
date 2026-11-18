@@ -1,6 +1,14 @@
 import { PortalCategoryResponse, CategoryTreeNode } from "../types/category.types";
 
-type CategoryLike = PortalCategoryResponse | CategoryTreeNode;
+interface CategoryTranslation {
+  is_translated?: boolean;
+  name?: string;
+  slug?: string;
+}
+
+type CategoryLike = (PortalCategoryResponse | CategoryTreeNode) & {
+  translations?: Record<string, CategoryTranslation | undefined>;
+};
 
 /**
  * Hàm helper để phân giải tên danh mục theo ngôn ngữ hiện tại của FE Client.
@@ -9,7 +17,7 @@ type CategoryLike = PortalCategoryResponse | CategoryTreeNode;
 export const resolveCategoryName = (category: CategoryLike | null | undefined, currentLang: string): string => {
   if (!category) return "";
   
-  const translations = (category as any).translations;
+  const translations = category.translations;
   const translation = translations?.[currentLang];
   
   // Nếu có bản dịch cho ngôn ngữ hiện tại và bản dịch đó hợp lệ
@@ -34,7 +42,7 @@ export const resolveCategoryName = (category: CategoryLike | null | undefined, c
 export const resolveCategorySlug = (category: CategoryLike | null | undefined, currentLang: string): string => {
   if (!category) return "";
 
-  const translations = (category as any).translations;
+  const translations = category.translations;
   const translation = translations?.[currentLang];
   
   if (translation && translation.is_translated && translation.slug) {
@@ -57,7 +65,7 @@ export const isCategorySlugMatch = (category: CategoryLike | null | undefined, t
   if (!category || !targetSlug) return false;
   if (category.slug === targetSlug) return true;
   
-  const translations = (category as any).translations;
+  const translations = category.translations;
   if (translations) {
     for (const lang in translations) {
       if (translations[lang]?.slug === targetSlug) {

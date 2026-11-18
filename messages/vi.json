@@ -243,7 +243,8 @@
     "morning": "Sáng",
     "afternoon": "Chiều",
     "evening": "Tối",
-    "no_schedule": "Không có lịch công tác"
+    "no_schedule": "Không có lịch công tác",
+    "view_all": "Xem chi tiết"
   },
   "about": {
     "hero_alt": "Trường Kỹ thuật và Công nghệ - Trường Đại học Vinh",

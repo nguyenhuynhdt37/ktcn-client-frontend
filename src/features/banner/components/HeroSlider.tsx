@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { BannerResponse } from "../types/banner.types";
 import { useLocale } from "next-intl";
 import { getLocalizedField } from "@/features/article/utils/map-article";
+import { safePortalHref } from "@/shared/lib/security";
 
 interface HeroSliderProps {
   banners: BannerResponse[];
@@ -49,6 +50,9 @@ export function HeroSlider({ banners }: HeroSliderProps) {
 
     return () => {
       cancelAnimationFrame(initHandle);
+      emblaApi.off("reInit", onInit);
+      emblaApi.off("reInit", onSelect);
+      emblaApi.off("select", onSelect);
     };
   }, [emblaApi, onInit, onSelect]);
 
@@ -95,23 +99,50 @@ export function HeroSlider({ banners }: HeroSliderProps) {
             );
 
             // Xác định href dựa trên target_type mới của Banner
-            let bannerHref: ComponentProps<typeof Link>["href"] | null = null;
+            let internalHref: ComponentProps<typeof Link>["href"] | null = null;
+            let externalHref: string | null = null;
             if (banner.target_type === "ARTICLE" && banner.article_id) {
-              bannerHref = { pathname: "/tin-tuc/[slug]" as const, params: { slug: banner.article_id } };
-            } else if (banner.target_type === "EXTERNAL" && banner.link_url) {
-              bannerHref = banner.link_url as ComponentProps<typeof Link>["href"];
-            } else if (!banner.target_type && banner.link_url) {
-              // Fallback cho dữ liệu banner cũ
-              bannerHref = banner.link_url as ComponentProps<typeof Link>["href"];
+              internalHref = {
+                pathname: "/tin-tuc/[slug]" as const,
+                params: { slug: banner.article_id },
+              };
+            } else if (banner.link_url) {
+              const safeUrl = safePortalHref(banner.link_url, "#");
+              if (safeUrl !== "#") {
+                if (/^(https?:|mailto:|tel:)/i.test(safeUrl)) {
+                  externalHref = safeUrl;
+                } else {
+                  internalHref = safeUrl as ComponentProps<typeof Link>["href"];
+                }
+              }
             }
 
-            // Nếu banner có link, bọc toàn bộ slide bằng thẻ Link
-            if (bannerHref) {
+            if (externalHref) {
+              return (
+                <a
+                  key={banner.id}
+                  href={externalHref}
+                  target={banner.open_in_new_tab ? "_blank" : undefined}
+                  rel={banner.open_in_new_tab ? "noopener noreferrer" : undefined}
+                  className="relative block min-w-0 flex-[0_0_100%]"
+                >
+                  {SlideContent}
+                </a>
+              );
+            }
+
+            // Nếu banner có link nội bộ, bọc toàn bộ slide bằng thẻ Link
+            if (internalHref) {
               return (
                 <Link
                   key={banner.id}
-                  href={bannerHref}
+                  href={internalHref}
                   target={banner.open_in_new_tab && banner.target_type !== "ARTICLE" ? "_blank" : undefined}
+                  rel={
+                    banner.open_in_new_tab && banner.target_type !== "ARTICLE"
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
                   className="relative block min-w-0 flex-[0_0_100%]"
                 >
                   {SlideContent}
@@ -132,6 +163,7 @@ export function HeroSlider({ banners }: HeroSliderProps) {
       {banners.length > 1 && (
         <>
           <button
+            type="button"
             onClick={scrollPrev}
             disabled={prevBtnDisabled}
             className="absolute top-1/2 left-5 z-10 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-slate-950/35 text-white backdrop-blur-sm transition-colors duration-150 hover:bg-slate-950/60 disabled:pointer-events-none disabled:opacity-30 sm:flex"
@@ -140,6 +172,7 @@ export function HeroSlider({ banners }: HeroSliderProps) {
             <ChevronLeft size={22} aria-hidden="true" />
           </button>
           <button
+            type="button"
             onClick={scrollNext}
             disabled={nextBtnDisabled}
             className="absolute top-1/2 right-5 z-10 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-slate-950/35 text-white backdrop-blur-sm transition-colors duration-150 hover:bg-slate-950/60 disabled:pointer-events-none disabled:opacity-30 sm:flex"
@@ -155,6 +188,7 @@ export function HeroSlider({ banners }: HeroSliderProps) {
         <div className="absolute bottom-1 left-1/2 z-10 flex -translate-x-1/2 gap-0.5">
           {scrollSnaps.map((_, index) => (
             <button
+              type="button"
               key={index}
               onClick={() => scrollTo(index)}
               className="flex size-11 items-center justify-center rounded-full"

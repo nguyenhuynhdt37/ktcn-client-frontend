@@ -46,7 +46,7 @@ export function Header({ initialMenu, settings }: HeaderProps) {
           <div className="flex min-w-0 items-center">
             <Link href="/" className="flex items-center rounded-md" aria-label="Trang chủ">
               <div
-                className="relative h-14 w-64 sm:w-72 md:w-80"
+                className="relative h-14 w-56 sm:w-64 lg:w-56 xl:w-76"
                 style={
                   settings?.header_logo_width || settings?.header_logo_height
                     ? {
@@ -62,7 +62,7 @@ export function Header({ initialMenu, settings }: HeaderProps) {
                   eager
                   src={settings?.header_logo_url || settings?.header_logo_object_key}
                   alt={logoAlt}
-                  sizes="(max-width: 639px) 256px, (max-width: 767px) 288px, 320px"
+                  sizes="(max-width: 639px) 224px, (max-width: 1279px) 256px, 304px"
                   className="object-contain object-left py-0.5"
                 />
               </div>
