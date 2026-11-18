@@ -28,43 +28,43 @@ export function FireworksCelebrate() {
   useEffect(() => {
     const guestUuid = getCookie("guest_uuid");
     const generalFired = localStorage.getItem("fireworks_fired_general");
+    let shouldShow = false;
 
     if (guestUuid) {
       const uuidFired = localStorage.getItem(`fireworks_fired_${guestUuid}`);
       if (!uuidFired && !generalFired) {
-        setShow(true);
+        shouldShow = true;
         localStorage.setItem(`fireworks_fired_${guestUuid}`, "true");
         localStorage.setItem("fireworks_fired_general", "true");
       } else if (generalFired && !uuidFired) {
         localStorage.setItem(`fireworks_fired_${guestUuid}`, "true");
       }
-    } else {
-      if (!generalFired) {
-        setShow(true);
-        localStorage.setItem("fireworks_fired_general", "true");
-      }
+    } else if (!generalFired) {
+      shouldShow = true;
+      localStorage.setItem("fireworks_fired_general", "true");
     }
-  }, []);
 
-  // Quản lý thời gian hiển thị banner và pháo hoa độc lập
-  useEffect(() => {
-    if (show) {
+    if (!shouldShow) return;
+
+    const startTimeout = window.setTimeout(() => {
+      setShow(true);
       setShowBanner(true);
+    }, 0);
 
-      const hideBannerTimeout = setTimeout(() => {
-        setShowBanner(false);
-      }, 4500); // 4.5s ẩn banner
+    const hideBannerTimeout = window.setTimeout(() => {
+      setShowBanner(false);
+    }, 4500); // 4.5s ẩn banner
 
-      const removeTimeout = setTimeout(() => {
-        setShow(false);
-      }, 6000); // 6s tắt pháo hoa
+    const removeTimeout = window.setTimeout(() => {
+      setShow(false);
+    }, 6000); // 6s tắt pháo hoa
 
-      return () => {
-        clearTimeout(hideBannerTimeout);
-        clearTimeout(removeTimeout);
-      };
-    }
-  }, [show]);
+    return () => {
+      clearTimeout(startTimeout);
+      clearTimeout(hideBannerTimeout);
+      clearTimeout(removeTimeout);
+    };
+  }, []);
 
   useEffect(() => {
     if (!show || !containerRef.current) return;

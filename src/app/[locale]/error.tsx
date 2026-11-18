@@ -44,7 +44,7 @@ export default function Error({ error, unstable_retry }: ErrorProps) {
           {/* Mã lỗi */}
           {error.digest && (
             <div className="mx-auto mt-4 w-fit rounded-md bg-slate-50 px-3 py-1.5 text-center">
-              <span className="text-xs font-medium text-slate-400">
+              <span className="text-xs font-medium text-slate-600">
                 {t("error_code")}:{" "}
               </span>
               <code className="text-xs font-mono font-semibold text-slate-600">

@@ -36,7 +36,7 @@ function hashString(str: string): number {
  * Nếu là ảnh placeholder (ví dụ chứa no-image, noimage, placeholder, default),
  * chúng ta sẽ chủ động chuyển sang ảnh random chất lượng cao từ gallery ĐH Vinh.
  */
-function isPlaceholderImage(src: any): boolean {
+function isPlaceholderImage(src: unknown): boolean {
   if (!src) return true;
   const srcStr = String(src).toLowerCase();
   if (srcStr.includes("no-image-dhv")) return false;

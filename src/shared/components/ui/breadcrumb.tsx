@@ -78,7 +78,7 @@ export function Breadcrumb({ items, variant = "white" }: BreadcrumbProps) {
                 </span>
               ) : (
                 <Link
-                  href={item.href as any}
+                  href={item.href}
                   className={isTransparent ? "hover:text-white rounded-sm font-medium transition-colors duration-150 text-slate-300" : "hover:text-brand-darkred rounded-sm font-medium transition-colors duration-150"}
                 >
                   {item.name}

@@ -104,7 +104,7 @@ export default async function TrainingPage({ params }: PageProps) {
         />
       </div>
 
-      <main>
+      <div>
         <section className="site-container grid gap-10 py-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end lg:py-14">
           <div className="max-w-3xl">
             <p className="text-brand-darkred text-xs font-bold uppercase">
@@ -274,7 +274,7 @@ export default async function TrainingPage({ params }: PageProps) {
             ))}
           </div>
         </section>
-      </main>
+      </div>
     </div>
   );
 }

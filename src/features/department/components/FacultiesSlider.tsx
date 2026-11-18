@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Link } from "@/i18n/routing";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import { SafeImage } from "@/shared/components/ui/safe-image";
 
 interface FacultyItem {
@@ -53,7 +53,6 @@ export function FacultiesSlider({ faculties = defaultFaculties }: { faculties?: 
     dragFree: true,
   });
   const locale = useLocale();
-  const t = useTranslations("common");
 
   const scrollPrev = () => emblaApi && emblaApi.scrollPrev();
   const scrollNext = () => emblaApi && emblaApi.scrollNext();
@@ -88,7 +87,7 @@ export function FacultiesSlider({ faculties = defaultFaculties }: { faculties?: 
                 >
                   {/* Card thiết kế phẳng, ảnh đè chữ (overlay) hiện đại */}
                   <Link 
-                    href={faculty.href as any} 
+                    href={faculty.href} 
                     className="block relative aspect-[4/3] w-full overflow-hidden bg-slate-900 border border-border hover:border-border-subtle hover:shadow-sm transition-all duration-300 group/card cursor-pointer rounded-xl"
                   >
                     <SafeImage

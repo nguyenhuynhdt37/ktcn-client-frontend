@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Mail, BookOpen, Layers, UserCheck, GraduationCap } from "lucide-react";
+import { Calendar, Mail, BookOpen, UserCheck, GraduationCap } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 
@@ -23,7 +23,7 @@ const defaultServices: ServiceItem[] = [
   },
   {
     titleKey: "elearning",
-    href: "http://elearning.vinhuni.edu.vn/",
+    href: "https://elearning.vinhuni.edu.vn/",
     icon: <BookOpen className="text-brand-blue h-5 w-5" />,
   },
   {
@@ -38,7 +38,7 @@ const defaultServices: ServiceItem[] = [
   },
   {
     titleKey: "smart_uni",
-    href: "http://usmart.vinhuni.edu.vn/",
+    href: "https://usmart.vinhuni.edu.vn/",
     icon: <GraduationCap className="text-brand-blue h-5 w-5" />,
   },
 ];
@@ -80,7 +80,7 @@ export function ServicesBar({ services = defaultServices }: { services?: Service
             }
 
             return (
-              <Link key={service.titleKey} href={service.href as any} className={cardClasses}>
+              <Link key={service.titleKey} href={service.href} className={cardClasses}>
                 <div className="bg-brand-blue/8 group-hover:bg-brand-blue/12 flex size-11 items-center justify-center rounded-lg transition-colors duration-150">
                   {service.icon}
                 </div>

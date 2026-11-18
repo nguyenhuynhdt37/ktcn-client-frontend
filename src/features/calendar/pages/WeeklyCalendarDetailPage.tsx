@@ -15,7 +15,8 @@ export async function WeeklyCalendarDetailPage({ locale, slug, page }: WeeklyCal
   // Thiết lập locale để kích hoạt static rendering / server rendering đa ngôn ngữ
   setRequestLocale(locale);
 
-  const currentPage = parseInt(page || "1");
+  const parsedPage = Number.parseInt(page || "1", 10);
+  const currentPage = Number.isFinite(parsedPage) && parsedPage >= 1 ? parsedPage : 1;
 
   // Gọi đồng thời API chi tiết lịch tuần đang chọn và danh sách lịch tuần ở Sidebar thông qua calendarService
   const [article, articlesData] = await Promise.all([
@@ -47,7 +48,7 @@ export async function WeeklyCalendarDetailPage({ locale, slug, page }: WeeklyCal
   })) || [];
 
   return (
-    <main className="w-full max-w-[96%] sm:max-w-[98%] mx-auto px-4 sm:px-6 py-12">
+    <div className="w-full max-w-[96%] sm:max-w-[98%] mx-auto px-4 sm:px-6 py-12">
       {/* Breadcrumb */}
       <nav className="flex mb-6 text-xs font-semibold text-slate-400 select-none uppercase tracking-wider" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1 md:space-x-2">
@@ -86,6 +87,6 @@ export async function WeeklyCalendarDetailPage({ locale, slug, page }: WeeklyCal
         hasPrevious={articlesData?.has_previous || false}
         locale={locale}
       />
-    </main>
+    </div>
   );
 }

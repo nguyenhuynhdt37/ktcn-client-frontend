@@ -13,6 +13,7 @@ import {
   Search,
 } from "lucide-react";
 import { Link } from "@/i18n/routing";
+import { safePortalHref } from "@/shared/lib/security";
 import type { ProgramCourse, ProgramDetail, ProgramVersion } from "../types/program.types";
 
 function formatFileSize(bytes?: number | null) {
@@ -113,22 +114,24 @@ function Documents({ version, isEn }: { version: ProgramVersion; isEn: boolean }
                 {size ? ` · ${size}` : ""}
               </p>
             </div>
-            {document.file_url && (
+            {document.file_url && safePortalHref(document.file_url, "") && (
               <div className="flex items-center gap-2">
                 <a
-                  href={document.file_url}
+                  href={safePortalHref(document.file_url, "#")}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   title={isEn ? "Open document" : "Mở tài liệu"}
+                  aria-label={`${isEn ? "Open document" : "Mở tài liệu"}: ${document.title}`}
                   className="hover:border-brand-darkred hover:text-brand-darkred grid size-9 place-items-center rounded-md border border-slate-300 text-slate-600"
                 >
                   <ExternalLink className="size-4" aria-hidden="true" />
                 </a>
                 {isPdf && (
                   <a
-                    href={document.file_url}
+                    href={safePortalHref(document.file_url, "#")}
                     download
                     title={isEn ? "Download document" : "Tải tài liệu"}
+                    aria-label={`${isEn ? "Download document" : "Tải tài liệu"}: ${document.title}`}
                     className="bg-brand-darkred hover:bg-brand-darkred-dark grid size-9 place-items-center rounded-md text-white"
                   >
                     <Download className="size-4" aria-hidden="true" />
@@ -331,7 +334,9 @@ export function ProgramRecord({ program, locale }: { program: ProgramDetail; loc
   const award = isMaster
     ? isEn
       ? program.name
-      : "Thạc sĩ Công nghệ thông tin"
+      : program.name.toLowerCase().startsWith("thạc sĩ")
+        ? program.name
+        : `Thạc sĩ ${program.name}`
     : isEn
       ? "Engineer"
       : "Kỹ sư";

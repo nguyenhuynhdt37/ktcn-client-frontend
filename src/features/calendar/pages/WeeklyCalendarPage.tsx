@@ -14,7 +14,8 @@ export async function WeeklyCalendarPage({ locale, page }: WeeklyCalendarPagePro
   // Thiết lập locale để kích hoạt static rendering / server rendering đa ngôn ngữ
   setRequestLocale(locale);
 
-  const currentPage = parseInt(page || "1");
+  const parsedPage = Number.parseInt(page || "1", 10);
+  const currentPage = Number.isFinite(parsedPage) && parsedPage >= 1 ? parsedPage : 1;
 
   // 1. Gọi API lấy danh sách bài viết lịch tuần để lấy tuần mới nhất
   const articlesData = await calendarService.getWeeklyCalendars(currentPage, locale);
@@ -48,7 +49,7 @@ export async function WeeklyCalendarPage({ locale, page }: WeeklyCalendarPagePro
   };
 
   return (
-    <main className="w-full max-w-[96%] sm:max-w-[98%] mx-auto px-4 sm:px-6 py-12">
+    <div className="w-full max-w-[96%] sm:max-w-[98%] mx-auto px-4 sm:px-6 py-12">
       {/* Breadcrumb */}
       <nav className="flex mb-6 text-xs font-semibold text-slate-400 select-none uppercase tracking-wider" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1 md:space-x-2">
@@ -79,6 +80,6 @@ export async function WeeklyCalendarPage({ locale, page }: WeeklyCalendarPagePro
         hasPrevious={articlesData?.has_previous || false}
         locale={locale}
       />
-    </main>
+    </div>
   );
 }

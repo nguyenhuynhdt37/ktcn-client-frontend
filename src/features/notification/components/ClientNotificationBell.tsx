@@ -12,6 +12,7 @@ export function ClientNotificationBell() {
   const t = useTranslations("notifications");
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const { items, readIds, unreadCount, isLoading, markRead, markAllRead } =
     useArticleNotifications(8);
 
@@ -21,7 +22,10 @@ export function ClientNotificationBell() {
       if (!rootRef.current?.contains(event.target as Node)) setIsOpen(false);
     };
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsOpen(false);
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        triggerRef.current?.focus();
+      }
     };
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("keydown", onKeyDown);
@@ -34,6 +38,7 @@ export function ClientNotificationBell() {
   return (
     <div ref={rootRef} className="relative">
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setIsOpen((current) => !current)}
         className="hover:text-brand-yellow relative inline-flex size-11 items-center justify-center rounded-md text-white/80 transition-colors duration-150"
@@ -101,7 +106,7 @@ export function ClientNotificationBell() {
                     <span
                       className={cn(
                         "mt-2 size-2 shrink-0 rounded-full",
-                        isUnread ? "bg-brand-orange" : "bg-border",
+                        isUnread ? "bg-brand-darkred" : "bg-border",
                       )}
                       aria-hidden="true"
                     />

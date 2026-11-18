@@ -96,7 +96,7 @@ export default async function PostgraduatePage({ params }: PageProps) {
         />
       </div>
 
-      <main className="site-container pt-5 pb-20 sm:pt-8">
+      <div className="site-container pt-5 pb-20 sm:pt-8">
         <div className="mb-8 max-w-3xl">
           <p className="text-brand-darkred text-xs font-bold uppercase">
             {isEn ? "Programme catalogue" : "Danh mục chương trình"}
@@ -165,7 +165,7 @@ export default async function PostgraduatePage({ params }: PageProps) {
             </h2>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }

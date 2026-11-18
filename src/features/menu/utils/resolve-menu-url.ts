@@ -1,4 +1,5 @@
 import { MenuItemTreeNode } from "../types/menu.types";
+import { safePortalHref } from "@/shared/lib/security";
 
 export function resolveMenuUrl(item: MenuItemTreeNode, locale?: string): string {
   // 1. Kiểm tra tính hợp lệ của link cấu hình
@@ -8,8 +9,8 @@ export function resolveMenuUrl(item: MenuItemTreeNode, locale?: string): string 
 
   // 2. Nếu là đường dẫn ngoài (External Link)
   if (item.target_type === "EXTERNAL_LINK") {
-    let url = item.external_url || "#";
-    if (locale) {
+    let url = safePortalHref(item.external_url, "#");
+    if (locale && url !== "#") {
       if (locale === "vi") {
         url = url.replace(/\/en(\/|$)/g, "/vi$1");
       } else if (locale === "en") {

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import { useState } from "react";
 import { Sparkles, Trophy } from "lucide-react";
@@ -88,9 +89,11 @@ export function AboutStudentLife() {
                 className="flex items-start gap-5 p-6 bg-white border border-slate-200/80 rounded-xl hover:border-brand-darkred/20 hover:shadow-sm transition-all duration-300 ease-out cursor-pointer block group"
               >
                 <div className="w-14 h-14 rounded-full overflow-hidden border border-slate-200/80 flex items-center justify-center shrink-0 shadow-xs relative">
-                  <img 
+                  <Image 
                     src={club.image} 
                     alt={club.name} 
+                    fill
+                    sizes="56px"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
                   />
                 </div>

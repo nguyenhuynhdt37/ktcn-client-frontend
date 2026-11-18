@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useTransition } from "react";
-import { useRouter, usePathname } from "@/i18n/routing";
+import { useRouter, usePathname, type RouterHref } from "@/i18n/routing";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Search, X } from "lucide-react";
@@ -14,7 +14,7 @@ export function ArticleSearch({ initialSearch }: ArticleSearchProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const t = useTranslations("common");
 
   const [value, setValue] = useState(initialSearch);
@@ -51,7 +51,7 @@ export function ArticleSearch({ initialSearch }: ArticleSearchProps) {
       params.set("page", "1"); // Thay đổi search tự động reset page về 1
 
       startTransition(() => {
-        router.push(`${pathname}?${params.toString()}` as any, { scroll: false });
+        router.push(`${pathname}?${params.toString()}` as RouterHref, { scroll: false });
       });
     }, 400); // Debounce 400ms
 
@@ -63,7 +63,10 @@ export function ArticleSearch({ initialSearch }: ArticleSearchProps) {
   // Đồng bộ state khi URL search params thay đổi từ bên ngoài (ví dụ bấm Clear All)
   const currentUrlQuery = searchParams.get("q") || "";
   useEffect(() => {
-    setValue(currentUrlQuery);
+    const syncTimer = window.setTimeout(() => {
+      setValue(currentUrlQuery);
+    }, 0);
+    return () => clearTimeout(syncTimer);
   }, [currentUrlQuery]);
 
   const handleClear = () => {
@@ -72,7 +75,7 @@ export function ArticleSearch({ initialSearch }: ArticleSearchProps) {
     params.delete("q");
     params.set("page", "1");
     startTransition(() => {
-      router.push(`${pathname}?${params.toString()}` as any, { scroll: false });
+      router.push(`${pathname}?${params.toString()}` as RouterHref, { scroll: false });
     });
   };
 

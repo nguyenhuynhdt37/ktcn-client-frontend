@@ -11,7 +11,6 @@ import {
   Compass, 
   Target, 
   Clock3, 
-  BookOpen, 
   Newspaper, 
   ArrowRight
 } from "lucide-react";
@@ -21,7 +20,7 @@ import { ArticleCard } from "@/features/article";
 import { StaffGrid } from "@/features/lecturer/components/StaffGrid";
 import { sanitizeRichHtml } from "@/shared/lib/security";
 import { LeadershipGroups, isLeadershipUnit } from "./LeadershipGroups";
-import type { PortalDepartment, PortalProgram, DepartmentOverview } from "../types/department.types";
+import type { DepartmentOverview } from "../types/department.types";
 
 interface DepartmentRecordProps {
   overview: DepartmentOverview;
@@ -235,7 +234,7 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
                   <div className="space-y-1.5 flex-grow">
                     <div className="flex flex-wrap items-center gap-2 text-xs">
                       {program.code && (
-                        <span className="font-mono text-slate-400 font-bold">
+                        <span className="font-mono text-slate-600 font-bold">
                           {program.code}
                         </span>
                       )}
@@ -259,7 +258,7 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
                   </div>
 
                   <div className="flex items-center gap-4 shrink-0 justify-between sm:justify-end">
-                    <div className="flex items-center gap-3 text-xs text-slate-400 font-semibold">
+                    <div className="flex items-center gap-3 text-xs text-slate-600 font-semibold">
                       {program.duration_years && (
                         <span className="inline-flex items-center gap-1">
                           <Clock3 size={13} />
@@ -358,7 +357,7 @@ export function DepartmentRecord({ overview, locale }: DepartmentRecordProps) {
                       <item.icon className="h-4.5 w-4.5" aria-hidden="true" />
                     </div>
                     <div>
-                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                      <div className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">
                         {item.label}
                       </div>
                       <div className="mt-0.5 text-xs sm:text-sm font-semibold text-slate-800 break-all leading-normal">

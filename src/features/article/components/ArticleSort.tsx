@@ -16,7 +16,7 @@ export function ArticleSort({ currentSortBy, currentSortDir }: ArticleSortProps)
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const locale = useLocale();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const t = useTranslations("sort");
 
   // Mặc định
@@ -41,9 +41,13 @@ export function ArticleSort({ currentSortBy, currentSortDir }: ArticleSortProps)
 
     // Giữ nguyên filter, chỉ reset page về 1
     params.set("page", "1");
+    const query = params.toString();
 
     startTransition(() => {
-      router.push(`${pathname}?${params.toString()}` as any, { scroll: false });
+      router.push(
+        (query ? `${pathname}?${query}` : pathname) as Parameters<typeof router.push>[0],
+        { scroll: false }
+      );
     });
   };
 
@@ -65,6 +69,7 @@ export function ArticleSort({ currentSortBy, currentSortDir }: ArticleSortProps)
         <select
           value={sortBy}
           onChange={(e) => handleSortByChange(e.target.value)}
+          aria-label={t("label")}
           className="h-11 min-w-0 flex-1 cursor-pointer border-none bg-transparent pr-7 pl-3 text-sm text-slate-700 focus:outline-none md:w-44"
         >
           <option value="publish_at">{t("newest")}</option>

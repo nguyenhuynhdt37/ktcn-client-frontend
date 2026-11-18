@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type
 import { useLocale } from "next-intl";
 import { Send, X } from "lucide-react";
 import { ChatRateLimitError, chatbotService } from "../services/chatbotService";
+import { safePortalHref } from "@/shared/lib/security";
 import { GREETING, SUGGESTIONS, UI_TEXT } from "../data/suggestions";
 import type { ChatLang, ChatMessage } from "../types";
 
@@ -75,6 +76,7 @@ export function ChatWidget() {
   const sessionRef = useRef<string>("");
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const toggleBtnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     sessionRef.current = getSessionId();
@@ -83,6 +85,11 @@ export function ChatWidget() {
   useEffect(() => {
     if (open) inputRef.current?.focus();
   }, [open]);
+
+  const closeDialog = useCallback(() => {
+    setOpen(false);
+    requestAnimationFrame(() => toggleBtnRef.current?.focus());
+  }, []);
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
@@ -128,7 +135,7 @@ export function ChatWidget() {
       e.preventDefault();
       void send(input);
     }
-    if (e.key === "Escape") setOpen(false);
+    if (e.key === "Escape") closeDialog();
   };
 
   return (
@@ -137,6 +144,9 @@ export function ChatWidget() {
         <div
           role="dialog"
           aria-label={ui.title}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") closeDialog();
+          }}
           className="fixed inset-x-3 bottom-24 z-50 flex max-h-[min(70vh,560px)] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:inset-x-auto sm:right-6 sm:w-[380px]"
         >
           <header className="flex items-center gap-3 border-b border-slate-100 bg-white px-4 py-3">
@@ -147,7 +157,7 @@ export function ChatWidget() {
             </div>
             <button
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={closeDialog}
               aria-label={ui.close}
               className="inline-flex size-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900"
             >
@@ -164,7 +174,7 @@ export function ChatWidget() {
               <div className="space-y-3">
                 {SUGGESTIONS[lang].map((group) => (
                   <div key={group.group}>
-                    <p className="mb-1.5 text-[11px] font-bold tracking-wide text-slate-400 uppercase">{group.group}</p>
+                    <p className="mb-1.5 text-[11px] font-bold tracking-wide text-slate-600 uppercase">{group.group}</p>
                     <div className="flex flex-wrap gap-2">
                       {group.questions.map((q) => (
                         <button key={q} type="button" onClick={() => void send(q)} className={chipClass}>
@@ -194,14 +204,29 @@ export function ChatWidget() {
                   {m.sources && m.sources.length > 0 && (
                     <div className="mt-2 border-t border-slate-100 pt-2 text-xs text-slate-500">
                       <span className="font-semibold">{ui.sources}: </span>
-                      {m.sources.map((s, i) => (
-                        <span key={s.url}>
-                          {i > 0 && ", "}
-                          <Link href={s.url} className="text-brand-darkred underline">
-                            {s.title}
-                          </Link>
-                        </span>
-                      ))}
+                      {m.sources.map((s, i) => {
+                        const safeUrl = safePortalHref(s.url, "#");
+                        const external = /^https?:/i.test(safeUrl);
+                        return (
+                          <span key={`${s.url}-${i}`}>
+                            {i > 0 && ", "}
+                            {external || safeUrl === "#" ? (
+                              <a
+                                href={safeUrl}
+                                target={external ? "_blank" : undefined}
+                                rel={external ? "noopener noreferrer" : undefined}
+                                className="text-brand-darkred underline"
+                              >
+                                {s.title}
+                              </a>
+                            ) : (
+                              <Link href={safeUrl} className="text-brand-darkred underline">
+                                {s.title}
+                              </Link>
+                            )}
+                          </span>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -256,6 +281,7 @@ export function ChatWidget() {
       )}
 
       <button
+        ref={toggleBtnRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? ui.close : ui.open}

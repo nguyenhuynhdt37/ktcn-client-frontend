@@ -1,13 +1,11 @@
 // src/features/about/components/AboutAchievements.tsx
 "use client";
 
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { ACHIEVEMENTS } from "../constants/about-data";
 
 export function AboutAchievements() {
   const t = useTranslations("about");
-  const locale = useLocale();
-  const isEn = locale === "en";
 
   return (
     <section className="py-14 md:py-20 bg-slate-50/30">

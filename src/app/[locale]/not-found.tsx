@@ -25,7 +25,7 @@ export default function NotFound() {
             <span className="text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-brand-darkred to-brand-blue leading-none">
               404
             </span>
-            <div className="mt-2 text-[10px] font-extrabold uppercase tracking-widest text-slate-400">
+            <div className="mt-2 text-[10px] font-extrabold uppercase tracking-widest text-slate-600">
               Page Not Found
             </div>
           </div>

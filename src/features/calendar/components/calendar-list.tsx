@@ -60,7 +60,7 @@ export function CalendarList({
               {/* Left Side: Info */}
               <div className="space-y-2 flex-1">
                 <Link
-                  href={`/lich-tuan/${item.slug}` as any}
+                  href={`/lich-tuan/${item.slug}`}
                   className="block text-base font-bold text-slate-800 hover:text-brand-darkred group-hover:text-brand-darkred transition-colors duration-150 leading-snug"
                 >
                   {item.title}
@@ -74,7 +74,7 @@ export function CalendarList({
                 )}
 
                 {/* Meta details */}
-                <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 font-medium pt-1">
+                <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 font-medium pt-1">
                   <span className="flex items-center gap-1">
                     <Clock size={12} />
                     <span>{item.publishedAt}</span>
@@ -91,7 +91,7 @@ export function CalendarList({
               {/* Right Side: Action Button */}
               <div className="shrink-0 flex items-center">
                 <Link
-                  href={`/lich-tuan/${item.slug}` as any}
+                  href={`/lich-tuan/${item.slug}`}
                   className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-bold text-slate-700 hover:text-white bg-slate-50 hover:bg-brand-darkred border border-slate-100/60 hover:border-brand-darkred transition-all duration-200 rounded-sm cursor-pointer group/btn "
                 >
                   <span>{t("view_all")}</span>

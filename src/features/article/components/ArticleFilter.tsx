@@ -4,7 +4,7 @@ import { useRouter, usePathname } from "@/i18n/routing";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { X, RefreshCw, Tag as TagIcon } from "lucide-react";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { PortalTagResponse } from "../types/article.types";
 import { getLocalizedField } from "../utils/map-article";
 
@@ -15,14 +15,22 @@ interface ArticleFilterProps {
   onClose: () => void;
 }
 
-export function ArticleFilter({ tags, currentTagFilter, isOpen, onClose }: ArticleFilterProps) {
+export function ArticleFilter({ tags, isOpen, onClose }: ArticleFilterProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const locale = useLocale();
   const [isPending, startTransition] = useTransition();
-  const tCommon = useTranslations("common");
   const tArticle = useTranslations("article");
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isOpen, onClose]);
 
   // Mảng các tag slug đang hoạt động
   const currentTag = searchParams.get("tag_slug") || searchParams.get("tag") || "";
@@ -50,8 +58,12 @@ export function ArticleFilter({ tags, currentTagFilter, isOpen, onClose }: Artic
     }
 
     params.set("page", "1"); // Tự động reset về trang 1
+    const query = params.toString();
     startTransition(() => {
-      router.push(`${pathname}?${params.toString()}` as any, { scroll: false });
+      router.push(
+        (query ? `${pathname}?${query}` : pathname) as Parameters<typeof router.push>[0],
+        { scroll: false }
+      );
     });
   };
 
@@ -60,8 +72,12 @@ export function ArticleFilter({ tags, currentTagFilter, isOpen, onClose }: Artic
     params.delete("tag_slug");
     params.delete("tag");
     params.set("page", "1");
+    const query = params.toString();
     startTransition(() => {
-      router.push(`${pathname}?${params.toString()}` as any, { scroll: false });
+      router.push(
+        (query ? `${pathname}?${query}` : pathname) as Parameters<typeof router.push>[0],
+        { scroll: false }
+      );
     });
   };
 
@@ -153,10 +169,14 @@ export function ArticleFilter({ tags, currentTagFilter, isOpen, onClose }: Artic
   return (
     <>
       {/* Giao diện Desktop sidebar */}
-      <div className="sticky top-24 hidden h-fit lg:block">{filterContent}</div>
+      <div className="hidden h-fit lg:block">{filterContent}</div>
 
       {/* Giao diện Mobile Drawer/Sheet */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={tArticle("filter_by_tags")}
+        aria-hidden={!isOpen}
         className={`fixed inset-0 z-50 transition-opacity duration-300 lg:hidden ${
           isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         }`}
@@ -179,10 +199,12 @@ export function ArticleFilter({ tags, currentTagFilter, isOpen, onClose }: Artic
               {tArticle("filter_by_tags")}
             </h3>
             <button
+              type="button"
               onClick={onClose}
-              className="p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+              aria-label={locale === "en" ? "Close filter" : "Đóng bộ lọc"}
+              className="inline-flex size-9 items-center justify-center rounded-md text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
             >
-              <X size={18} />
+              <X size={18} aria-hidden="true" />
             </button>
           </div>
 
@@ -192,6 +214,7 @@ export function ArticleFilter({ tags, currentTagFilter, isOpen, onClose }: Artic
           {/* Footer Drawer */}
           <div className="flex shrink-0 gap-3 border-t border-slate-100 bg-slate-50 px-6 py-4">
             <button
+              type="button"
               onClick={handleClearTags}
               disabled={!isAnyTagActive}
               className="flex-1 cursor-pointer rounded-lg border border-border py-2.5 text-xs font-bold text-slate-600 transition hover:bg-slate-100 disabled:opacity-50"
@@ -199,6 +222,7 @@ export function ArticleFilter({ tags, currentTagFilter, isOpen, onClose }: Artic
               {locale === "en" ? "Reset" : "Đặt lại"}
             </button>
             <button
+              type="button"
               onClick={onClose}
               className="bg-brand-darkred hover:bg-brand-darkred-dark flex-1 cursor-pointer rounded-lg py-2.5 text-xs font-bold text-white transition"
             >

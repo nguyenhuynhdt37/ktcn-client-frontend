@@ -1,14 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Bell, X } from "lucide-react";
+import { useLocale } from "next-intl";
 import { axiosClient } from "@/shared/api/axios-client";
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding)
-    .replace(/\-/g, "+")
-    .replace(/_/g, "/");
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
 
   const rawData = window.atob(base64);
   const outputArray = new Uint8Array(rawData.length);
@@ -20,42 +19,12 @@ function urlBase64ToUint8Array(base64String: string) {
 }
 
 export function PushNotificationManager() {
+  const locale = useLocale();
+  const isEn = locale === "en";
   const [showBanner, setShowBanner] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
 
-  useEffect(() => {
-    if (typeof window === "undefined" || !("serviceWorker" in navigator) || !("PushManager" in window)) {
-      return;
-    }
-
-    // Đăng ký Service Worker
-    navigator.serviceWorker.register("/sw.js")
-      .then((reg) => {
-        console.log(
-          "%c🔔 Web Push %c Service Worker registered successfully! Scope: " + reg.scope,
-          "background: #3b82f6; color: white; padding: 3px 6px; border-radius: 4px 0 0 4px; font-weight: bold; font-family: system-ui, sans-serif;",
-          "background: #dbeafe; color: #1e3a8a; padding: 3px 6px; border-radius: 0 4px 4px 0; font-family: system-ui, sans-serif;"
-        );
-        
-        // Nếu đã được cấp quyền từ trước, tự động cập nhật/đăng ký lại subscription với backend
-        if (Notification.permission === "granted") {
-          updateSubscription(reg);
-        } else if (Notification.permission === "default") {
-          // Nếu chưa chọn, kiểm tra xem người dùng đã từng tắt banner xin quyền chưa
-          const dismissed = localStorage.getItem("push-notification-dismissed");
-          if (!dismissed) {
-            // Hiển thị banner xin quyền sau 3 giây để tránh làm phiền ngay lập tức
-            const timer = setTimeout(() => setShowBanner(true), 3000);
-            return () => clearTimeout(timer);
-          }
-        }
-      })
-      .catch((err) => {
-        console.error("Service Worker registration failed:", err);
-      });
-  }, []);
-
-  const updateSubscription = async (registration: ServiceWorkerRegistration) => {
+  const updateSubscription = useCallback(async (registration: ServiceWorkerRegistration) => {
     try {
       // 1. Lấy VAPID public key từ backend
       const res = await axiosClient.get("/api/v1/portal/notifications/vapid-public-key");
@@ -113,8 +82,8 @@ export function PushNotificationManager() {
       const payload = {
         endpoint: subscription.endpoint,
         keys: {
-          p256dh: p256dh,
-          auth: auth,
+          p256dh,
+          auth,
         },
         user_agent: navigator.userAgent,
       };
@@ -124,12 +93,52 @@ export function PushNotificationManager() {
       console.log(
         "%c🔔 Web Push %c Device subscription successfully synchronized with Backend! ",
         "background: #10b981; color: white; padding: 3px 6px; border-radius: 4px 0 0 4px; font-weight: bold; font-family: system-ui, sans-serif;",
-        "background: #d1fae5; color: #065f46; padding: 3px 6px; border-radius: 0 4px 4px 0; font-family: system-ui, sans-serif; font-weight: 500;"
+        "background: #d1fae5; color: #065f46; padding: 3px 6px; border-radius: 0 4px 4px 0; font-family: system-ui, sans-serif; font-weight: 500;",
       );
     } catch (error) {
       console.error("Failed to update push subscription:", error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !("serviceWorker" in navigator) || !("PushManager" in window)) {
+      return;
+    }
+
+    let cancelled = false;
+    let timerId: ReturnType<typeof setTimeout> | undefined;
+
+    // Đăng ký Service Worker
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then((reg) => {
+        if (cancelled) return;
+        console.log(
+          "%c🔔 Web Push %c Service Worker registered successfully! Scope: " + reg.scope,
+          "background: #3b82f6; color: white; padding: 3px 6px; border-radius: 4px 0 0 4px; font-weight: bold; font-family: system-ui, sans-serif;",
+          "background: #dbeafe; color: #1e3a8a; padding: 3px 6px; border-radius: 0 4px 4px 0; font-family: system-ui, sans-serif;",
+        );
+
+        if (Notification.permission === "granted") {
+          void updateSubscription(reg);
+        } else if (Notification.permission === "default") {
+          const dismissed = localStorage.getItem("push-notification-dismissed");
+          if (!dismissed) {
+            timerId = setTimeout(() => {
+              if (!cancelled) setShowBanner(true);
+            }, 3000);
+          }
+        }
+      })
+      .catch((err) => {
+        console.error("Service Worker registration failed:", err);
+      });
+
+    return () => {
+      cancelled = true;
+      if (timerId !== undefined) clearTimeout(timerId);
+    };
+  }, [updateSubscription]);
 
   const handleSubscribe = async () => {
     if (!("serviceWorker" in navigator)) return;
@@ -161,29 +170,39 @@ export function PushNotificationManager() {
   if (!showBanner) return null;
 
   return (
-    <div className="fixed top-24 right-4 md:right-6 z-50 w-[calc(100%-2rem)] sm:w-80 rounded-xl border border-white/10 bg-card/95 backdrop-blur-md p-3.5 shadow-lg transition-all duration-300 animate-in fade-in slide-in-from-top-5 max-w-sm">
+    <div
+      role="region"
+      aria-label={isEn ? "Push notifications" : "Thông báo đẩy"}
+      className="border-border bg-card/95 animate-in fade-in slide-in-from-top-5 fixed top-24 right-4 z-50 w-[calc(100%-2rem)] max-w-sm rounded-xl border p-3.5 shadow-lg backdrop-blur-md transition-all duration-300 sm:w-80 md:right-6"
+    >
       <div className="flex items-center gap-3">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-          <Bell className="h-4 w-4 animate-bounce" />
+        <div className="bg-primary/10 text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-lg">
+          <Bell className="h-4 w-4 animate-bounce" aria-hidden="true" />
         </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-xs text-foreground truncate">Nhận thông báo đẩy?</h3>
-          <p className="text-[10px] text-muted-foreground truncate">Cập nhật tin tức quan trọng từ nhà trường</p>
+        <div className="min-w-0 flex-1">
+          <h3 className="text-foreground truncate text-xs font-semibold">
+            {isEn ? "Enable push notifications?" : "Nhận thông báo đẩy?"}
+          </h3>
+          <p className="text-muted-foreground truncate text-[11px]">
+            {isEn ? "Get latest updates from the university" : "Cập nhật tin tức quan trọng từ nhà trường"}
+          </p>
         </div>
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex shrink-0 items-center gap-1.5">
           <button
+            type="button"
             onClick={handleSubscribe}
             disabled={isSubscribing}
-            className="rounded-lg bg-primary px-3 py-1.5 text-[10px] font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 min-h-9 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors disabled:opacity-50"
           >
-            {isSubscribing ? "..." : "Đồng ý"}
+            {isSubscribing ? "..." : isEn ? "Allow" : "Đồng ý"}
           </button>
           <button
+            type="button"
             onClick={handleDismiss}
-            className="rounded-full p-1 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
-            aria-label="Bỏ qua"
+            className="text-muted-foreground hover:bg-muted hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+            aria-label={isEn ? "Dismiss" : "Bỏ qua"}
           >
-            <X className="h-3.5 w-3.5" />
+            <X className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
       </div>

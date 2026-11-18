@@ -39,6 +39,18 @@ export const defaultViewport: Viewport = {
   maximumScale: 5,
 };
 
+interface RobotsConfig {
+  index: boolean;
+  follow: boolean;
+  googleBot: {
+    index: boolean;
+    follow: boolean;
+    "max-video-preview": number;
+    "max-image-preview": "large" | "standard" | "none";
+    "max-snippet": number;
+  };
+}
+
 interface MetadataOptions {
   title: string;
   description: string;
@@ -51,7 +63,7 @@ interface MetadataOptions {
   modifiedTime?: string;
   authors?: string[];
   alternatesLanguages?: { [key: string]: string }; // Map language code to localized slug
-  robots?: string | string[] | any; // Custom robots settings
+  robots?: string | string[] | RobotsConfig; // Custom robots settings
 }
 
 // 2. Main Metadata Constructor function
@@ -105,7 +117,7 @@ export function constructMetadata(options: MetadataOptions): Metadata {
   }
 
   // Dynamically resolve robots settings
-  let robotsConfig = {
+  let robotsConfig: RobotsConfig = {
     index: true,
     follow: true,
     googleBot: {

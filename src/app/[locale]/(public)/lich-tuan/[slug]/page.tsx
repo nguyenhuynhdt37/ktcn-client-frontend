@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     type: "article",
     publishedTime: article.published_at,
     modifiedTime: article.updated_at || undefined,
-    robots: article.robots ? article.robots.split(",").map(r => r.trim()) as any : undefined,
+    robots: article.robots ? article.robots.split(",").map(r => r.trim()) : undefined,
   });
 }
 

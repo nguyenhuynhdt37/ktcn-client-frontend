@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/routing";
 import { MapPin, Facebook, MessageSquare, Search, Clock, CloudSun } from "lucide-react";
 import { LanguageSwitcher, LanguageSwitcherPlaceholder } from "@/features/language/components/LanguageSwitcher";
 import type { Language } from "@/features/language/types/language.types";
@@ -17,6 +18,7 @@ interface TopBarProps {
 export function TopBar({ initialLanguages, settings }: TopBarProps) {
   const t = useTranslations("common");
   const locale = useLocale();
+  const router = useRouter();
   const isEn = locale === "en";
   const schoolAddress = (isEn ? settings?.address_en : settings?.address_vi) || t("school_address");
   const facebookUrl = sanitizeExternalUrl(settings?.facebook_url, "https://www.facebook.com/Vienktcn");
@@ -26,6 +28,9 @@ export function TopBar({ initialLanguages, settings }: TopBarProps) {
   const [weather, setWeather] = useState<{ temp: number; description: string } | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
     // 1. Cập nhật thời gian thực tế
     const updateTime = () => {
       const now = new Date();
@@ -41,10 +46,11 @@ export function TopBar({ initialLanguages, settings }: TopBarProps) {
       try {
         const localeString = locale === "en" ? "en-US" : "vi-VN";
         const formatted = now.toLocaleDateString(localeString, options);
-        // Sửa định dạng dấu phẩy sang gạch ngang
-        setTimeString(formatted.replace(",", " -"));
+        if (isMounted) {
+          setTimeString(formatted.replace(",", " -"));
+        }
       } catch {
-        setTimeString("");
+        if (isMounted) setTimeString("");
       }
     };
 
@@ -56,10 +62,18 @@ export function TopBar({ initialLanguages, settings }: TopBarProps) {
       try {
         const res = await fetch(
           "https://api.open-meteo.com/v1/forecast?latitude=18.6734&longitude=105.6924&current=temperature_2m,weather_code",
+          { signal: controller.signal },
         );
-        const data = await res.json();
-        const temp = Math.round(data.current.temperature_2m);
-        const code = data.current.weather_code;
+        if (!res.ok) throw new Error(`Weather HTTP ${res.status}`);
+        const data = (await res.json()) as {
+          current?: { temperature_2m?: number; weather_code?: number };
+        };
+        const rawTemp = data?.current?.temperature_2m;
+        const code = data?.current?.weather_code ?? 0;
+        if (typeof rawTemp !== "number" || !Number.isFinite(rawTemp)) {
+          throw new Error("Invalid weather payload");
+        }
+        const temp = Math.round(rawTemp);
 
         let description = locale === "en" ? "Sunny" : "Nắng";
         if (code >= 1 && code <= 3) description = locale === "en" ? "Partly Cloudy" : "Ít mây";
@@ -69,25 +83,30 @@ export function TopBar({ initialLanguages, settings }: TopBarProps) {
         else if (code >= 95) description = locale === "en" ? "Thunderstorm" : "Giông bão";
         else if (code === 0) description = locale === "en" ? "Clear Sky" : "Trời quang";
 
-        setWeather({ temp, description });
+        if (isMounted) setWeather({ temp, description });
       } catch (error) {
-        console.error("Failed to fetch weather", error);
-        setWeather({ temp: 28, description: locale === "en" ? "Cloudy" : "Nhiều mây" });
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        console.warn("Failed to fetch weather", error);
+        if (isMounted) {
+          setWeather({ temp: 28, description: locale === "en" ? "Cloudy" : "Nhiều mây" });
+        }
       }
     };
 
-    fetchWeather();
+    void fetchWeather();
 
     return () => {
+      isMounted = false;
+      controller.abort();
       clearInterval(intervalId);
     };
-  }, []);
+  }, [locale]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      // Điều hướng hoặc xử lý tìm kiếm
-      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+    const trimmed = searchQuery.trim();
+    if (trimmed) {
+      router.push({ pathname: "/tin-tuc", query: { q: trimmed } });
     }
   };
 
@@ -164,9 +183,10 @@ export function TopBar({ initialLanguages, settings }: TopBarProps) {
             <input
               type="text"
               placeholder={t("search_placeholder")}
+              aria-label={t("search_placeholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="focus:border-brand-yellow/60 focus:ring-brand-yellow/30 h-9 w-full min-w-0 rounded-md border border-white/15 bg-white/10 pr-10 pl-3 text-sm text-white transition-colors duration-150 placeholder:text-white/65 focus:ring-2 focus:outline-none sm:w-48"
+              className="focus:border-brand-yellow/60 focus:ring-brand-yellow/30 h-9 w-full min-w-0 rounded-md border border-white/15 bg-white/10 pr-10 pl-3 text-sm text-white transition-colors duration-150 placeholder:text-white/80 focus:ring-2 focus:outline-none sm:w-48"
             />
             <button
               type="submit"

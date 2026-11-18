@@ -13,7 +13,7 @@ export const lecturerService = {
   },
 
   async getStaffBySlug(slug: string): Promise<StaffItem | null> {
-    return httpClient.get<StaffItem>(`/api/v1/portal/staffs/${slug}`, {
+    return httpClient.get<StaffItem>(`/api/v1/portal/staffs/${encodeURIComponent(slug)}`, {
       revalidate: 300,
       tags: [`staff-${slug}`],
     });

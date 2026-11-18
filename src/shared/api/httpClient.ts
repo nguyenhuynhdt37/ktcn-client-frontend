@@ -47,32 +47,44 @@ export const httpClient = {
       }
     }
 
+    const {
+      revalidate,
+      tags,
+      forwardCookies,
+      ...restOptions
+    } = options;
+    delete (restOptions as { params?: unknown }).params;
+
     const fetchOptions: RequestInit = {
       method: "GET",
-      ...options,
+      ...restOptions,
       headers,
       credentials: "include",
     };
 
     // Chỉ đọc và chuyển tiếp Cookie trên Server-side (SSR) khi được yêu cầu cụ thể (tránh làm mất tối ưu SSG của các trang tĩnh)
-    if (options.forwardCookies && typeof window === "undefined") {
+    let hasForwardedCookies = false;
+    if (forwardCookies && typeof window === "undefined") {
       try {
         const { cookies } = await import("next/headers");
         const cookieStore = await cookies();
         const cookieString = cookieStore.toString();
         if (cookieString) {
           headers["Cookie"] = cookieString;
+          hasForwardedCookies = true;
         }
       } catch (error) {
         console.warn("Failed to read cookies on server side", error);
       }
     }
 
-    // Đính kèm cấu hình cache của Next.js
-    if (options.revalidate !== undefined || options.tags !== undefined) {
+    // Đính kèm cấu hình cache của Next.js (không dùng shared Data Cache khi forwardCookies mang Cookie người dùng)
+    if (hasForwardedCookies) {
+      fetchOptions.cache = "no-store";
+    } else if (revalidate !== undefined || tags !== undefined) {
       fetchOptions.next = {
-        ...(options.revalidate !== undefined ? { revalidate: options.revalidate } : {}),
-        ...(options.tags !== undefined ? { tags: options.tags } : {}),
+        ...(revalidate !== undefined ? { revalidate } : {}),
+        ...(tags !== undefined ? { tags } : {}),
       };
     }
 

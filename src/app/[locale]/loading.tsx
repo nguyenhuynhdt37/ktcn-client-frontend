@@ -33,7 +33,7 @@ export default function Loading() {
             />
           </div>
 
-          <p className="text-xs font-medium text-slate-400 tracking-wider uppercase">SET VinhUni</p>
+          <p className="text-xs font-medium text-slate-600 tracking-wider uppercase">SET VinhUni</p>
         </div>
       </div>
 

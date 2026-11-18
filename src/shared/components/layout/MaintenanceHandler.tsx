@@ -43,7 +43,7 @@ export function MaintenanceHandler() {
             window.location.reload();
           }, 2000);
         }
-      } catch (error) {
+      } catch {
         // Bỏ qua lỗi kết nối
       }
     };

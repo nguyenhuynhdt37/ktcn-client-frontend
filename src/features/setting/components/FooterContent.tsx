@@ -33,13 +33,10 @@ export interface FooterContentProps {
   localizeHref?: (href: string) => string;
 }
 
+import { safePortalHref } from "@/shared/lib/security";
+
 function safeFooterHref(value?: string | null) {
-  const href = (value || "").trim();
-  const scheme = Array.from(href)
-    .filter((char) => char.charCodeAt(0) > 32 && char.charCodeAt(0) !== 127)
-    .join("")
-    .match(/^([a-z][a-z0-9+.-]*):/i)?.[1];
-  return !scheme || /^(https?|mailto|tel)$/i.test(scheme) ? href : "#";
+  return safePortalHref(value, "#");
 }
 
 export function FooterBlockContent({

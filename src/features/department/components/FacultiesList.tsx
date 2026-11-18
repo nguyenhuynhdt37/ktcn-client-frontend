@@ -207,14 +207,14 @@ export function FacultiesList({ faculties, locale }: FacultiesListProps) {
                       <div className="p-6 pt-0 mt-auto border-t border-slate-100/80">
                         <div className="pt-4 flex items-center justify-between text-xs font-bold">
                           {faculty.office ? (
-                            <span className="text-slate-400 font-medium truncate max-w-[150px]">
+                            <span className="text-slate-600 font-medium truncate max-w-[150px]">
                               {faculty.office}
                             </span>
                           ) : (
                             <span />
                           )}
                           <Link
-                            href={detailUrl as any}
+                            href={detailUrl}
                             className="inline-flex items-center gap-1 text-brand-darkred hover:underline group/btn"
                           >
                             <span>{isEn ? "Explore Faculty" : "Khám phá khoa"}</span>

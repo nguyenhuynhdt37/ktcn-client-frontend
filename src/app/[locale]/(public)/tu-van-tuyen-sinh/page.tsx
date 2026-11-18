@@ -2,7 +2,7 @@ import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { constructMetadata } from "@/shared/lib/seo";
 import { ConsultationForm } from "@/features/consultation";
-import { Phone, Mail, MapPin, CheckCircle, ShieldCheck } from "lucide-react";
+import { Phone, Mail, MapPin, CheckCircle } from "lucide-react";
 
 interface ConsultationPageProps {
   params: Promise<{ locale: string }>;

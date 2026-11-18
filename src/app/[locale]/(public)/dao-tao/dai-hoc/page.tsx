@@ -162,7 +162,7 @@ export default async function UndergraduatePage({ params }: PageProps) {
         />
       </div>
 
-      <main className="site-container pt-5 pb-16 sm:pt-8 sm:pb-20">
+      <div className="site-container pt-5 pb-16 sm:pt-8 sm:pb-20">
         <div className="mb-8 max-w-3xl">
           <p className="text-brand-darkred text-xs font-bold uppercase">
             {isEn ? "Programme catalogue" : "Danh mục chương trình"}
@@ -196,7 +196,7 @@ export default async function UndergraduatePage({ params }: PageProps) {
             </p>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }

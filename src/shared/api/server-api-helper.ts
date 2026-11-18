@@ -8,7 +8,7 @@ export async function getLanguageHeader(): Promise<Record<string, string>> {
   try {
     const locale = await getLocale();
     return { "Accept-Language": locale };
-  } catch (error) {
+  } catch {
     // Tránh lỗi khi chạy trong build-time static generation hoặc ngoài request context
     return { "Accept-Language": "vi" };
   }

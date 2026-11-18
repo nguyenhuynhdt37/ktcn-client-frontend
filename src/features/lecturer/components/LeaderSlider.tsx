@@ -4,8 +4,8 @@ import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight, Mail, Globe, BookOpen } from "lucide-react";
-import { useTranslations, useLocale } from "next-intl";
-import { sanitizeRichHtml } from "@/shared/lib/security";
+import { useLocale } from "next-intl";
+import { sanitizeRichHtml, safePortalHref } from "@/shared/lib/security";
 
 interface LeaderItem {
   id: string | number;
@@ -70,7 +70,6 @@ const defaultLeaders: LeaderItem[] = [
 ];
 
 export function LeaderSlider({ leaders = defaultLeaders }: { leaders?: LeaderItem[] }) {
-  const t = useTranslations("common");
   const locale = useLocale();
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 25 });
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -86,9 +85,14 @@ export function LeaderSlider({ leaders = defaultLeaders }: { leaders?: LeaderIte
 
   useEffect(() => {
     if (!emblaApi) return;
-    onSelect();
+    const frame = requestAnimationFrame(() => onSelect());
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
+    return () => {
+      cancelAnimationFrame(frame);
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
+    };
   }, [emblaApi, onSelect]);
 
   return (
@@ -182,9 +186,9 @@ export function LeaderSlider({ leaders = defaultLeaders }: { leaders?: LeaderIte
                             <span>Email</span>
                           </a>
                         )}
-                        {leader.website && (
+                        {leader.website && safePortalHref(leader.website, "") && (
                           <a
-                            href={leader.website}
+                            href={safePortalHref(leader.website, "#")}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="hover:border-border-subtle hover:bg-brand-darkred/5 hover:text-brand-darkred inline-flex items-center gap-2 rounded-lg border border-border bg-white px-4 py-2 text-xs font-medium text-slate-600 shadow-sm transition-all duration-200"
@@ -193,9 +197,9 @@ export function LeaderSlider({ leaders = defaultLeaders }: { leaders?: LeaderIte
                             <span>Website</span>
                           </a>
                         )}
-                        {leader.googleScholar && (
+                        {leader.googleScholar && safePortalHref(leader.googleScholar, "") && (
                           <a
-                            href={leader.googleScholar}
+                            href={safePortalHref(leader.googleScholar, "#")}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="hover:border-border-subtle hover:bg-brand-darkred/5 hover:text-brand-darkred inline-flex items-center gap-2 rounded-lg border border-border bg-white px-4 py-2 text-xs font-medium text-slate-600 shadow-sm transition-all duration-200"

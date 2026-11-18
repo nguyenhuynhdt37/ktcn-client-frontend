@@ -72,14 +72,17 @@ export function Footer({ initialMenu, settings, dynamicData }: FooterProps) {
                   <ul className="space-y-2">
                     {column.children?.map((child) => {
                       const url = resolveMenuUrl(child, locale);
-                      const isExternal = child.target_type === "EXTERNAL_LINK";
+                      const isExternal =
+                        child.target_type === "EXTERNAL_LINK" ||
+                        url === "#" ||
+                        /^(https?:|mailto:|tel:)/i.test(url);
                       return (
                         <li key={child.id}>
                           {isExternal ? (
                             <a
                               href={url}
-                              target={child.open_in_new_tab ? "_blank" : undefined}
-                              rel={child.open_in_new_tab ? "noopener noreferrer" : undefined}
+                              target={url !== "#" && child.open_in_new_tab ? "_blank" : undefined}
+                              rel={url !== "#" && child.open_in_new_tab ? "noopener noreferrer" : undefined}
                               className="hover:text-brand-darkred flex min-h-11 items-center gap-1.5 rounded-md text-sm font-medium text-slate-600 transition-colors duration-150"
                             >
                               <ChevronRight

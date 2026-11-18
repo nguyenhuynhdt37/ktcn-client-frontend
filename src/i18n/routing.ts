@@ -89,11 +89,22 @@ const IntlLink = navigation.Link;
 
 export const { redirect, usePathname, useRouter, getPathname } = navigation;
 
-type LinkProps = ComponentProps<typeof IntlLink>;
+type IntlLinkProps = ComponentProps<typeof IntlLink>;
+export type IntlHref = IntlLinkProps["href"];
+export type RouterHref = Parameters<ReturnType<typeof navigation.useRouter>["push"]>[0];
+
+type LinkProps = Omit<IntlLinkProps, "href"> & {
+  href: IntlHref | string;
+};
 
 export const Link = forwardRef(function Link(
-  { prefetch = false, ...props }: LinkProps,
+  { prefetch = false, href, ...props }: LinkProps,
   ref: ForwardedRef<HTMLAnchorElement>,
 ) {
-  return createElement(IntlLink, { ...props, prefetch, ref });
+  return createElement(IntlLink, {
+    ...props,
+    href: href as IntlHref,
+    prefetch,
+    ref,
+  });
 });

@@ -32,20 +32,23 @@ export function TableOfContents({
       .map((h) => document.getElementById(h.id))
       .filter((el): el is HTMLElement => el !== null);
 
+    if (headingElements.length === 0) return;
+
+    const getDocTop = (el: HTMLElement) => el.getBoundingClientRect().top + window.scrollY;
+
     const handleScroll = () => {
       // Khoảng cách từ đỉnh màn hình để kích hoạt highlight (bù trừ cho sticky header)
       const scrollOffset = 140;
       const scrollPosition = window.scrollY + scrollOffset;
 
-      // Tìm tiêu đề hiện tại đang nằm trong tầm nhìn
       let currentActiveId = "";
 
       for (let i = 0; i < headingElements.length; i++) {
         const currentEl = headingElements[i];
         const nextEl = headingElements[i + 1];
 
-        const currentTop = currentEl.offsetTop;
-        const nextTop = nextEl ? nextEl.offsetTop : Infinity;
+        const currentTop = getDocTop(currentEl);
+        const nextTop = nextEl ? getDocTop(nextEl) : Infinity;
 
         if (scrollPosition >= currentTop && scrollPosition < nextTop) {
           currentActiveId = currentEl.id;
@@ -53,35 +56,28 @@ export function TableOfContents({
         }
       }
 
-      // Nếu cuộn lên trên cùng, chưa chạm tới heading đầu tiên
-      if (
-        !currentActiveId &&
-        headingElements.length > 0 &&
-        scrollPosition < headingElements[0].offsetTop
-      ) {
+      if (!currentActiveId && scrollPosition < getDocTop(headingElements[0])) {
         currentActiveId = "";
       }
 
-      // Trường hợp cuộn xuống dưới cùng của trang, highlight heading cuối cùng
-      if (!currentActiveId && headingElements.length > 0) {
+      if (!currentActiveId) {
         const lastEl = headingElements[headingElements.length - 1];
         if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60) {
           currentActiveId = lastEl.id;
         }
       }
 
-      if (currentActiveId && currentActiveId !== activeId) {
-        setActiveId(currentActiveId);
-      }
+      setActiveId((prev) => (prev === currentActiveId ? prev : currentActiveId));
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    const frame = requestAnimationFrame(handleScroll);
 
     return () => {
+      cancelAnimationFrame(frame);
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [headings, activeId]);
+  }, [headings]);
 
   if (headings.length === 0) return null;
 
@@ -159,6 +155,8 @@ export function TableOfContents({
           <span>{title}</span>
         </div>
         <button
+          type="button"
+          aria-expanded={isOpen}
           onClick={() => setIsOpen(!isOpen)}
           className="hover:text-brand-darkred flex items-center gap-1.5 text-xs font-semibold text-slate-600 transition-colors duration-200 focus:outline-none"
         >

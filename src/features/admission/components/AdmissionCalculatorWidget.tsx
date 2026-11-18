@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Calculator, AlertCircle, GraduationCap, BookOpen, CheckCircle2, MapPin, UserCheck } from "lucide-react";
+import { Calculator, AlertCircle } from "lucide-react";
 
 interface Major {
   code: string;
@@ -55,12 +55,22 @@ export function AdmissionCalculatorWidget() {
   const currentGroup = SUBJECT_GROUPS.find(g => g.id === selectedGroup) || SUBJECT_GROUPS[0];
   const subjectNames = isEn ? currentGroup.subjectsEn : currentGroup.subjects;
 
-  useEffect(() => {
+  const resetCalculation = () => {
     setScores({ sub0: "", sub1: "", sub2: "" });
     setErrors({});
     setTotalScore(null);
     setIsCalculated(false);
-  }, [selectedGroup, method]);
+  };
+
+  const handleMethodChange = (nextMethod: "exam" | "report") => {
+    setMethod(nextMethod);
+    resetCalculation();
+  };
+
+  const handleGroupChange = (nextGroup: string) => {
+    setSelectedGroup(nextGroup);
+    resetCalculation();
+  };
 
   const handleScoreChange = (key: string, value: string) => {
     if (value === "" || /^[0-9]*\.?[0-9]*$/.test(value)) {
@@ -149,7 +159,7 @@ export function AdmissionCalculatorWidget() {
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
-                    onClick={() => setMethod("exam")}
+                    onClick={() => handleMethodChange("exam")}
                     className={`py-2 px-3 border text-center text-xs font-semibold cursor-pointer rounded-sm ${
                       method === "exam"
                         ? "border-brand-darkred bg-brand-darkred text-white"
@@ -160,7 +170,7 @@ export function AdmissionCalculatorWidget() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setMethod("report")}
+                    onClick={() => handleMethodChange("report")}
                     className={`py-2 px-3 border text-center text-xs font-semibold cursor-pointer rounded-sm ${
                       method === "report"
                         ? "border-brand-darkred bg-brand-darkred text-white"
@@ -182,7 +192,7 @@ export function AdmissionCalculatorWidget() {
                     <button
                       key={group.id}
                       type="button"
-                      onClick={() => setSelectedGroup(group.id)}
+                      onClick={() => handleGroupChange(group.id)}
                       className={`py-1.5 px-1 text-center font-bold text-xs border cursor-pointer rounded-sm ${
                         selectedGroup === group.id
                           ? "bg-slate-800 border-slate-800 text-white"
@@ -208,10 +218,14 @@ export function AdmissionCalculatorWidget() {
                     const key = `sub${index}`;
                     return (
                       <div key={key} className="space-y-1">
-                        <span className="block text-[11px] font-medium text-slate-600 truncate">
+                        <label
+                          htmlFor={`calc-score-${key}`}
+                          className="block text-[11px] font-medium text-slate-600 truncate"
+                        >
                           {subject}
-                        </span>
+                        </label>
                         <input
+                          id={`calc-score-${key}`}
                           type="text"
                           inputMode="decimal"
                           value={scores[key]}
@@ -235,10 +249,14 @@ export function AdmissionCalculatorWidget() {
               {/* 4 & 5. Ưu tiên */}
               <div className="grid grid-cols-2 gap-2">
                 <div className="space-y-1">
-                  <span className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                  <label
+                    htmlFor="calc-priority-area"
+                    className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider"
+                  >
                     {t("priority_area")}
-                  </span>
+                  </label>
                   <select
+                    id="calc-priority-area"
                     value={areaBonus}
                     onChange={(e) => setAreaBonus(parseFloat(e.target.value))}
                     className="w-full py-2 px-1.5 border border-slate-100/60 bg-white focus:outline-none focus:border-brand-darkred text-xs text-slate-700 font-medium cursor-pointer rounded-sm"
@@ -251,10 +269,14 @@ export function AdmissionCalculatorWidget() {
                 </div>
 
                 <div className="space-y-1">
-                  <span className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                  <label
+                    htmlFor="calc-priority-group"
+                    className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider"
+                  >
                     {t("priority_group")}
-                  </span>
+                  </label>
                   <select
+                    id="calc-priority-group"
                     value={groupBonus}
                     onChange={(e) => setGroupBonus(parseFloat(e.target.value))}
                     className="w-full py-2 px-1.5 border border-slate-100/60 bg-white focus:outline-none focus:border-brand-darkred text-xs text-slate-700 font-medium cursor-pointer rounded-sm"
@@ -295,7 +317,7 @@ export function AdmissionCalculatorWidget() {
                   <span className="text-2xl font-extrabold text-brand-darkred">
                     {totalScore}
                   </span>
-                  <span className="text-slate-400 font-semibold text-xs ml-0.5">/ 30</span>
+                  <span className="text-slate-600 font-semibold text-xs ml-0.5">/ 30</span>
                 </div>
               </div>
             )}
@@ -366,8 +388,8 @@ export function AdmissionCalculatorWidget() {
 
             {/* Lưu ý chân trang phẳng */}
             <div className="p-3 bg-slate-50 border border-slate-100/60 flex items-start gap-2 rounded-sm">
-              <AlertCircle className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
-              <p className="text-[10px] text-slate-400 leading-normal">
+              <AlertCircle className="w-3.5 h-3.5 text-slate-600 shrink-0 mt-0.5" aria-hidden="true" />
+              <p className="text-[10px] text-slate-600 leading-normal">
                 {t("note")}
               </p>
             </div>

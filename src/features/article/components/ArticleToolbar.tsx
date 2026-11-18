@@ -56,7 +56,7 @@ export function ArticleToolbar({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const locale = useLocale();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const tCommon = useTranslations("common");
   const tArticle = useTranslations("article");
 
@@ -86,8 +86,12 @@ export function ArticleToolbar({
     }
 
     params.set("page", "1"); // Reset page về 1
+    const query = params.toString();
     startTransition(() => {
-      router.push(`${pathname}?${params.toString()}` as any, { scroll: false });
+      router.push(
+        (query ? `${pathname}?${query}` : pathname) as Parameters<typeof router.push>[0],
+        { scroll: false }
+      );
     });
   };
 
@@ -97,9 +101,13 @@ export function ArticleToolbar({
     const dir = searchParams.get("sort_dir");
     if (sort) params.set("sort_by", sort);
     if (dir) params.set("sort_dir", dir);
+    const query = params.toString();
 
     startTransition(() => {
-      router.push(`${pathname}?${params.toString()}` as any, { scroll: false });
+      router.push(
+        (query ? `${pathname}?${query}` : pathname) as Parameters<typeof router.push>[0],
+        { scroll: false }
+      );
     });
   };
 
@@ -129,7 +137,7 @@ export function ArticleToolbar({
   const isAnyFilterActive = activeChips.length > 0;
 
   return (
-    <div className="border-border sticky top-20 z-20 space-y-3 rounded-xl border bg-white/95 p-4 shadow-[var(--shadow-sm)] backdrop-blur-md">
+    <div className="border-border relative z-20 space-y-3 rounded-xl border bg-white p-4 shadow-[var(--shadow-sm)]">
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         {/* Search Input */}
         <ArticleSearch initialSearch={searchQuery} />

@@ -27,7 +27,7 @@ export function RecruitmentWidget({
           {t("recruitment_title")}
         </h2>
         <Link
-          href={`/tin-tuc?category_slug=${categorySlug}` as any}
+          href={`/tin-tuc?category_slug=${categorySlug}`}
           className="text-brand-darkred hover:text-brand-darkred-dark group flex items-center gap-1 text-xs font-bold transition-colors duration-200"
         >
           <span>{t("view_all")}</span>
@@ -42,7 +42,7 @@ export function RecruitmentWidget({
         {items.map((item) => (
           <li key={item.id} className="group py-3 first:pt-0">
             <Link
-              href={item.href as any}
+              href={item.href}
               className="block space-y-1.5 rounded-none py-1 transition-colors duration-150 hover:bg-slate-50/80"
             >
               <h3 className="group-hover:text-brand-darkred line-clamp-2 text-sm leading-snug font-bold text-slate-800 transition-colors duration-200">

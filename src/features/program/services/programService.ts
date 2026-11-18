@@ -1,7 +1,11 @@
 import { env } from "@/shared/config/env";
 import type { ProgramDetail, ProgramSummary } from "../types/program.types";
 
-const API_BASE = `${env.NEXT_PUBLIC_API_URL}/api/v1/portal/programs`;
+const apiBaseOrigin =
+  (typeof window === "undefined" ? process.env.API_URL : null) ||
+  env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:8000";
+const API_BASE = `${apiBaseOrigin.replace(/\/$/, "")}/api/v1/portal/programs`;
 
 export const programService = {
   async getAll(locale: string, degreeLevel?: string): Promise<ProgramSummary[]> {
