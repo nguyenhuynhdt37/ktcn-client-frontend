@@ -12,6 +12,7 @@ import {
   telHref,
   firstRichText,
   isAllPillActive,
+  sentenceCaseTitle,
 } from "../src/features/cet/utils/inner.ts";
 
 const node = (slug, extra = {}) => ({
@@ -175,4 +176,20 @@ test("isAllPillActive is true only when neither category nor tag filter is set",
   assert.equal(isAllPillActive({ category: "tin" }), false);
   assert.equal(isAllPillActive({ tag: "hoc-bong" }), false);
   assert.equal(isAllPillActive({ category: "", tag: "" }), true);
+});
+
+test("sentenceCaseTitle lowercases ALL CAPS titles and leaves mixed-case titles alone", () => {
+  assert.equal(
+    sentenceCaseTitle("CHI BỘ SINH VIÊN HỌC VIÊN VIỆN KỸ THUẬT VÀ CÔNG NGHỆ"),
+    "Chi bộ sinh viên học viên viện kỹ thuật và công nghệ",
+  );
+  assert.equal(sentenceCaseTitle("ẤM ÁP YÊU THƯƠNG – LAN TỎA NIỀM VUI DỊP QUỐC TẾ THIẾU NHI 1.6"), "Ấm áp yêu thương – lan tỏa niềm vui dịp quốc tế thiếu nhi 1.6");
+  assert.equal(sentenceCaseTitle("Thông báo tuyển sinh Vinh 2026"), "Thông báo tuyển sinh Vinh 2026");
+  assert.equal(sentenceCaseTitle("2025 – 2030"), "2025 – 2030");
+  assert.equal(
+    sentenceCaseTitle("BẢN TIN TÌNH NGUYỆN 2409 (ngày 18/7/2024) | NHẬT KÝ KỲ NGHỈ HÈ CỦA “BÉ NGOAN” TẠI VĨNH SƠN, ANH SƠN"),
+    "Bản tin tình nguyện 2409 (ngày 18/7/2024) | nhật ký kỳ nghỉ hè của “bé ngoan” tại vĩnh sơn, anh sơn",
+  );
+  assert.equal(sentenceCaseTitle("Thông báo lịch Đăng ký và xử lý học vụ Học kỳ 1 (Năm học 2018-2019)"), "Thông báo lịch Đăng ký và xử lý học vụ Học kỳ 1 (Năm học 2018-2019)");
+  assert.equal(sentenceCaseTitle(null), "");
 });

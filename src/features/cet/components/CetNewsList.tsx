@@ -3,7 +3,7 @@ import { SafeImage } from "@/shared/components/ui/safe-image";
 import { getLocalizedField, formatDate } from "@/features/article/utils/map-article";
 import type { PortalArticleListResponse } from "@/features/article/types/article.types";
 import type { CetNewsData, CetNewsFilters } from "../services/news-data";
-import { isAllPillActive, pageNumbers } from "../utils/inner";
+import { isAllPillActive, pageNumbers, sentenceCaseTitle } from "../utils/inner";
 import { CetLink } from "./CetLink";
 import { CetPageHeader } from "./CetPageHeader";
 import { CetSideCard } from "./CetSideCard";
@@ -222,8 +222,20 @@ export function CetNewsList({ data, locale }: { data: CetNewsData; locale: strin
               <ul className={styles.sideList}>
                 {popular.map((item) => (
                   <li key={item.id}>
-                    <CetLink href={`/tin-tuc/${item.slug}`} locale={locale}>
-                      {getLocalizedField<string>(item, "title", locale)}
+                    <CetLink
+                      className={styles.sideItem}
+                      href={`/tin-tuc/${item.slug}`}
+                      locale={locale}
+                    >
+                      <span>
+                        {sentenceCaseTitle(getLocalizedField<string>(item, "title", locale), locale)}
+                      </span>
+                      {item.published_at && (
+                        <time className={styles.sideDate} dateTime={item.published_at}>
+                          <CalendarDays size={12} aria-hidden="true" />
+                          {formatDate(item.published_at, locale)}
+                        </time>
+                      )}
                     </CetLink>
                   </li>
                 ))}

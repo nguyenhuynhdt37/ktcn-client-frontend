@@ -31,6 +31,9 @@ export const UI_TEXT: Record<ChatLang, Record<string, string>> = {
   vi: {
     open: "Mở trợ lý ảo",
     close: "Đóng",
+    expand: "Phóng to",
+    shrink: "Thu nhỏ",
+    drag: "Kéo để di chuyển",
     title: "Trợ lý ảo",
     subtitle: "Trường Kỹ thuật và Công nghệ",
     placeholder: "Nhập câu hỏi của bạn…",
@@ -44,6 +47,9 @@ export const UI_TEXT: Record<ChatLang, Record<string, string>> = {
   en: {
     open: "Open virtual assistant",
     close: "Close",
+    expand: "Enlarge",
+    shrink: "Shrink",
+    drag: "Drag to move",
     title: "Virtual assistant",
     subtitle: "College of Engineering and Technology",
     placeholder: "Type your question…",

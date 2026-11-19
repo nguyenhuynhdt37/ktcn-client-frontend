@@ -131,6 +131,18 @@
 .languages button[aria-pressed="true"] {
   border-color: #fff;
 }
+.topLogo {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  flex: 0 0 auto;
+}
+.flagEn {
+  display: block;
+  width: 25px;
+  height: 17px;
+}
 .flagVi {
   display: grid;
   place-items: center;

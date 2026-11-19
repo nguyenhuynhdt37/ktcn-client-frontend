@@ -137,6 +137,29 @@ export function programHref(program: { slug: string; degree_level?: string | nul
   return `/dao-tao/${section}/${program.slug}`;
 }
 
+/**
+ * Titles typed mostly in CAPS become sentence case ("CHI BỘ SINH VIÊN" -> "Chi bộ sinh viên").
+ * "Mostly" = at least 60% of the letters are upper case, so a stray lower-case word such as
+ * "BẢN TIN TÌNH NGUYỆN 2409 (ngày 18/7/2024) | NHẬT KÝ…" is still converted. Titles that already
+ * read as normal text are returned unchanged so proper nouns survive.
+ */
+export function sentenceCaseTitle(title: string | null | undefined, locale = "vi"): string {
+  const text = (title ?? "").trim();
+  if (!text) return "";
+  const tag = locale === "en" ? "en" : "vi";
+  let upper = 0;
+  let lower = 0;
+  for (const char of text) {
+    if (char === char.toLocaleLowerCase(tag) && char === char.toLocaleUpperCase(tag)) continue;
+    if (char === char.toLocaleUpperCase(tag)) upper++;
+    else lower++;
+  }
+  if (upper + lower === 0 || upper / (upper + lower) < 0.6) return text;
+  const lowered = text.toLocaleLowerCase(tag);
+  const first = Array.from(lowered)[0] ?? "";
+  return first.toLocaleUpperCase(tag) + lowered.slice(first.length);
+}
+
 /** First letter of the first and last words, e.g. "Hoàng Hữu Việt" -> "HV". */
 export function initials(name: string): string {
   const words = name.trim().split(/\s+/).filter(Boolean);

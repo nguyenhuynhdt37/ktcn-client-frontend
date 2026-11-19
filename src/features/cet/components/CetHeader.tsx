@@ -225,6 +225,14 @@ export function CetHeader({
             </div>
             <div className={styles.topLinks}>
               <a href="https://vinhuni.edu.vn/" target="_blank" rel="noopener noreferrer">
+                <Image
+                  className={styles.topLogo}
+                  src="/images/logo-192.png"
+                  width={22}
+                  height={22}
+                  alt=""
+                  aria-hidden="true"
+                />
                 {isEn ? "Vinh University" : "Trường Đại học Vinh"}
               </a>
               <a
@@ -256,7 +264,18 @@ export function CetHeader({
                   aria-pressed={isEn}
                   onClick={() => switchLanguage("en")}
                 >
-                  <span aria-hidden="true">🇬🇧</span>
+                  <svg
+                    className={styles.flagEn}
+                    viewBox="0 0 60 40"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <rect width="60" height="40" fill="#012169" />
+                    <path d="M0 0 60 40M60 0 0 40" stroke="#fff" strokeWidth="8" />
+                    <path d="M0 0 60 40M60 0 0 40" stroke="#c8102e" strokeWidth="3" />
+                    <path d="M30 0v40M0 20h60" stroke="#fff" strokeWidth="13" />
+                    <path d="M30 0v40M0 20h60" stroke="#c8102e" strokeWidth="8" />
+                  </svg>
                 </button>
               </div>
             </div>

@@ -15,13 +15,13 @@ export function AboutOverview() {
               {t("overview_heading")}
             </h2>
             <div className="w-16 h-[2px] bg-brand-darkred" />
-            <p className="text-base text-slate-600 leading-relaxed">
+            <p className="text-base text-slate-600 leading-relaxed text-justify">
               {t("overview_p1")}
             </p>
-            <p className="text-base text-slate-600 leading-relaxed">
+            <p className="text-base text-slate-600 leading-relaxed text-justify">
               {t("overview_p2")}
             </p>
-            <p className="text-base text-slate-600 leading-relaxed">
+            <p className="text-base text-slate-600 leading-relaxed text-justify">
               {t("overview_p3")}
             </p>
           </div>

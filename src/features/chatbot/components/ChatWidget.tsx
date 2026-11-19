@@ -2,15 +2,41 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+  type KeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from "react";
 import { useLocale } from "next-intl";
-import { Send, X } from "lucide-react";
+import { Maximize2, Minimize2, Send, X } from "lucide-react";
 import { ChatRateLimitError, chatbotService } from "../services/chatbotService";
 import { safePortalHref } from "@/shared/lib/security";
 import { GREETING, SUGGESTIONS, UI_TEXT } from "../data/suggestions";
 import type { ChatLang, ChatMessage } from "../types";
 
 const MAX_CHARS = 500;
+/** Từ breakpoint `sm` của Tailwind trở lên khung mới có thể kéo thả; dưới đó khung chiếm gần hết chiều ngang. */
+const DRAG_MIN_WIDTH = 640;
+const LAUNCHER_SIZE = 56;
+const DIALOG_GAP = 12;
+
+/** setPointerCapture ném lỗi nếu con trỏ đã thả trước khi handler chạy; bỏ qua vì kéo vẫn hoạt động. */
+function capturePointer(element: HTMLElement, pointerId: number) {
+  try {
+    element.setPointerCapture(pointerId);
+  } catch {
+    /* no active pointer */
+  }
+}
+
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(min, value), Math.max(min, max));
 const URL_PATTERN = /((?:https?:\/\/|\/(?:vi|en)\/)[^\s)]+)/g;
 const TRAILING_PUNCTUATION = /[.,;:!?]+$/;
 
@@ -77,6 +103,15 @@ export function ChatWidget() {
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const toggleBtnRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<{ dx: number; dy: number } | null>(null);
+  const [expanded, setExpanded] = useState(false);
+  // null = vị trí mặc định (góc phải dưới); có giá trị khi người dùng đã kéo khung đi chỗ khác.
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  // Nút tròn mở chatbot cũng kéo thả được; khung chat mở ra ngay phía trên nút ở vị trí mới.
+  const [launcherPos, setLauncherPos] = useState<{ x: number; y: number } | null>(null);
+  const launcherDrag = useRef<{ dx: number; dy: number; sx: number; sy: number; moved: boolean } | null>(null);
+  const suppressClick = useRef(false);
 
   useEffect(() => {
     sessionRef.current = getSessionId();
@@ -85,6 +120,85 @@ export function ChatWidget() {
   useEffect(() => {
     if (open) inputRef.current?.focus();
   }, [open]);
+
+  useEffect(() => {
+    const reset = () => {
+      setPos(null);
+      setLauncherPos(null);
+    };
+    window.addEventListener("resize", reset);
+    return () => window.removeEventListener("resize", reset);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open || !launcherPos || window.innerWidth < DRAG_MIN_WIDTH) return;
+    const rect = dialogRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    // Ưu tiên mở phía trên nút; không đủ chỗ thì mở phía dưới, vẫn không đủ thì giữ trong màn hình.
+    const above = launcherPos.y - DIALOG_GAP - rect.height;
+    const below = launcherPos.y + LAUNCHER_SIZE + DIALOG_GAP;
+    const y = above >= 0 ? above : below + rect.height <= window.innerHeight ? below : above;
+    setPos({
+      x: clamp(launcherPos.x + LAUNCHER_SIZE - rect.width, 0, window.innerWidth - rect.width),
+      y: clamp(y, 0, window.innerHeight - rect.height),
+    });
+  }, [open, expanded, launcherPos]);
+
+  const toggleExpanded = useCallback(() => {
+    setExpanded((v) => !v);
+    setPos(null);
+  }, []);
+
+  const onDragStart = (e: ReactPointerEvent<HTMLElement>) => {
+    if (window.innerWidth < DRAG_MIN_WIDTH || e.button !== 0) return;
+    if ((e.target as HTMLElement).closest("button")) return;
+    const rect = dialogRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    dragRef.current = { dx: e.clientX - rect.left, dy: e.clientY - rect.top };
+    capturePointer(e.currentTarget, e.pointerId);
+  };
+
+  const onDragMove = (e: ReactPointerEvent<HTMLElement>) => {
+    const drag = dragRef.current;
+    const rect = dialogRef.current?.getBoundingClientRect();
+    if (!drag || !rect) return;
+    const x = Math.min(Math.max(0, e.clientX - drag.dx), window.innerWidth - rect.width);
+    const y = Math.min(Math.max(0, e.clientY - drag.dy), window.innerHeight - rect.height);
+    setPos({ x, y });
+  };
+
+  const onDragEnd = (e: ReactPointerEvent<HTMLElement>) => {
+    dragRef.current = null;
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+  };
+
+  const onLauncherDown = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    if (e.button !== 0) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    launcherDrag.current = { dx: e.clientX - rect.left, dy: e.clientY - rect.top, sx: e.clientX, sy: e.clientY, moved: false };
+    capturePointer(e.currentTarget, e.pointerId);
+  };
+
+  const onLauncherMove = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    const drag = launcherDrag.current;
+    if (!drag) return;
+    if (!drag.moved && Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) < 5) return;
+    drag.moved = true;
+    setLauncherPos({
+      x: clamp(e.clientX - drag.dx, 0, window.innerWidth - LAUNCHER_SIZE),
+      y: clamp(e.clientY - drag.dy, 0, window.innerHeight - LAUNCHER_SIZE),
+    });
+  };
+
+  const onLauncherUp = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    // Kéo xong thì nuốt cú click ngay sau đó, để thả nút không vô tình mở/đóng khung chat.
+    suppressClick.current = Boolean(launcherDrag.current?.moved);
+    launcherDrag.current = null;
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+    setTimeout(() => {
+      suppressClick.current = false;
+    }, 0);
+  };
 
   const closeDialog = useCallback(() => {
     setOpen(false);
@@ -142,19 +256,41 @@ export function ChatWidget() {
     <>
       {open && (
         <div
+          ref={dialogRef}
           role="dialog"
           aria-label={ui.title}
+          style={pos ? { left: pos.x, top: pos.y, right: "auto", bottom: "auto" } : undefined}
           onKeyDown={(e) => {
             if (e.key === "Escape") closeDialog();
           }}
-          className="fixed inset-x-3 bottom-24 z-50 flex max-h-[min(70vh,560px)] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:inset-x-auto sm:right-6 sm:w-[380px]"
+          className={`fixed inset-x-3 bottom-24 z-[60] flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:inset-x-auto sm:right-6 ${
+            expanded
+              ? "h-[min(85vh,780px,calc(100vh-7.5rem))] sm:w-[min(760px,calc(100vw-3rem))]"
+              : "max-h-[min(70vh,560px)] sm:w-[380px]"
+          }`}
         >
-          <header className="flex items-center gap-3 border-b border-slate-100 bg-white px-4 py-3">
+          <header
+            onPointerDown={onDragStart}
+            onPointerMove={onDragMove}
+            onPointerUp={onDragEnd}
+            onPointerCancel={onDragEnd}
+            title={ui.drag}
+            className="flex touch-none items-center gap-3 border-b border-slate-100 bg-white px-4 py-3 select-none sm:cursor-move"
+          >
             <Image src="/images/logo-192.png" alt="" width={36} height={36} className="size-9 shrink-0" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-bold text-slate-900">{ui.title}</p>
               <p className="truncate text-xs text-slate-500">{ui.subtitle}</p>
             </div>
+            <button
+              type="button"
+              onClick={toggleExpanded}
+              aria-label={expanded ? ui.shrink : ui.expand}
+              title={expanded ? ui.shrink : ui.expand}
+              className="inline-flex size-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+            >
+              {expanded ? <Minimize2 size={17} aria-hidden="true" /> : <Maximize2 size={17} aria-hidden="true" />}
+            </button>
             <button
               type="button"
               onClick={closeDialog}
@@ -283,10 +419,19 @@ export function ChatWidget() {
       <button
         ref={toggleBtnRef}
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          if (suppressClick.current) return;
+          setOpen((v) => !v);
+        }}
+        onPointerDown={onLauncherDown}
+        onPointerMove={onLauncherMove}
+        onPointerUp={onLauncherUp}
+        onPointerCancel={onLauncherUp}
+        style={launcherPos ? { left: launcherPos.x, top: launcherPos.y, right: "auto", bottom: "auto" } : undefined}
+        title={ui.drag}
         aria-label={open ? ui.close : ui.open}
         aria-expanded={open}
-        className="fixed right-6 bottom-6 z-50 flex size-14 items-center justify-center rounded-full border border-slate-200 bg-white shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95"
+        className="fixed right-6 bottom-6 z-50 flex size-14 touch-none items-center justify-center rounded-full border border-slate-200 bg-white shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95"
       >
         <Image src="/images/logo-192.png" alt="" width={44} height={44} className="size-11" />
       </button>
