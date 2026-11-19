@@ -274,10 +274,11 @@ export function ChatWidget() {
             onPointerMove={onDragMove}
             onPointerUp={onDragEnd}
             onPointerCancel={onDragEnd}
+            onDragStart={(e) => e.preventDefault()}
             title={ui.drag}
             className="flex touch-none items-center gap-3 border-b border-slate-100 bg-white px-4 py-3 select-none sm:cursor-move"
           >
-            <Image src="/images/logo-192.png" alt="" width={36} height={36} className="size-9 shrink-0" />
+            <Image src="/images/logo-192.png" alt="" width={36} height={36} draggable={false} className="pointer-events-none size-9 shrink-0" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-bold text-slate-900">{ui.title}</p>
               <p className="truncate text-xs text-slate-500">{ui.subtitle}</p>
@@ -427,13 +428,14 @@ export function ChatWidget() {
         onPointerMove={onLauncherMove}
         onPointerUp={onLauncherUp}
         onPointerCancel={onLauncherUp}
+        onDragStart={(e) => e.preventDefault()}
         style={launcherPos ? { left: launcherPos.x, top: launcherPos.y, right: "auto", bottom: "auto" } : undefined}
         title={ui.drag}
         aria-label={open ? ui.close : ui.open}
         aria-expanded={open}
         className="fixed right-6 bottom-6 z-50 flex size-14 touch-none items-center justify-center rounded-full border border-slate-200 bg-white shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95"
       >
-        <Image src="/images/logo-192.png" alt="" width={44} height={44} className="size-11" />
+        <Image src="/images/logo-192.png" alt="" width={44} height={44} draggable={false} className="pointer-events-none size-11" />
       </button>
     </>
   );
