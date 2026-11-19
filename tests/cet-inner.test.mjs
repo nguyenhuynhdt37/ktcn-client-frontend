@@ -181,7 +181,7 @@ test("isAllPillActive is true only when neither category nor tag filter is set",
 test("sentenceCaseTitle lowercases ALL CAPS titles and leaves mixed-case titles alone", () => {
   assert.equal(
     sentenceCaseTitle("CHI BỘ SINH VIÊN HỌC VIÊN VIỆN KỸ THUẬT VÀ CÔNG NGHỆ"),
-    "Chi bộ sinh viên học viên viện kỹ thuật và công nghệ",
+    "Chi bộ sinh viên học viên Viện Kỹ thuật và Công nghệ",
   );
   assert.equal(sentenceCaseTitle("ẤM ÁP YÊU THƯƠNG – LAN TỎA NIỀM VUI DỊP QUỐC TẾ THIẾU NHI 1.6"), "Ấm áp yêu thương – lan tỏa niềm vui dịp quốc tế thiếu nhi 1.6");
   assert.equal(sentenceCaseTitle("Thông báo tuyển sinh Vinh 2026"), "Thông báo tuyển sinh Vinh 2026");
@@ -199,9 +199,26 @@ test("sentenceCaseTitle keeps acronyms upper case", () => {
     sentenceCaseTitle("VIỆN KTCN TỔ CHỨC THÀNH CÔNG BẢO VỆ ĐỒ ÁN TỐT NGHIỆP"),
     "Viện KTCN tổ chức thành công bảo vệ đồ án tốt nghiệp",
   );
-  assert.equal(sentenceCaseTitle("THÔNG BÁO VNPT NGHỆ AN TUYỂN DỤNG NHÂN SỰ"), "Thông báo VNPT nghệ an tuyển dụng nhân sự");
-  assert.equal(sentenceCaseTitle("ĐH VINH TỔ CHỨC HỘI THẢO VỀ AI VÀ IOT CHO SV"), "ĐH vinh tổ chức hội thảo về AI và IoT cho SV");
-  assert.equal(sentenceCaseTitle("ĐOÀN TNCS HỒ CHÍ MINH TỔ CHỨC ĐẠI HỘI"), "Đoàn TNCS hồ chí minh tổ chức đại hội");
+  assert.equal(sentenceCaseTitle("THÔNG BÁO VNPT NGHỆ AN TUYỂN DỤNG NHÂN SỰ"), "Thông báo VNPT Nghệ An tuyển dụng nhân sự");
+  assert.equal(sentenceCaseTitle("ĐH VINH TỔ CHỨC HỘI THẢO VỀ AI VÀ IOT CHO SV"), "ĐH Vinh tổ chức hội thảo về AI và IoT cho SV");
+  assert.equal(sentenceCaseTitle("ĐOÀN TNCS HỒ CHÍ MINH TỔ CHỨC ĐẠI HỘI"), "Đoàn TNCS Hồ Chí Minh tổ chức đại hội");
   assert.equal(sentenceCaseTitle("JOY FOR CHILDREN'S DAY JUNE 1ST"), "Joy for children's day june 1st");
   assert.equal(sentenceCaseTitle("KTCN"), "KTCN");
+});
+
+test("sentenceCaseTitle restores proper-noun phrases but not the bare word vinh", () => {
+  assert.equal(
+    sentenceCaseTitle("VIỆN KỸ THUẬT VÀ CÔNG NGHỆ TỔ CHỨC LỄ KẾT NẠP ĐẢNG VIÊN MỚI"),
+    "Viện Kỹ thuật và Công nghệ tổ chức lễ kết nạp đảng viên mới",
+  );
+  assert.equal(
+    sentenceCaseTitle("SINH VIÊN TRƯỜNG ĐẠI HỌC VINH THAM QUAN VINFAST TẠI HẢI PHÒNG"),
+    "Sinh viên Trường Đại học Vinh tham quan VinFast tại Hải Phòng",
+  );
+  assert.equal(sentenceCaseTitle("VINH DANH SINH VIÊN XUẤT SẮC TẠI NGHỆ AN"), "Vinh danh sinh viên xuất sắc tại Nghệ An");
+  assert.equal(sentenceCaseTitle("ĐH VINH PHỐI HỢP VỚI VNPT"), "ĐH Vinh phối hợp với VNPT");
+  assert.equal(
+    sentenceCaseTitle("YOUTH OF INSTITUTE OF ENGINEERING AND TECHNOLOGY AT VINH UNIVERSITY, VIETNAM"),
+    "Youth of Institute of Engineering and Technology at Vinh University, Vietnam",
+  );
 });

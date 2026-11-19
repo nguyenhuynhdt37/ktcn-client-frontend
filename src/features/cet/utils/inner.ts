@@ -144,7 +144,7 @@ export function programHref(program: { slug: string; degree_level?: string | nul
  * read as normal text are returned unchanged so proper nouns survive.
  */
 export function sentenceCaseTitle(title: string | null | undefined, locale = "vi"): string {
-  const text = (title ?? "").trim();
+  const text = (title ?? "").normalize("NFC").trim();
   if (!text) return "";
   const tag = locale === "en" ? "en" : "vi";
   let upper = 0;
@@ -159,8 +159,52 @@ export function sentenceCaseTitle(title: string | null | undefined, locale = "vi
     const acronym = acronymForm(word, text[offset - 1]);
     return acronym ?? word.toLocaleLowerCase(tag);
   });
-  const first = Array.from(lowered)[0] ?? "";
-  return first.toLocaleUpperCase(tag) + lowered.slice(first.length);
+  const restored = restoreProperNouns(lowered);
+  const first = Array.from(restored)[0] ?? "";
+  return first.toLocaleUpperCase(tag) + restored.slice(first.length);
+}
+
+/**
+ * Whole phrases that keep their capitals after a title is lowered. Only full phrases are listed:
+ * "vinh" alone is also the common word in "vinh danh", so it is never restored by itself.
+ */
+const PROPER_NOUNS: string[] = [
+  "Viện Kỹ thuật và Công nghệ",
+  "Trường Kỹ thuật và Công nghệ",
+  "Trường Đại học Vinh",
+  "Đại học Vinh",
+  "ĐH Vinh",
+  "Thành phố Vinh",
+  "Thành phố Hồ Chí Minh",
+  "Đoàn Thanh niên Cộng sản Hồ Chí Minh",
+  "Đảng Cộng sản Việt Nam",
+  "Hồ Chí Minh",
+  "Việt Nam",
+  "Nghệ An",
+  "Hà Nội",
+  "Hải Phòng",
+  "VinFast",
+  "Samsung",
+  "Viettel",
+  "Institute of Engineering and Technology",
+  "School of Engineering and Technology",
+  "Vinh University",
+  "University of Vinh",
+  "Vietnam",
+  "Nghe An",
+  "Ho Chi Minh",
+  "Hai Phong",
+  "Ha Noi",
+];
+const PROPER_NOUN_PATTERNS = [...PROPER_NOUNS]
+  .sort((a, b) => b.length - a.length)
+  .map((name) => ({
+    pattern: new RegExp(`(?<!\\p{L})${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?!\\p{L})`, "giu"),
+    name,
+  }));
+
+function restoreProperNouns(text: string): string {
+  return PROPER_NOUN_PATTERNS.reduce((result, { pattern, name }) => result.replace(pattern, name), text);
 }
 
 /** Acronyms that contain a vowel and so cannot be recognised by shape alone. */
