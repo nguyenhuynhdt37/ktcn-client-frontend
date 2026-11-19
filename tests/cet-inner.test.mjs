@@ -193,3 +193,15 @@ test("sentenceCaseTitle lowercases ALL CAPS titles and leaves mixed-case titles 
   assert.equal(sentenceCaseTitle("Thông báo lịch Đăng ký và xử lý học vụ Học kỳ 1 (Năm học 2018-2019)"), "Thông báo lịch Đăng ký và xử lý học vụ Học kỳ 1 (Năm học 2018-2019)");
   assert.equal(sentenceCaseTitle(null), "");
 });
+
+test("sentenceCaseTitle keeps acronyms upper case", () => {
+  assert.equal(
+    sentenceCaseTitle("VIỆN KTCN TỔ CHỨC THÀNH CÔNG BẢO VỆ ĐỒ ÁN TỐT NGHIỆP"),
+    "Viện KTCN tổ chức thành công bảo vệ đồ án tốt nghiệp",
+  );
+  assert.equal(sentenceCaseTitle("THÔNG BÁO VNPT NGHỆ AN TUYỂN DỤNG NHÂN SỰ"), "Thông báo VNPT nghệ an tuyển dụng nhân sự");
+  assert.equal(sentenceCaseTitle("ĐH VINH TỔ CHỨC HỘI THẢO VỀ AI VÀ IOT CHO SV"), "ĐH vinh tổ chức hội thảo về AI và IoT cho SV");
+  assert.equal(sentenceCaseTitle("ĐOÀN TNCS HỒ CHÍ MINH TỔ CHỨC ĐẠI HỘI"), "Đoàn TNCS hồ chí minh tổ chức đại hội");
+  assert.equal(sentenceCaseTitle("JOY FOR CHILDREN'S DAY JUNE 1ST"), "Joy for children's day june 1st");
+  assert.equal(sentenceCaseTitle("KTCN"), "KTCN");
+});

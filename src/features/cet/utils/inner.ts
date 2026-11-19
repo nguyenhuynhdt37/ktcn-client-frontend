@@ -155,9 +155,36 @@ export function sentenceCaseTitle(title: string | null | undefined, locale = "vi
     else lower++;
   }
   if (upper + lower === 0 || upper / (upper + lower) < 0.6) return text;
-  const lowered = text.toLocaleLowerCase(tag);
+  const lowered = text.replace(/\p{L}+/gu, (word, offset: number) => {
+    const acronym = acronymForm(word, text[offset - 1]);
+    return acronym ?? word.toLocaleLowerCase(tag);
+  });
   const first = Array.from(lowered)[0] ?? "";
   return first.toLocaleUpperCase(tag) + lowered.slice(first.length);
+}
+
+/** Acronyms that contain a vowel and so cannot be recognised by shape alone. */
+const KNOWN_ACRONYMS: Record<string, string> = {
+  AI: "AI",
+  IT: "IT",
+  ICT: "ICT",
+  IOT: "IoT",
+  STEM: "STEM",
+  VNU: "VNU",
+  TOEIC: "TOEIC",
+  IELTS: "IELTS",
+};
+const VIETNAMESE_VOWEL = /[AEIOUYÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴ]/;
+
+/**
+ * The form an upper-case word keeps when the rest of the title is lowered: listed acronyms and
+ * vowel-less words such as KTCN, VNPT, TNCS, SV, ĐH. Ordinals like "1ST" are not acronyms.
+ */
+function acronymForm(word: string, previousChar: string | undefined): string | null {
+  if (word.length < 2 || word !== word.toLocaleUpperCase()) return null;
+  if (previousChar && /\d/.test(previousChar)) return null;
+  if (word in KNOWN_ACRONYMS) return KNOWN_ACRONYMS[word];
+  return VIETNAMESE_VOWEL.test(word) ? null : word;
 }
 
 /** First letter of the first and last words, e.g. "Hoàng Hữu Việt" -> "HV". */
