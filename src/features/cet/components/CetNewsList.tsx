@@ -25,7 +25,7 @@ function pageHref(filters: CetNewsFilters, page: number): string {
 }
 
 function NewsCard({ item, locale }: { item: PortalArticleListResponse; locale: string }) {
-  const title = getLocalizedField<string>(item, "title", locale);
+  const title = sentenceCaseTitle(getLocalizedField<string>(item, "title", locale), locale);
   const excerpt = getLocalizedField<string>(item, "excerpt", locale);
   const href = `/tin-tuc/${item.slug}`;
   return (

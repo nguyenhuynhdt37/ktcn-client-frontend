@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { CalendarDays, Eye, Mail, Share2, User } from "lucide-react";
 import { getLocalizedField, formatDate } from "@/features/article/utils/map-article";
+import { sentenceCaseTitle } from "../utils/inner";
 import type {
   PortalArticleDetail,
   PortalArticleListResponse,
@@ -27,7 +28,7 @@ export function CetArticleDetail({
   shareUrl: string;
 }) {
   const isEn = locale === "en";
-  const title = getLocalizedField<string>(article, "title", locale);
+  const title = sentenceCaseTitle(getLocalizedField<string>(article, "title", locale), locale);
   const excerpt = getLocalizedField<string>(article, "excerpt", locale);
   const categoryName = article.category
     ? getLocalizedField<string>(article.category, "name", locale)
@@ -153,7 +154,7 @@ export function CetArticleDetail({
                 {related.map((item) => (
                   <li key={item.id}>
                     <CetLink href={`/tin-tuc/${item.slug}`} locale={locale}>
-                      {getLocalizedField<string>(item, "title", locale)}
+                      {sentenceCaseTitle(getLocalizedField<string>(item, "title", locale), locale)}
                     </CetLink>
                   </li>
                 ))}

@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { SafeImage } from "@/shared/components/ui/safe-image";
 import { getLocalizedField, formatDate } from "@/features/article/utils/map-article";
+import { sentenceCaseTitle } from "../utils/inner";
 import type { HomeShortcutItem } from "@/features/setting/types/setting.types";
 import type { CetHomeData } from "../services/home-data";
 import { CetLink } from "./CetLink";
@@ -118,7 +119,7 @@ export function CetHome({ data, locale }: { data: CetHomeData; locale: string })
               {notices.map((item) => (
                 <li key={item.id}>
                   <CetLink href={`/tin-tuc/${item.slug}`} locale={locale}>
-                    {getLocalizedField<string>(item, "title", locale)}
+                    {sentenceCaseTitle(getLocalizedField<string>(item, "title", locale), locale)}
                   </CetLink>
                   <time dateTime={item.published_at}>{formatDate(item.published_at, locale)}</time>
                 </li>
@@ -186,7 +187,7 @@ export function CetHome({ data, locale }: { data: CetHomeData; locale: string })
                   )}
                   <h3>
                     <CetLink href={`/tin-tuc/${item.slug}`} locale={locale}>
-                      {getLocalizedField<string>(item, "title", locale)}
+                      {sentenceCaseTitle(getLocalizedField<string>(item, "title", locale), locale)}
                     </CetLink>
                   </h3>
                   {item.excerpt && <p>{getLocalizedField<string>(item, "excerpt", locale)}</p>}

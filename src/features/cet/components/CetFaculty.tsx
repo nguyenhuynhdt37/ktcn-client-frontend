@@ -6,7 +6,14 @@ import { formatDate, getLocalizedField } from "@/features/article/utils/map-arti
 import type { PortalArticleListResponse } from "@/features/article/types/article.types";
 import type { DepartmentOverview, PortalProgram } from "@/features/department/types/department.types";
 import { getStaffQualifications } from "@/features/lecturer/utils/staff-directory";
-import { facultySections, firstRichText, htmlToPlainText, programHref, telHref } from "../utils/inner";
+import {
+  facultySections,
+  firstRichText,
+  htmlToPlainText,
+  programHref,
+  sentenceCaseTitle,
+  telHref,
+} from "../utils/inner";
 import { CetAvatar } from "./CetAvatar";
 import { CetLink } from "./CetLink";
 import { CetPageHeader } from "./CetPageHeader";
@@ -44,7 +51,7 @@ function ProgramTile({ program, locale }: { program: PortalProgram; locale: stri
 }
 
 function NewsTile({ item, locale }: { item: PortalArticleListResponse; locale: string }) {
-  const title = getLocalizedField<string>(item, "title", locale);
+  const title = sentenceCaseTitle(getLocalizedField<string>(item, "title", locale), locale);
   const href = `/tin-tuc/${item.slug}`;
   return (
     <article className={base.newsCard}>
