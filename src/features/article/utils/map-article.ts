@@ -24,10 +24,12 @@ export function formatDate(dateString: string, locale: string = "vi"): string {
   if (!dateString) return "";
   const date = new Date(dateString);
   const localeTag = locale === "en" ? "en-US" : "vi-VN";
+  // Cố định múi giờ Việt Nam: server chạy UTC sẽ hiển thị lệch ngày với bài đăng buổi sáng giờ VN.
   return date.toLocaleDateString(localeTag, {
     day: "2-digit",
     month: "2-digit",
-    year: "numeric"
+    year: "numeric",
+    timeZone: "Asia/Ho_Chi_Minh",
   });
 }
 
